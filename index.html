@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+
+		<link type="text/css" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.3.1/css/bootstrap.css" />
+
+		<script type="text/javascript" src="//polyfill.io/v3/polyfill.min.js?features=es2015%2CIntersectionObserver" crossorigin="anonymous"></script>
+		<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+		<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.3.1/js/bootstrap.bundle.js"></script>
+		<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/lz-string/1.4.4/lz-string.min.js"></script>
+		<script type="text/javascript" src="evolve.js"></script>
+		<title>Evolve Progress Tracker</title>
+
+		<link type="text/css" rel="stylesheet" href="style.css" />
+	</head>
+
+	<body>
+		<noscript><strong>We're sorry but Evolve Save Editor doesn't work properly without JavaScript enabled. Please enable it to continue.</strong></noscript>
+
+		<div class="container-fluid">
+			<div class="header row">
+				<div class="col-sm-7 d-flex align-items-center justify-content-center">
+					<h1>Evolve Achievement Tracker</h1>
+				</div>
+				<div class="col-sm-3 d-flex align-items-center">
+					<textarea id="saveTextarea" class="form-control my-3"></textarea>
+				</div>
+				<div class="col-sm-2 text-center d-flex align-items-center">
+					<button id="load" class="btn btn-primary">Import Save</button>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-sm-6 col-md-4 col-lg-3" id="achievementList">
+					<h2 class="text-center">Achievements</h2>
+					<p class="lead text-center"></p>
+					<div></div>
+				</div>
+				<div class="col-sm-6 col-md-4 col-lg-3" id="featList">
+					<h2 class="text-center">Feats</h2>
+					<p class="lead text-center"></p>
+					<div></div>
+				</div>
+				<div class="col-sm-6 col-md-4 col-lg-3" id="perkList">
+					<h2 class="text-center">Perks</h2>
+					<p class="lead text-center"></p>
+					<div></div>
+				</div>
+				<div class="col-sm-6 col-md-4 col-lg-3" id="crisprList">
+					<div>
+						<h2 class="text-center">CRISPR</h2>
+						<p class="lead text-center"></p>
+						<div></div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</body>
+</html>

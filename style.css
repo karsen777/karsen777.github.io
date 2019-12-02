@@ -1,0 +1,88 @@
+body {
+	font-family: 'Helvetica';
+	background-color: #1f2424;
+	color: #fff;
+	margin-bottom: 15px;
+	font-size: 14px;
+}
+
+h1,h2,h3,h4,h5,h6{
+	font-family: 'Bookman';
+	font-weight: bold;
+}
+
+textarea {
+	font-size: 12px !important;
+	min-height: 75px;
+}
+
+.header {
+	background-color: #3a4344;
+	margin: 0px -15px 20px -15px;
+}
+
+.col-icon {
+	margin-left: 25px;
+	padding-right: 10px;
+	width: 90px;
+	text-align: right;
+}
+
+.col-upgrade {
+	margin-left: 25px;
+	padding-right: 3px;
+	width: 26px;
+	text-align: right;
+}
+
+.star {
+	fill: #000;
+	background-color: #aaa;
+}
+.star2 {
+	fill: #fff;
+}
+.star3 {
+	fill: #cd7f32;
+}
+.star4 {
+	fill: #c0c0c0;
+}
+.star5 {
+	fill: #d4af37;
+}
+.checkmark {
+	fill: #32CD32;
+}
+
+.yellow {
+	color: #ffdd57;
+}
+
+.hr-tip {
+	border: 1px solid #fff;
+	width: 75%;
+	align: center;
+	margin: auto;
+}
+
+.tooltip-inner {
+	width: 250px;
+	max-width: 250px;
+}
+
+#featList>h2 {
+	color: #ff3860;
+}
+
+#perkList>h2 {
+	color: #1abc9c;
+}
+
+#crisprList>h2 {
+	color: #fff;
+}
+
+#crisprList>div>div {
+	text-transform: capitalize;
+}
