@@ -39,7 +39,7 @@ function loc(key, variables) {
     return string;
 }
 
-var achievements = {
+const achievements = {
     apocalypse: {
         name: loc("achieve_apocalypse_name"),
         desc: loc("achieve_apocalypse_desc"),
@@ -1226,12 +1226,12 @@ const upgrades = {
 var upgradeList = [];
 
 $.each(achievements, function(index, achievement){
-	if (!perks.includes(index)) {
+	//if (!perks.includes(index)) {
 		let html = '';
 		html += '<div class="row"><div id="a-'+index+'" class="col-icon"></div><div>'+achievement.name+'</div></div>';
 		$('#achievementList>div').append(html);
 		$('#a-'+index).siblings().first().tooltip({ placement: 'right', 'title': achievement.desc+'<hr class="hr-tip"><span class="small">'+achievement.flair+'</span>', html: true });
-	}
+	//}
 });
 $.each(feats, function(index, feat){
 	let html = '';
@@ -1285,18 +1285,20 @@ $('#load').on('click', function(){
 			return false;
 		}
 		$.each(saveData.achievements, function(index, achievement){
-			achievementComplete++;
-			let starLevel = achievement.l;
-			masteryLevel += achievement.l;
-			if (index == 'joyless') masteryLevel += achievement.l;
-			let star = ''
-			if (starLevel > 4) star += `<svg class="star5" version="1.1" x="0px" y="0px" width="16px" height="16px" viewBox="0 0 640 640" xml:space="preserve"><path d="M320.012 15.662l88.076 215.246L640 248.153 462.525 398.438l55.265 225.9-197.778-122.363-197.778 122.363 55.264-225.9L0 248.153l231.936-17.245z"/></svg>`;
-			if (starLevel > 3) star += `<svg class="star4" version="1.1" x="0px" y="0px" width="16px" height="16px" viewBox="0 0 640 640" xml:space="preserve"><path d="M320.012 15.662l88.076 215.246L640 248.153 462.525 398.438l55.265 225.9-197.778-122.363-197.778 122.363 55.264-225.9L0 248.153l231.936-17.245z"/></svg>`;
-			if (starLevel > 2) star += `<svg class="star3" version="1.1" x="0px" y="0px" width="16px" height="16px" viewBox="0 0 640 640" xml:space="preserve"><path d="M320.012 15.662l88.076 215.246L640 248.153 462.525 398.438l55.265 225.9-197.778-122.363-197.778 122.363 55.264-225.9L0 248.153l231.936-17.245z"/></svg>`;
-			if (starLevel > 1) star += `<svg class="star2" version="1.1" x="0px" y="0px" width="16px" height="16px" viewBox="0 0 640 640" xml:space="preserve"><path d="M320.012 15.662l88.076 215.246L640 248.153 462.525 398.438l55.265 225.9-197.778-122.363-197.778 122.363 55.264-225.9L0 248.153l231.936-17.245z"/></svg>`;
-			star += `<svg class="star" version="1.1" x="0px" y="0px" width="16px" height="16px" viewBox="0 0 640 640" xml:space="preserve"><path d="M320.012 15.662l88.076 215.246L640 248.153 462.525 398.438l55.265 225.9-197.778-122.363-197.778 122.363 55.264-225.9L0 248.153l231.936-17.245z"/></svg>`;
 			let div = $('#a-'+index);
-			div.html(star).tooltip({ placement: 'right', 'title': (achievement.l - 1)+' Challenges Completed' });
+			if (div.length) {
+				achievementComplete++;
+				let starLevel = achievement.l;
+				masteryLevel += achievement.l;
+				if (index == 'joyless') masteryLevel += achievement.l;
+				let star = ''
+				if (starLevel > 4) star += `<svg class="star5" version="1.1" x="0px" y="0px" width="16px" height="16px" viewBox="0 0 640 640" xml:space="preserve"><path d="M320.012 15.662l88.076 215.246L640 248.153 462.525 398.438l55.265 225.9-197.778-122.363-197.778 122.363 55.264-225.9L0 248.153l231.936-17.245z"/></svg>`;
+				if (starLevel > 3) star += `<svg class="star4" version="1.1" x="0px" y="0px" width="16px" height="16px" viewBox="0 0 640 640" xml:space="preserve"><path d="M320.012 15.662l88.076 215.246L640 248.153 462.525 398.438l55.265 225.9-197.778-122.363-197.778 122.363 55.264-225.9L0 248.153l231.936-17.245z"/></svg>`;
+				if (starLevel > 2) star += `<svg class="star3" version="1.1" x="0px" y="0px" width="16px" height="16px" viewBox="0 0 640 640" xml:space="preserve"><path d="M320.012 15.662l88.076 215.246L640 248.153 462.525 398.438l55.265 225.9-197.778-122.363-197.778 122.363 55.264-225.9L0 248.153l231.936-17.245z"/></svg>`;
+				if (starLevel > 1) star += `<svg class="star2" version="1.1" x="0px" y="0px" width="16px" height="16px" viewBox="0 0 640 640" xml:space="preserve"><path d="M320.012 15.662l88.076 215.246L640 248.153 462.525 398.438l55.265 225.9-197.778-122.363-197.778 122.363 55.264-225.9L0 248.153l231.936-17.245z"/></svg>`;
+				star += `<svg class="star" version="1.1" x="0px" y="0px" width="16px" height="16px" viewBox="0 0 640 640" xml:space="preserve"><path d="M320.012 15.662l88.076 215.246L640 248.153 462.525 398.438l55.265 225.9-197.778-122.363-197.778 122.363 55.264-225.9L0 248.153l231.936-17.245z"/></svg>`;
+				div.html(star).tooltip({ placement: 'right', 'title': (achievement.l - 1)+' Challenges Completed' });
+			}
 		});
 		let achievementTotal = Object.keys(achievements).length;
 		let aColor = (achievementComplete == Object.keys(achievements).length) ? 'yellow' : '';
@@ -1304,31 +1306,35 @@ $('#load').on('click', function(){
 		$('#achievementList>p').html('<span class="'+aColor+'">'+achievementComplete+'</span> of <span class="yellow">'+achievementTotal+'</span> Complete<br /><span class="'+mColor+'">'+(masteryLevel*.25)+'%</span> of <span class="yellow">'+(masteryTotal*1.25)+'%</span> Mastery');
 
 		$.each(saveData.feats, function(index, feat){
-			featComplete++;
-			let star = '';
-			if (feat > 4) star += `<svg class="star5" version="1.1" x="0px" y="0px" width="16px" height="16px" viewBox="0 0 640 640" xml:space="preserve"><path d="M320.012 15.662l88.076 215.246L640 248.153 462.525 398.438l55.265 225.9-197.778-122.363-197.778 122.363 55.264-225.9L0 248.153l231.936-17.245z"/></svg>`;
-			if (feat > 3) star += `<svg class="star4" version="1.1" x="0px" y="0px" width="16px" height="16px" viewBox="0 0 640 640" xml:space="preserve"><path d="M320.012 15.662l88.076 215.246L640 248.153 462.525 398.438l55.265 225.9-197.778-122.363-197.778 122.363 55.264-225.9L0 248.153l231.936-17.245z"/></svg>`;
-			if (feat > 2) star += `<svg class="star3" version="1.1" x="0px" y="0px" width="16px" height="16px" viewBox="0 0 640 640" xml:space="preserve"><path d="M320.012 15.662l88.076 215.246L640 248.153 462.525 398.438l55.265 225.9-197.778-122.363-197.778 122.363 55.264-225.9L0 248.153l231.936-17.245z"/></svg>`;
-			if (feat > 1) star += `<svg class="star2" version="1.1" x="0px" y="0px" width="16px" height="16px" viewBox="0 0 640 640" xml:space="preserve"><path d="M320.012 15.662l88.076 215.246L640 248.153 462.525 398.438l55.265 225.9-197.778-122.363-197.778 122.363 55.264-225.9L0 248.153l231.936-17.245z"/></svg>`;
-			star += `<svg class="star" version="1.1" x="0px" y="0px" width="16px" height="16px" viewBox="0 0 640 640" xml:space="preserve"><path d="M320.012 15.662l88.076 215.246L640 248.153 462.525 398.438l55.265 225.9-197.778-122.363-197.778 122.363 55.264-225.9L0 248.153l231.936-17.245z"/></svg>`;
 			let div = $('#f-'+index);
-			div.html(star).tooltip({ placement: 'right', 'title': (feat - 1)+' Challenges Completed' });
+			if (div.length) {
+				featComplete++;
+				let star = '';
+				if (feat > 4) star += `<svg class="star5" version="1.1" x="0px" y="0px" width="16px" height="16px" viewBox="0 0 640 640" xml:space="preserve"><path d="M320.012 15.662l88.076 215.246L640 248.153 462.525 398.438l55.265 225.9-197.778-122.363-197.778 122.363 55.264-225.9L0 248.153l231.936-17.245z"/></svg>`;
+				if (feat > 3) star += `<svg class="star4" version="1.1" x="0px" y="0px" width="16px" height="16px" viewBox="0 0 640 640" xml:space="preserve"><path d="M320.012 15.662l88.076 215.246L640 248.153 462.525 398.438l55.265 225.9-197.778-122.363-197.778 122.363 55.264-225.9L0 248.153l231.936-17.245z"/></svg>`;
+				if (feat > 2) star += `<svg class="star3" version="1.1" x="0px" y="0px" width="16px" height="16px" viewBox="0 0 640 640" xml:space="preserve"><path d="M320.012 15.662l88.076 215.246L640 248.153 462.525 398.438l55.265 225.9-197.778-122.363-197.778 122.363 55.264-225.9L0 248.153l231.936-17.245z"/></svg>`;
+				if (feat > 1) star += `<svg class="star2" version="1.1" x="0px" y="0px" width="16px" height="16px" viewBox="0 0 640 640" xml:space="preserve"><path d="M320.012 15.662l88.076 215.246L640 248.153 462.525 398.438l55.265 225.9-197.778-122.363-197.778 122.363 55.264-225.9L0 248.153l231.936-17.245z"/></svg>`;
+				star += `<svg class="star" version="1.1" x="0px" y="0px" width="16px" height="16px" viewBox="0 0 640 640" xml:space="preserve"><path d="M320.012 15.662l88.076 215.246L640 248.153 462.525 398.438l55.265 225.9-197.778-122.363-197.778 122.363 55.264-225.9L0 248.153l231.936-17.245z"/></svg>`;
+				div.html(star).tooltip({ placement: 'right', 'title': (feat - 1)+' Challenges Completed' });
+			}
 		});
 		let fColor = (featComplete == Object.keys(feats).length) ? 'yellow' : '';
 		$('#featList>p').html('<span class="'+fColor+'">'+featComplete+'</span> of <span class="yellow">'+Object.keys(feats).length+'</span> Complete');
 
 		$.each(saveData.achievements, function(index, achievement){
 			if (perks.includes(index)) {
-				perkComplete++;
-				let starLevel = achievement.l;
-				let star = ''
-				if (starLevel > 4) star += `<svg class="star5" version="1.1" x="0px" y="0px" width="16px" height="16px" viewBox="0 0 640 640" xml:space="preserve"><path d="M320.012 15.662l88.076 215.246L640 248.153 462.525 398.438l55.265 225.9-197.778-122.363-197.778 122.363 55.264-225.9L0 248.153l231.936-17.245z"/></svg>`;
-				if (starLevel > 3) star += `<svg class="star4" version="1.1" x="0px" y="0px" width="16px" height="16px" viewBox="0 0 640 640" xml:space="preserve"><path d="M320.012 15.662l88.076 215.246L640 248.153 462.525 398.438l55.265 225.9-197.778-122.363-197.778 122.363 55.264-225.9L0 248.153l231.936-17.245z"/></svg>`;
-				if (starLevel > 2) star += `<svg class="star3" version="1.1" x="0px" y="0px" width="16px" height="16px" viewBox="0 0 640 640" xml:space="preserve"><path d="M320.012 15.662l88.076 215.246L640 248.153 462.525 398.438l55.265 225.9-197.778-122.363-197.778 122.363 55.264-225.9L0 248.153l231.936-17.245z"/></svg>`;
-				if (starLevel > 1) star += `<svg class="star2" version="1.1" x="0px" y="0px" width="16px" height="16px" viewBox="0 0 640 640" xml:space="preserve"><path d="M320.012 15.662l88.076 215.246L640 248.153 462.525 398.438l55.265 225.9-197.778-122.363-197.778 122.363 55.264-225.9L0 248.153l231.936-17.245z"/></svg>`;
-				star += `<svg class="star" version="1.1" x="0px" y="0px" width="16px" height="16px" viewBox="0 0 640 640" xml:space="preserve"><path d="M320.012 15.662l88.076 215.246L640 248.153 462.525 398.438l55.265 225.9-197.778-122.363-197.778 122.363 55.264-225.9L0 248.153l231.936-17.245z"/></svg>`;
 				let div = $('#p-'+index);
-				div.html(star).tooltip({ placement: 'right', 'title': (achievement.l - 1)+' Challenges Completed' });
+				if (div.length) {
+					perkComplete++;
+					let starLevel = achievement.l;
+					let star = ''
+					if (starLevel > 4) star += `<svg class="star5" version="1.1" x="0px" y="0px" width="16px" height="16px" viewBox="0 0 640 640" xml:space="preserve"><path d="M320.012 15.662l88.076 215.246L640 248.153 462.525 398.438l55.265 225.9-197.778-122.363-197.778 122.363 55.264-225.9L0 248.153l231.936-17.245z"/></svg>`;
+					if (starLevel > 3) star += `<svg class="star4" version="1.1" x="0px" y="0px" width="16px" height="16px" viewBox="0 0 640 640" xml:space="preserve"><path d="M320.012 15.662l88.076 215.246L640 248.153 462.525 398.438l55.265 225.9-197.778-122.363-197.778 122.363 55.264-225.9L0 248.153l231.936-17.245z"/></svg>`;
+					if (starLevel > 2) star += `<svg class="star3" version="1.1" x="0px" y="0px" width="16px" height="16px" viewBox="0 0 640 640" xml:space="preserve"><path d="M320.012 15.662l88.076 215.246L640 248.153 462.525 398.438l55.265 225.9-197.778-122.363-197.778 122.363 55.264-225.9L0 248.153l231.936-17.245z"/></svg>`;
+					if (starLevel > 1) star += `<svg class="star2" version="1.1" x="0px" y="0px" width="16px" height="16px" viewBox="0 0 640 640" xml:space="preserve"><path d="M320.012 15.662l88.076 215.246L640 248.153 462.525 398.438l55.265 225.9-197.778-122.363-197.778 122.363 55.264-225.9L0 248.153l231.936-17.245z"/></svg>`;
+					star += `<svg class="star" version="1.1" x="0px" y="0px" width="16px" height="16px" viewBox="0 0 640 640" xml:space="preserve"><path d="M320.012 15.662l88.076 215.246L640 248.153 462.525 398.438l55.265 225.9-197.778-122.363-197.778 122.363 55.264-225.9L0 248.153l231.936-17.245z"/></svg>`;
+					div.html(star).tooltip({ placement: 'right', 'title': (achievement.l - 1)+' Challenges Completed' });
+				}
 			}
 		});
 		let pColor = (perkComplete == Object.keys(perks).length) ? 'yellow' : '';
@@ -1337,10 +1343,13 @@ $('#load').on('click', function(){
 		$.each(upgrades, function(type, upgrade){
 			$.each(saveData.genes, function(index, level){
 				if (upgrade.grant[0] == index && upgrade.grant[1] <= level) {
-					upgradeComplete++;
-					let checkmark = `<svg class="checkmark" version="1.1" x="0px" y="0px" width="16px" height="16px" viewBox="0 1 20 20" xml:space="preserve"><path d="M7.629,14.566c0.125,0.125,0.291,0.188,0.456,0.188c0.164,0,0.329-0.062,0.456-0.188l8.219-8.221c0.252-0.252,0.252-0.659,0-0.911c-0.252-0.252-0.659-0.252-0.911,0l-7.764,7.763L4.152,9.267c-0.252-0.251-0.66-0.251-0.911,0c-0.252,0.252-0.252,0.66,0,0.911L7.629,14.566z"/></path></svg>`;
 					let div = $('#g-'+type);
-					div.html(checkmark).tooltip({ placement: 'right', 'title': 'Upgrade Purchased' });
+					if (div.length) {
+						upgradeComplete++;
+						let checkmark = `<svg class="checkmark" version="1.1" x="0px" y="0px" width="16px" height="16px" viewBox="0 1 20 20" xml:space="preserve"><path d="M7.629,14.566c0.125,0.125,0.291,0.188,0.456,0.188c0.164,0,0.329-0.062,0.456-0.188l8.219-8.221c0.252-0.252,0.252-0.659,0-0.911c-0.252-0.252-0.659-0.252-0.911,0l-7.764,7.763L4.152,9.267c-0.252-0.251-0.66-0.251-0.911,0c-0.252,0.252-0.252,0.66,0,0.911L7.629,14.566z"/></path></svg>`;
+						let div = $('#g-'+type);
+						div.html(checkmark).tooltip({ placement: 'right', 'title': 'Upgrade Purchased' });
+					}
 				}
 			});
 		});
