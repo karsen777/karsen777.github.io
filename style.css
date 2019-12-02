@@ -56,7 +56,11 @@ textarea {
 }
 
 .yellow {
-	color: #ffdd57;
+	color: #FFDD57;
+}
+
+.green {
+	color: #7FFF00;
 }
 
 .hr-tip {
