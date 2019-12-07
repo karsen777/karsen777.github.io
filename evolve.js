@@ -629,6 +629,31 @@ const feats = {
         desc: loc("feat_rocky_road_desc"),
         flair: loc("feat_rocky_road_flair")
     },
+    novice: {
+        name: loc("feat_novice_name"),
+        desc: loc("feat_achievement_hunter_desc",[10]),
+        flair: loc("feat_novice_flair")
+    },
+    journeyman: {
+        name: loc("feat_journeyman_name"),
+        desc: loc("feat_achievement_hunter_desc",[25]),
+        flair: loc("feat_journeyman_flair")
+    },
+    adept: {
+        name: loc("feat_adept_name"),
+        desc: loc("feat_achievement_hunter_desc",[50]),
+        flair: loc("feat_adept_flair")
+    },
+    master: {
+        name: loc("feat_master_name"),
+        desc: loc("feat_achievement_hunter_desc",[75]),
+        flair: loc("feat_master_flair")
+    },
+    grandmaster: {
+        name: loc("feat_grandmaster_name"),
+        desc: loc("feat_achievement_hunter_desc",[100]),
+        flair: loc("feat_grandmaster_flair")
+    },
     nephilim: {
         name: loc("feat_nephilim_name"),
         desc: loc("feat_nephilim_desc"),
@@ -727,15 +752,17 @@ const feats = {
 };
 
 const perks = [
-	'mass_extinction',
-	'extinct_junker',
-	'anarchist',
-	'explorer',
-	'creator',
-	'whitehole',
-	'blackhole',
-	'dissipated',
-	'heavyweight'
+	[ 'mass_extinction', 'achievements' ],
+	[ 'extinct_junker', 'achievements' ],
+	[ 'anarchist', 'achievements' ],
+	[ 'explorer', 'achievements' ],
+	[ 'creator', 'achievements' ],
+	[ 'whitehole', 'achievements' ],
+	[ 'blackhole', 'achievements' ],
+	[ 'dissipated', 'achievements' ],
+	[ 'heavyweight', 'achievements' ],
+	[ 'novice', 'feats' ],
+	[ 'journeyman', 'feats' ],
 ];
 
 const upgrades = {
@@ -1236,45 +1263,37 @@ const upgrades = {
 
 const upgradeList = [];
 let i;
-let blackholeDesc = '';
+let blackholeDesc = mass_extinctionDesc = creator2Desc = explorerDesc = whitehole2Desc = '';
+let heavyweightDesc = dissipated3Desc = dissipated4Desc = anarchistDesc = '';
+let novice1Desc = novice2Desc = journeyman1Desc = journeyman2Desc = '';
 for (i = 1; i <= 5; i++) {
 	blackholeDesc += i * 5;
 	if (i < 5) blackholeDesc += '% / ';
-}
-let mass_extinctionDesc = '';
-for (i = 1; i <= 5; i++) {
 	mass_extinctionDesc += i + 1;
 	if (i < 5) mass_extinctionDesc += 'x / ';
-}
-let creator2Desc = '';
-for (i = 1; i <= 5; i++) {
 	creator2Desc += '+' + (i - 1) * 50;
 	if (i < 5) creator2Desc += ' / ';
-}
-let explorerDesc = '';
-for (i = 1; i <= 5; i++) {
 	explorerDesc += '+' + (i + 1);
 	if (i < 5) explorerDesc += ' / ';
-}
-let whitehole2Desc = '';
-for (i = 1; i <= 5; i++) {
 	whitehole2Desc += (i * 5);
 	if (i < 5) whitehole2Desc += '% / ';
-}
-let heavyweightDesc = '';
-for (i = 1; i <= 5; i++) {
 	heavyweightDesc += (i * 4);
 	if (i < 5) heavyweightDesc += '% / ';
+	anarchistDesc += '-' + (i * 10);
+	if (i < 5) anarchistDesc += '% / ';
+	novice1Desc += (i / 2);
+	if (i < 5) novice1Desc += 'x / ';
+	novice2Desc += (i / 4);
+	if (i < 5) novice2Desc += 'x / ';
+	journeyman1Desc += Math.floor((i / 2) + 0.5);
+	if (i < 5) journeyman1Desc += ' / +';
+	journeyman2Desc += Math.floor(i / 2);
+	if (i < 5) journeyman2Desc += ' / +';
 }
 let dissipated1Desc = [ loc("achieve_perks_dissipated1",[1]) ];
 //let dissipated2Desc = `1kW (${star2}) / 2kw (${star4})`;
 let dissipated2Desc = `(2-star) 1kW / (4-star) 2`;
-let dissipated3Desc = dissipated4Desc = '';
-let anarchistDesc = '';
-for (i = 1; i <= 5; i++) {
-	anarchistDesc += '-' + (i * 10);
-	if (i < 5) anarchistDesc += '% / ';
-}
+
 const perksDesc = {
 	blackhole: loc("achieve_perks_blackhole",[blackholeDesc]),
 	mass_extinction: loc("achieve_perks_mass_extinction",[mass_extinctionDesc]),
@@ -1296,6 +1315,10 @@ const perksDesc = {
 		loc("achieve_perks_dissipated4",[1])
 	],
 	anarchist: loc("achieve_perks_anarchist",[anarchistDesc]),
+	novice: loc("achieve_perks_novice",[novice1Desc, novice2Desc]),
+	journeyman: [
+		loc("achieve_perks_journeyman2",[journeyman1Desc, journeyman2Desc]),
+	]
 }
 
 $.each(achievements, function(index, achievement){
@@ -1312,19 +1335,20 @@ $.each(feats, function(index, feat){
 	$('#featList>div').append(html);
 	$('#f-'+index).siblings().first().tooltip({ placement: 'right', 'title': feat.desc+'<hr class="hr-tip"><span class="small">'+feat.flair+'</span>', html: true });
 });
-$.each(perks, function(index, perk){
-	let achievement = achievements[perk];
+$.each(perks, function(index, details){
+	let perkName = details[0];
+	let perk = (details[1] == 'achievements') ? achievements[perkName] : feats[perkName];
 	let html = '';
-	html += '<div class="row"><div id="p-'+perk+'" class="col-icon"></div><div>'+achievement.name+'</div></div>';
+	html += '<div class="row"><div id="p-'+perkName+'" class="col-icon"></div><div>'+perk.name+'</div></div>';
 	$('#perkList>div').append(html);
 	let perkBonus = '';
-	if (Array.isArray(perksDesc[perk])) {
-		$.each(perksDesc[perk], function(index, desc){
+	if (Array.isArray(perksDesc[perkName])) {
+		$.each(perksDesc[perkName], function(index, desc){
 			perkBonus += desc+'<br />';
 		});
 	}
-	else perkBonus = perksDesc[perk];
-	$('#p-'+perk).siblings().first().tooltip({ placement: 'right', 'title': achievement.desc+'<hr class="hr-tip"><span class="small">'+achievement.flair+'</span><hr class="hr-tip"><div class="small text-left">'+perkBonus+'</div>', html: true });
+	else perkBonus = perksDesc[perkName];
+	$('#p-'+perkName).siblings().first().tooltip({ placement: 'right', 'title': perk.desc+'<hr class="hr-tip"><span class="small">'+perk.flair+'</span><hr class="hr-tip"><div class="small text-left">'+perkBonus+'</div>', html: true });
 });
 $.each(upgrades, function(index, upgrade){
 	upgradeList.push(index);
@@ -1401,19 +1425,21 @@ $('#load').on('click', function(){
 		let fColor = (featComplete == Object.keys(feats).length) ? 'yellow' : '';
 		$('#featList>p').html('<span class="'+fColor+'">'+featComplete+'</span> of <span class="yellow">'+Object.keys(feats).length+'</span> Complete');
 
-		$.each(saveData.achievements, function(index, achievement){
-			if (perks.includes(index)) {
-				let div = $('#p-'+index);
+		$.each(perks, function(index, details){
+			let perkName = details[0];
+			if (saveData.achievements[perkName] || saveData.feats[perkName]) {
+				let perkLevel = (details[1] == 'achievements') ? saveData.achievements[perkName]['l'] : saveData.feats[perkName];
+				let div = $('#p-'+perkName);
 				if (div.length) {
 					perkComplete++;
-					let starLevel = achievement.l;
+					let starLevel = perkLevel;
 					let star = ''
 					if (starLevel > 4) star += star4;
 					if (starLevel > 3) star += star3;
 					if (starLevel > 2) star += star2;
 					if (starLevel > 1) star += star1;
 					star += star0;
-					div.html(star).tooltip({ placement: 'right', 'title': (achievement.l - 1)+' Challenges Completed' });
+					div.html(star).tooltip({ placement: 'right', 'title': (perkLevel - 1)+' Challenges Completed' });
 				}
 			}
 		});
