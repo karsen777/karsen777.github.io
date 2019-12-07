@@ -1282,9 +1282,9 @@ for (i = 1; i <= 5; i++) {
 	anarchistDesc += '-' + (i * 10);
 	if (i < 5) anarchistDesc += '% / ';
 	novice1Desc += (i / 2);
-	if (i < 5) novice1Desc += 'x / ';
+	if (i < 5) novice1Desc += 'x / +';
 	novice2Desc += (i / 4);
-	if (i < 5) novice2Desc += 'x / ';
+	if (i < 5) novice2Desc += 'x / +';
 	journeyman1Desc += Math.floor((i / 2) + 0.5);
 	if (i < 5) journeyman1Desc += ' / +';
 	journeyman2Desc += Math.floor(i / 2);
