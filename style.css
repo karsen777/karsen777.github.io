@@ -35,9 +35,10 @@ textarea {
 	text-align: right;
 }
 
-.star {
+.star1 {
 	fill: #000;
 	background-color: #aaa;
+	border-radius: 5px;
 }
 .star2 {
 	fill: #fff;
@@ -51,7 +52,7 @@ textarea {
 .star5 {
 	fill: #d4af37;
 }
-.checkmark {
+.star0 {
 	fill: #32CD32;
 }
 
