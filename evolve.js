@@ -1492,6 +1492,13 @@ $('#load').on('click', function(){
 	$('#crisprList>div>div .col-upgrade').empty();
 	$('#crisprList>p').empty();
 	$('.col-icon svg, .col-upgrade svg').tooltip('dispose');
+	$('#universe').val('all');
+	$('#earned').val('all');
+	$('#rating0').prop("checked", true);
+	console.log($('#rating0'))
+	$('#achievementList div').each(function(){
+		$(this).show();
+	});
 
 	let importText = $('#saveTextarea').val();
 	if (importText != '') {
