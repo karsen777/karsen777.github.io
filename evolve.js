@@ -1495,7 +1495,6 @@ $('#load').on('click', function(){
 	$('#universe').val('all');
 	$('#earned').val('all');
 	$('#rating0').prop("checked", true);
-	console.log($('#rating0'))
 	$('#achievementList div').each(function(){
 		$(this).show();
 	});
@@ -1569,7 +1568,7 @@ $('#load').on('click', function(){
 		let uColor = (upgradeComplete == Object.keys(upgrades).length) ? 'yellow' : '';
 		$('#crisprList>p').html('<span class="'+uColor+'">'+upgradeComplete+'</span> of <span class="yellow">'+Object.keys(upgrades).length+'</span> Purchased');
 
-		$('#filters').show();
+		$('.filters').show();
 	}
 });
 
