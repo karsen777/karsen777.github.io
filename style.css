@@ -16,6 +16,14 @@ textarea {
 	min-height: 75px;
 }
 
+a, a:visited {
+	color: #ffdd57;
+}
+
+a:hover, a:active {
+	color: #e5c64e;
+}
+
 .header {
 	background-color: #3a4344;
 	margin: 0px -15px 20px -15px;
@@ -74,6 +82,18 @@ textarea {
 .tooltip-inner {
 	width: 250px;
 	max-width: 250px;
+}
+
+label {
+	margin-bottom: 0px;
+}
+
+select {
+	margin-bottom: 3px;
+}
+
+#filters {
+	display: none;
 }
 
 #featList>h2 {

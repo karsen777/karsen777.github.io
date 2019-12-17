@@ -2,6 +2,11 @@ $(function(){
 
 const global = { race: { species: ''} };
 let achievementCount = featCount = 0;
+let saveData = {
+	achievements: {},
+	feats: {},
+	genes: {}
+};
 
 const icons = {
 	star: {
@@ -29,10 +34,6 @@ const icons = {
 		viewbox: '0 0 20 20'
 	}
 };
-function getIcon(type, level = 0) {
-	if (type == 'blank') return '<svg width="16px" height="16px"></svg>';
-	return '<svg class="star'+level+'" version="1.1" x="0px" y="0px" width="16px" height="16px" viewBox="'+icons[type].viewbox+'" xml:space="preserve">'+icons[type].path+'</svg>';
-}
 
 $.ajaxSetup({ async: false });
 let strings;
@@ -68,6 +69,37 @@ function loc(key, variables) {
         }
     }
     return string;
+}
+
+const universeData = {
+	all: {
+		name: 'All',
+		code: 'l'
+	},
+	star: {
+		name: 'Normal',
+		code: 'l'
+	},
+	normal: {
+		name: 'Normal',
+		code: 'l'
+	},
+	anti: {
+		name: 'Antimatter',
+		code: 'a'
+	},
+	evil: {
+		name: 'Evil',
+		code: 'e'
+	},
+	heavy: {
+		name: 'Micro',
+		code: 'h'
+	},
+	micro: {
+		name: 'Micro',
+		code: 'm'
+	}
 }
 
 const achievements = {
@@ -1316,8 +1348,30 @@ for (i = 1; i <= 5; i++) {
 	if (i < 5) journeyman2Desc += ' / +';
 }
 let dissipated1Desc = [ loc("achieve_perks_dissipated1",[1]) ];
-//let dissipated2Desc = `1kW (${star2}) / 2kw (${star4})`;
-let dissipated2Desc = `(2-star) 1kW / (4-star) 2`;
+//let dissipated2Desc = `1kW (${star2}) / +2kw (${star4})`;
+let dissipated2Desc = `1kW (2-star) / +2 (4-star)`;
+
+const filters = {
+	vigilante: { only: 'evil' },
+	blood_war: { not: 'evil' },
+	extinct_seraph: { only: 'evil' },
+	extinct_unicorn: { only: 'evil' },
+	extinct_balorg: { not: 'evil' },
+	extinct_imp: { not: 'evil' },
+	genus_angelic: { only: 'evil' },
+	genus_demonic: { not: 'evil' },
+	biome_eden: { only: 'evil' },
+	biome_hellscape: { not: 'evil' },
+	squished: { only: 'micro' },
+	macro: { only: 'micro' },
+	marble: { only: 'micro' },
+	heavyweight: { only: 'heavy' },
+	cross: { only: 'anti' },
+	heavy: { only: 'heavy' },
+	canceled: { only: 'anti' },
+	eviltwin: { only: 'evil' },
+	microbang: { only: 'micro' }
+}
 
 const perksDesc = {
 	blackhole: loc("achieve_perks_blackhole",[blackholeDesc]),
@@ -1346,13 +1400,58 @@ const perksDesc = {
 	]
 }
 
+function createIcon(div, universe, type, item) {
+	if (universe == 'blank') div.append('<svg width="16px" height="16px"></svg>');
+	else {
+		let icon;
+		switch(type) {
+			case 'achievement':
+				let uniName = universeData[universe].name;
+				let abbrev = universeData[universe].code;
+				let level = item[abbrev];
+				icon = '<svg class="star'+level+'" version="1.1" x="0px" y="0px" width="16px" height="16px" viewBox="'+icons[universe].viewbox+'" xml:space="preserve" data-level="'+level+'">'+icons[universe].path+'</svg>';
+				div.append(icon).children().last().tooltip({ placement: 'right', html: true, 'title': '<b>'+uniName+' Universe</b><hr class="hr-tip" />'+(level - 1)+' Challenges Completed' });
+				break;
+			case 'upgrade':
+				icon = $('<svg class="star'+item+'" version="1.1" x="0px" y="0px" width="16px" height="16px" viewBox="'+icons[universe].viewbox+'" xml:space="preserve">'+icons[universe].path+'</svg>');
+				div.append(icon).children().last().tooltip({ placement: 'right', 'title': 'Upgrade Purchased' });
+				break;
+			default:
+				icon = $('<svg class="star'+item+'" version="1.1" x="0px" y="0px" width="16px" height="16px" viewBox="'+icons[universe].viewbox+'" xml:space="preserve">'+icons[universe].path+'</svg>');
+				div.append(icon).children().last().tooltip({ placement: 'right', 'title': (item - 1)+' Challenges Completed' });
+		}
+	}
+}
+
+function applyFilter(name, filterUniverse, filterEarned, filterStar) {
+	let row = $('#achievementList [data-index="' + name + '"]');
+	let iconDiv = row.children('.col-icon').first();
+	let starLevel = (saveData.achievements[name] && saveData.achievements[name][universeData[filterUniverse].code]) ? saveData.achievements[name][universeData[filterUniverse].code] : 0;
+	let show = true;
+
+	if (filterUniverse != 'all') {
+		if (filterUniverse == 'micro') {
+			show = false;
+			if (filters[name] && filters[name]['only'] && filters[name]['only'] == filterUniverse) show = true;
+		}
+		else {
+			if (filters[name] && filters[name]['only'] && filters[name]['only'] != filterUniverse) show = false;
+			if (filters[name] && filters[name]['not'] && filters[name]['not'] == filterUniverse) show = false;
+		}
+	}
+	if (filterEarned == 'earned' && starLevel == 0) show = false;
+	if (filterEarned == 'unearned' && starLevel > 0) show = false;
+	if (filterStar > 0 && starLevel != filterStar) show = false;
+
+	if (show == true) row.show();
+	else row.hide();
+}
+
 $.each(achievements, function(index, achievement){
-	//if (!perks.includes(index)) {
-		let html = '';
-		html += '<div class="row"><div id="a-'+index+'" class="col-icon"></div><div>'+achievement.name+'</div></div>';
-		$('#achievementList>div').append(html);
-		$('#a-'+index).siblings().first().tooltip({ placement: 'right', 'title': achievement.desc+'<hr class="hr-tip"><span class="small">'+achievement.flair+'</span>', html: true });
-	//}
+	let html = '';
+	html += '<div class="row" data-index="'+index+'"><div id="a-'+index+'" class="col-icon"></div><div>'+achievement.name+'</div></div>';
+	$('#achievementList>div').append(html);
+	$('#a-'+index).siblings().first().tooltip({ placement: 'right', 'title': achievement.desc+'<hr class="hr-tip"><span class="small">'+achievement.flair+'</span>', html: true });
 });
 $.each(feats, function(index, feat){
 	let html = '';
@@ -1383,12 +1482,6 @@ $.each(upgrades, function(index, upgrade){
 	$('#g-'+index).siblings().first().tooltip({ placement: 'right', 'title': upgrade.title+'<hr class="hr-tip"><span class="small">'+upgrade.desc+'</span>', html: true });
 });
 
-var saveData = {
-	achievements: {},
-	feats: {},
-	genes: {}
-};
-
 $('#load').on('click', function(){
 	$('#achievementList>div>div .col-icon').empty();
 	$('#achievementList>p').empty();
@@ -1398,7 +1491,7 @@ $('#load').on('click', function(){
 	$('#perkList>p').empty();
 	$('#crisprList>div>div .col-upgrade').empty();
 	$('#crisprList>p').empty();
-	$('.col-icon, .col-upgrade').tooltip('dispose');
+	$('.col-icon svg, .col-upgrade svg').tooltip('dispose');
 
 	let importText = $('#saveTextarea').val();
 	if (importText != '') {
@@ -1421,13 +1514,11 @@ $('#load').on('click', function(){
 				let starLevel = achievement.l;
 				masteryLevel += achievement.l;
 				if (index == 'joyless') masteryLevel += achievement.l;
-				let icons = ''
-				icons += (achievement['h']) ? getIcon('heavy', achievement.l) : getIcon('blank');
-				icons += (achievement['m']) ? getIcon('micro', achievement.l) : getIcon('blank');
-				icons += (achievement['e']) ? getIcon('evil', achievement.l) : getIcon('blank');
-				icons += (achievement['a']) ? getIcon('anti', achievement.l) : getIcon('blank');
-				icons += (achievement['l']) ? getIcon('star', achievement.l) : getIcon('blank');
-				div.html(icons).tooltip({ placement: 'right', 'title': (achievement.l - 1)+' Challenges Completed' });
+				(achievement['h']) ? createIcon(div, 'heavy', 'achievement', achievement) : createIcon(div, 'blank');
+				(achievement['m']) ? createIcon(div, 'micro', 'achievement', achievement) : createIcon(div, 'blank');
+				(achievement['e']) ? createIcon(div, 'evil', 'achievement', achievement) : createIcon(div, 'blank');
+				(achievement['a']) ? createIcon(div, 'anti', 'achievement', achievement) : createIcon(div, 'blank');
+				(achievement['l']) ? createIcon(div, 'star', 'achievement', achievement) : createIcon(div, 'blank');
 			}
 		});
 		let achievementTotal = Object.keys(achievements).length;
@@ -1439,8 +1530,7 @@ $('#load').on('click', function(){
 			let div = $('#f-'+index);
 			if (div.length) {
 				featComplete++;
-				let icon = (feat > 0) ? getIcon('star', feat) : getIcon('blank');
-				div.html(icon).tooltip({ placement: 'right', 'title': (feat - 1)+' Challenges Completed' });
+				(feat > 0) ? createIcon(div, 'star', 'feat', feat) : createIcon(div, 'blank');
 			}
 		});
 		let fColor = (featComplete == Object.keys(feats).length) ? 'yellow' : '';
@@ -1453,8 +1543,7 @@ $('#load').on('click', function(){
 				let div = $('#p-'+perkName);
 				if (div.length) {
 					perkComplete++;
-					let icon = (perkLevel > 0) ? getIcon('star', perkLevel) : getIcon('blank');
-					div.html(icon).tooltip({ placement: 'right', 'title': (perkLevel - 1)+' Challenges Completed' });
+					(perkLevel > 0) ? createIcon(div, 'star', 'perk', perkLevel) : createIcon(div, 'blank');
 				}
 			}
 		});
@@ -1465,18 +1554,25 @@ $('#load').on('click', function(){
 			$.each(saveData.genes, function(index, level){
 				if (upgrade.grant[0] == index && upgrade.grant[1] <= level) {
 					let div = $('#g-'+type);
-					let check = getIcon('blank');
-					if (div.length) {
-						upgradeComplete++;
-						check = getIcon('checkmark', 0);
-					}
-					div.html(check).tooltip({ placement: 'right', 'title': 'Upgrade Purchased' });
+					if (div.length) upgradeComplete++;
+					(div.length) ? createIcon(div, 'checkmark', 'upgrade', 0) : createIcon(div, 'blank');
 				}
 			});
 		});
 		let uColor = (upgradeComplete == Object.keys(upgrades).length) ? 'yellow' : '';
 		$('#crisprList>p').html('<span class="'+uColor+'">'+upgradeComplete+'</span> of <span class="yellow">'+Object.keys(upgrades).length+'</span> Purchased');
+
+		$('#filters').show();
 	}
+});
+
+$('#universe, #earned, input[name="rating"]').on('change', function(){
+	var checked = $('input[name="rating"]').filter(function(){
+		return $(this).prop('checked');
+	});
+	$('#achievementList .col-icon').each(function(){
+		applyFilter($(this).parent().data('index'), $('#universe').val(), $('#earned').val(), checked.val());
+	});
 });
 
 });

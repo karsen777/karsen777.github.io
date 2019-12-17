@@ -6,6 +6,7 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
 
 		<link type="text/css" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.3.1/css/bootstrap.css" />
+		<link type="text/css" rel="stylesheet" href="style.css" />
 
 		<script type="text/javascript" src="//polyfill.io/v3/polyfill.min.js?features=es2015%2CIntersectionObserver" crossorigin="anonymous"></script>
 		<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
@@ -13,8 +14,6 @@
 		<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/lz-string/1.4.4/lz-string.min.js"></script>
 		<script type="text/javascript" src="evolve.js"></script>
 		<title>Evolve Progress Tracker</title>
-
-		<link type="text/css" rel="stylesheet" href="style.css" />
 	</head>
 
 	<body>
@@ -22,14 +21,64 @@
 
 		<div class="container-fluid">
 			<div class="header row">
-				<div class="col-sm-7 d-flex align-items-center justify-content-center">
-					<h1>Evolve Progress Tracker</h1>
+				<div class="col-md-4 pb-2">
+					<div class="row align-items-center justify-content-center h-100">
+						<h1 class="text-center">Evolve Progress Tracker</h1>
+						<div class="text-center">
+							<a href="https://github.com/karsen777/karsen777.github.io" target="_new">GitHub</a> | <a href="https://pmotschmann.github.io/Evolve/" target="_new">Evolve by Demagorddon</a><br />
+							For Evolve version 0.7.11
+						</div>
+					</div>
 				</div>
-				<div class="col-sm-3 d-flex align-items-center">
+				<div class="col-md-3 d-flex align-items-center pb-2">
 					<textarea id="saveTextarea" class="form-control my-3"></textarea>
 				</div>
-				<div class="col-sm-2 text-center d-flex align-items-center">
+				<div class="col-md-1 d-flex align-items-center pb-2">
 					<button id="load" class="btn btn-primary">Import Save</button>
+				</div>
+				<div class="col-md-2 text-center d-flex align-items-center pb-2 text-center">
+					<div id="filters" class="text-center">
+						<label for="universe">Filter By:</label>
+						<select id="universe" class="form-control">
+							<option value="all">All Universes</option>
+							<option value="normal">Normal</option>
+							<option value="anti">Antimatter</option>
+							<option value="evil">Evil</option>
+							<option value="heavy">Heavy</option>
+							<option value="micro">Micro</option>
+						</select>
+						<select id="earned" class="form-control">
+							<option value="all">All Achievements</option>
+							<option value="earned">Earned Only</option>
+							<option value="unearned">Unearned Only</option>
+						</select>
+					</div>
+				</div>
+				<div class="col-md-2 pb-2">
+					<div class="form-check">
+						<input class="form-check-input" type="radio" name="rating" value="0" id="rating[1]" checked>
+						<label class="form-check-label" for="defaultCheck1">All Star Ratings</label>
+					</div>
+					<div class="form-check">
+						<input class="form-check-input" type="radio" name="rating" value="1" id="rating[2]">
+						<label class="form-check-label" for="defaultCheck1">0-Challenge Rating</label>
+					</div>
+					<div class="form-check">
+						<input class="form-check-input" type="radio" name="rating" value="2" id="rating[2]">
+						<label class="form-check-label" for="defaultCheck1">1-Challenge Rating</label>
+					</div>
+					<div class="form-check">
+						<input class="form-check-input" type="radio" name="rating" value="3" id="rating[3]">
+						<label class="form-check-label" for="defaultCheck1">2-Challenge Rating</label>
+					</div>
+					<div class="form-check">
+						<input class="form-check-input" type="radio" name="rating" value="4" id="rating[4]">
+						<label class="form-check-label" for="defaultCheck1">3-Challenge Rating</label>
+					</div>
+					<div class="form-check">
+						<input class="form-check-input" type="radio" name="rating" value="5" id="rating[5]">
+						<label class="form-check-label" for="defaultCheck1">4-Challenge Rating</label>
+					</div>
 				</div>
 			</div>
 			<div class="row">

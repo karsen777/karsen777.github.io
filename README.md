@@ -10,5 +10,5 @@ Currently tracks your progress on:
 + CRISPR Upgrades
 
 To-Do List:
-+ Add filters- by universe, earned/unearned, star levels
++ Revamp filter UI
 + Add in better detailed descriptions- how to earn, benefits for completion, etc.
