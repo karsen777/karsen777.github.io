@@ -1330,7 +1330,7 @@ for (i = 1; i <= 5; i++) {
 	if (i < 5) mass_extinctionDesc += 'x / ';
 	creator2Desc += '+' + (i - 1) * 50;
 	if (i < 5) creator2Desc += ' / ';
-	explorerDesc += '+' + (i + 1);
+	explorerDesc += '+' + (i);
 	if (i < 5) explorerDesc += ' / ';
 	whitehole2Desc += (i * 5);
 	if (i < 5) whitehole2Desc += '% / ';
