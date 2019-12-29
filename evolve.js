@@ -80,7 +80,7 @@ const universeData = {
 		code: 'l'
 	},
 	star: {
-		name: 'Normal',
+		name: 'Overall',
 		code: 'l'
 	},
 	normal: {
@@ -1423,7 +1423,7 @@ function createIcon(div, universe, type, item) {
 			icon = '<svg width="16px" height="16px"></svg>';
 			div.append(icon);
 		}
-		else div.append(icon).children().last().tooltip({ placement: 'right', html: true, 'title': '<b>'+universeData[universe].name+' Universe</b><hr class="hr-tip" />Achievement Not Awarded' });
+		else div.append(icon).children().last().tooltip({ placement: 'right', html: true, 'title': '<b>'+(universe == 'star' ? 'Overall' : universeData[universe].name+' Universe')+'</b><hr class="hr-tip" />Achievement Not Awarded' });
 	}
 	else {
 		let icon;
@@ -1433,7 +1433,7 @@ function createIcon(div, universe, type, item) {
 				let abbrev = universeData[universe].code;
 				let level = item[abbrev];
 				icon = '<svg class="star'+level+'" version="1.1" x="0px" y="0px" width="16px" height="16px" viewBox="'+icons[universe].viewbox+'" xml:space="preserve" data-level="'+level+'">'+icons[universe].path+'</svg>';
-				div.append(icon).children().last().tooltip({ placement: 'right', html: true, 'title': '<b>'+uniName+' Universe</b><hr class="hr-tip" />'+(level - 1)+' Challenges Completed' });
+				div.append(icon).children().last().tooltip({ placement: 'right', html: true, 'title': '<b>'+(universe == 'star' ? 'Overall' : uniName+' Universe')+'</b><hr class="hr-tip" />'+(level - 1)+' Challenges Completed' });
 				break;
 			case 'upgrade':
 				icon = $('<svg class="checkmark" version="1.1" x="0px" y="0px" width="16px" height="16px" viewBox="'+icons[universe].viewbox+'" xml:space="preserve">'+icons[universe].path+'</svg>');
