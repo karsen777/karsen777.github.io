@@ -29,6 +29,18 @@ a:hover, a:active {
 	margin: 0px -15px 20px -15px;
 }
 
+#achievementList, #featList, #perkList, #crisprList {
+	padding-left: 15px;
+	padding-right: 15px;
+}
+
+#achievementList>div>div:hover,
+#featList>div>div:hover,
+#perkList>div>div:hover,
+#crisprList>div>div:hover {
+	background-color: #2b3232;
+}
+
 .col-icon {
 	margin-left: 25px;
 	padding-right: 10px;
@@ -43,6 +55,9 @@ a:hover, a:active {
 	text-align: right;
 }
 
+.star0 {
+	fill: #454545;
+}
 .star1 {
 	fill: #000;
 	background-color: #aaa;
@@ -60,7 +75,7 @@ a:hover, a:active {
 .star5 {
 	fill: #d4af37;
 }
-.star0 {
+.checkmark {
 	fill: #32CD32;
 }
 

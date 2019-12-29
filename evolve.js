@@ -1,5 +1,8 @@
 $(function(){
 
+const version = '0.7.12';
+$('#version').text(version);
+
 const global = { race: { species: ''} };
 let achievementCount = featCount = 0;
 let saveData = {
@@ -1401,7 +1404,16 @@ const perksDesc = {
 }
 
 function createIcon(div, universe, type, item) {
-	if (universe == 'blank') div.append('<svg width="16px" height="16px"></svg>');
+	if (!type) {
+		let name = div.parent().data('index');
+		let icon = '<svg class="star0" version="1.1" x="0px" y="0px" width="16px" height="16px" viewBox="'+icons[universe].viewbox+'" xml:space="preserve" data-level="0">'+icons[universe].path+'</svg>';
+		if (filters[name] && universe != 'star' && ((filters[name]['only'] && filters[name]['only'] != universe) ||
+		  (filters[name] && filters[name]['not'] && filters[name]['not'] == universe))) {
+			  icon = '<svg width="16px" height="16px"></svg>';
+			  div.append(icon);
+		}
+		else div.append(icon).children().last().tooltip({ placement: 'right', html: true, 'title': '<b>'+universeData[universe].name+' Universe</b><hr class="hr-tip" />Achievement Not Awarded' });
+	}
 	else {
 		let icon;
 		switch(type) {
@@ -1413,7 +1425,7 @@ function createIcon(div, universe, type, item) {
 				div.append(icon).children().last().tooltip({ placement: 'right', html: true, 'title': '<b>'+uniName+' Universe</b><hr class="hr-tip" />'+(level - 1)+' Challenges Completed' });
 				break;
 			case 'upgrade':
-				icon = $('<svg class="star'+item+'" version="1.1" x="0px" y="0px" width="16px" height="16px" viewBox="'+icons[universe].viewbox+'" xml:space="preserve">'+icons[universe].path+'</svg>');
+				icon = $('<svg class="checkmark" version="1.1" x="0px" y="0px" width="16px" height="16px" viewBox="'+icons[universe].viewbox+'" xml:space="preserve">'+icons[universe].path+'</svg>');
 				div.append(icon).children().last().tooltip({ placement: 'right', 'title': 'Upgrade Purchased' });
 				break;
 			default:
@@ -1440,8 +1452,8 @@ function applyFilter(name, filterUniverse, filterEarned, filterStar) {
 		}
 	}
 	if (filterEarned == 'earned' && starLevel == 0) show = false;
+	if (filterEarned != 'unearned' && filterStar > 0 && starLevel != filterStar) show = false;
 	if (filterEarned == 'unearned' && starLevel > 0) show = false;
-	if (filterStar > 0 && starLevel != filterStar) show = false;
 
 	if (show == true) row.show();
 	else row.hide();
@@ -1513,18 +1525,28 @@ $('#load').on('click', function(){
 			alert('Invalid save data.')
 			return false;
 		}
-		$.each(saveData.achievements, function(index, achievement){
+		$.each(achievements, function(index, achieve){
 			let div = $('#a-'+index);
 			if (div.length) {
-				achievementComplete++;
-				let starLevel = achievement.l;
-				masteryLevel += achievement.l;
-				if (index == 'joyless') masteryLevel += achievement.l;
-				(achievement['h']) ? createIcon(div, 'heavy', 'achievement', achievement) : createIcon(div, 'blank');
-				(achievement['m']) ? createIcon(div, 'micro', 'achievement', achievement) : createIcon(div, 'blank');
-				(achievement['e']) ? createIcon(div, 'evil', 'achievement', achievement) : createIcon(div, 'blank');
-				(achievement['a']) ? createIcon(div, 'anti', 'achievement', achievement) : createIcon(div, 'blank');
-				(achievement['l']) ? createIcon(div, 'star', 'achievement', achievement) : createIcon(div, 'blank');
+				let achievement = saveData.achievements[index];
+				if (achievement) {
+					achievementComplete++;
+					let starLevel = achievement.l;
+					masteryLevel += achievement.l;
+					if (index == 'joyless') masteryLevel += achievement.l;
+					achievement['h'] ? createIcon(div, 'heavy', 'achievement', achievement) : createIcon(div, 'heavy');
+					achievement['m'] ? createIcon(div, 'micro', 'achievement', achievement) : createIcon(div, 'micro');
+					achievement['e'] ? createIcon(div, 'evil', 'achievement', achievement) : createIcon(div, 'evil');
+					achievement['a'] ? createIcon(div, 'anti', 'achievement', achievement) : createIcon(div, 'anti');
+					achievement['l'] ? createIcon(div, 'star', 'achievement', achievement) : createIcon(div, 'star');
+				}
+				else {
+					createIcon(div, 'heavy');
+					createIcon(div, 'micro');
+					createIcon(div, 'evil');
+					createIcon(div, 'anti');
+					createIcon(div, 'star');
+				}
 			}
 		});
 		let achievementTotal = Object.keys(achievements).length;
@@ -1536,7 +1558,7 @@ $('#load').on('click', function(){
 			let div = $('#f-'+index);
 			if (div.length) {
 				featComplete++;
-				(feat > 0) ? createIcon(div, 'star', 'feat', feat) : createIcon(div, 'blank');
+				(feat > 0) ? createIcon(div, 'star', 'feat', feat) : createIcon(div, 'star');
 			}
 		});
 		let fColor = (featComplete == Object.keys(feats).length) ? 'yellow' : '';
@@ -1549,7 +1571,7 @@ $('#load').on('click', function(){
 				let div = $('#p-'+perkName);
 				if (div.length) {
 					perkComplete++;
-					(perkLevel > 0) ? createIcon(div, 'star', 'perk', perkLevel) : createIcon(div, 'blank');
+					(perkLevel > 0) ? createIcon(div, 'star', 'perk', perkLevel) : createIcon(div, 'star');
 				}
 			}
 		});
@@ -1561,7 +1583,7 @@ $('#load').on('click', function(){
 				if (upgrade.grant[0] == index && upgrade.grant[1] <= level) {
 					let div = $('#g-'+type);
 					if (div.length) upgradeComplete++;
-					(div.length) ? createIcon(div, 'checkmark', 'upgrade', 0) : createIcon(div, 'blank');
+					(div.length) ? createIcon(div, 'checkmark', 'upgrade', 0) : createIcon(div, 'checkmark');
 				}
 			});
 		});

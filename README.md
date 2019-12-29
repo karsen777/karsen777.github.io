@@ -10,5 +10,7 @@ Currently tracks your progress on:
 + CRISPR Upgrades
 
 To-Do List:
-+ Revamp filter UI
++ Revamp filters & UI
+    + Add toggle to show only selected star level or selected level and lower
+	+ Apply filters to other columns
 + Add in better detailed descriptions- how to earn, benefits for completion, etc.
