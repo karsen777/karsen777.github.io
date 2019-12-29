@@ -1407,10 +1407,21 @@ function createIcon(div, universe, type, item) {
 	if (!type) {
 		let name = div.parent().data('index');
 		let icon = '<svg class="star0" version="1.1" x="0px" y="0px" width="16px" height="16px" viewBox="'+icons[universe].viewbox+'" xml:space="preserve" data-level="0">'+icons[universe].path+'</svg>';
-		if (filters[name] && universe != 'star' && ((filters[name]['only'] && filters[name]['only'] != universe) ||
-		  (filters[name] && filters[name]['not'] && filters[name]['not'] == universe))) {
-			  icon = '<svg width="16px" height="16px"></svg>';
-			  div.append(icon);
+		let blank = false;
+		if (universe != 'star') {
+			if (universe == 'micro') {
+				blank = true;
+				if (filters[name] && filters[name]['only'] && filters[name]['only'] == universe) blank = false;
+			}
+			else {
+				if (filters[name] && filters[name]['only'] && filters[name]['only'] != universe) blank = true;
+				if (filters[name] && filters[name]['not'] && filters[name]['not'] == universe) blank = true;
+			}
+		}
+
+		if (blank == true) {
+			icon = '<svg width="16px" height="16px"></svg>';
+			div.append(icon);
 		}
 		else div.append(icon).children().last().tooltip({ placement: 'right', html: true, 'title': '<b>'+universeData[universe].name+' Universe</b><hr class="hr-tip" />Achievement Not Awarded' });
 	}
