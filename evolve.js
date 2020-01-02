@@ -1373,7 +1373,8 @@ const filters = {
 	heavy: { only: 'heavy' },
 	canceled: { only: 'anti' },
 	eviltwin: { only: 'evil' },
-	microbang: { only: 'micro' }
+	microbang: { only: 'micro' },
+	whitehole: { only: 'normal' }
 }
 
 const perksDesc = {
@@ -1408,7 +1409,7 @@ function createIcon(div, universe, type, item) {
 		let name = div.parent().data('index');
 		let icon = '<svg class="star0" version="1.1" x="0px" y="0px" width="16px" height="16px" viewBox="'+icons[universe].viewbox+'" xml:space="preserve" data-level="0">'+icons[universe].path+'</svg>';
 		let blank = false;
-		if (universe != 'star') {
+		if (universe != 'star' || universe != 'normal') {
 			if (universe == 'micro') {
 				blank = true;
 				if (filters[name] && filters[name]['only'] && filters[name]['only'] == universe) blank = false;
