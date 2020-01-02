@@ -96,7 +96,7 @@ const universeData = {
 		code: 'e'
 	},
 	heavy: {
-		name: 'Micro',
+		name: 'Heavy',
 		code: 'h'
 	},
 	micro: {
