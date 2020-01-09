@@ -1,6 +1,6 @@
 $(function(){
 
-const version = '0.7.12';
+const version = '0.7.16';
 $('#version').text(version);
 
 const global = { race: { species: ''} };
@@ -295,6 +295,11 @@ const achievements = {
         name: loc("achieve_heavyweight_name"),
         desc: loc("achieve_heavyweight_desc"),
         flair: loc("achieve_heavyweight_flair")
+    },
+    miners_dream: {
+        name: loc("achieve_miners_dream_name"),
+        desc: loc("achieve_miners_dream_desc"),
+        flair: loc("achieve_miners_dream_flair")
     },
     whitehole: {
         name: loc("achieve_whitehole_name"),
@@ -809,13 +814,14 @@ const feats = {
         desc: loc("feat_heavy_genus_demonic_desc"),
         flair: loc("feat_heavy_genus_demonic_flair")
     }
-};
+}
 
 const perks = [
 	[ 'mass_extinction', 'achievements' ],
 	[ 'extinct_junker', 'achievements' ],
 	[ 'anarchist', 'achievements' ],
 	[ 'explorer', 'achievements' ],
+	[ 'miners_dream', 'achievements' ],
 	[ 'creator', 'achievements' ],
 	[ 'whitehole', 'achievements' ],
 	[ 'blackhole', 'achievements' ],
@@ -1384,6 +1390,7 @@ const perksDesc = {
 		loc("achieve_perks_creator"),
 		loc("achieve_perks_creator2",[creator2Desc])
 	],
+	miners_dream: loc("achieve_perks_miners_dream"),
 	explorer: loc("achieve_perks_explorer",[explorerDesc]),
 	extinct_junker: loc("achieve_perks_enlightened"),
 	whitehole: [

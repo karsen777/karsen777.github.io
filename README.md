@@ -13,4 +13,5 @@ To-Do List:
 + Revamp filters & UI
     + Add toggle to show only selected star level or selected level and lower
 	+ Apply filters to other columns
++ Add achievement totals per universe
 + Add in better detailed descriptions- how to earn, benefits for completion, etc.
