@@ -1480,7 +1480,6 @@ function applyFilter(name, filterUniverse, filterEarned, filterStar) {
 	else row.hide();
 
 	$('.filter-highlight').removeClass('filter-highlight');
-	//if (filterUniverse == 'normal') $('[class^="star"]').addClass('filter-highlight');
 	$('.'+filterUniverse).addClass('filter-highlight');
 }
 
@@ -1550,6 +1549,11 @@ $('#load').on('click', function(){
 			alert('Invalid save data.')
 			return false;
 		}
+
+		let heavyComplete = 0;
+		let microComplete = 0;
+		let antiComplete = 0;
+		let evilComplete = 0;
 		$.each(achievements, function(index, achieve){
 			let div = $('#a-'+index);
 			if (div.length) {
@@ -1559,10 +1563,26 @@ $('#load').on('click', function(){
 					let starLevel = achievement.l;
 					masteryLevel += achievement.l;
 					if (index == 'joyless') masteryLevel += achievement.l;
-					achievement['h'] ? createIcon(div, 'heavy', 'achievement', achievement) : createIcon(div, 'heavy');
-					achievement['m'] ? createIcon(div, 'micro', 'achievement', achievement) : createIcon(div, 'micro');
-					achievement['e'] ? createIcon(div, 'evil', 'achievement', achievement) : createIcon(div, 'evil');
-					achievement['a'] ? createIcon(div, 'anti', 'achievement', achievement) : createIcon(div, 'anti');
+					if (achievement['h']) {
+						createIcon(div, 'heavy', 'achievement', achievement);
+						heavyComplete++;
+					}
+					else createIcon(div, 'heavy');
+					if (achievement['m']) {
+						createIcon(div, 'micro', 'achievement', achievement);
+						microComplete++;
+					}
+					else createIcon(div, 'micro');
+					if (achievement['e']) {
+						createIcon(div, 'evil', 'achievement', achievement);
+						evilComplete++;
+					}
+					else createIcon(div, 'evil');
+					if (achievement['a']) {
+						createIcon(div, 'anti', 'achievement', achievement);
+						antiComplete++;
+					}
+					else createIcon(div, 'anti');
 					achievement['l'] ? createIcon(div, 'star', 'achievement', achievement) : createIcon(div, 'star');
 				}
 				else {
@@ -1577,7 +1597,16 @@ $('#load').on('click', function(){
 		let achievementTotal = Object.keys(achievements).length;
 		let aColor = (achievementComplete == Object.keys(achievements).length) ? 'yellow' : '';
 		let mColor = (masteryLevel == Object.keys(achievements).length+1) ? 'yellow' : '';
-		$('#achievementList>p').html('<span class="'+aColor+'">'+achievementComplete+'</span> of <span class="yellow">'+achievementTotal+'</span> ('+(achievementComplete/achievementTotal*100).toFixed(2)+'% Complete)<br /><span class="'+mColor+'">'+(masteryLevel*.25)+'%</span> of <span class="yellow">'+(masteryTotal*1.25)+'%</span> Mastery');
+		let heavyTotal = $('[class^="star"].heavy').length;
+		let microTotal = $('[class^="star"].micro').length;
+		let evilTotal = $('[class^="star"].evil').length;
+		let antiTotal = $('[class^="star"].anti').length;
+		console.log(heavyTotal);
+		let universeTotals = '<p class="universe-totals">Heavy Universe: '+heavyComplete+' of '+heavyTotal+' ('+(heavyComplete/heavyTotal*100).toFixed(2)+'% Complete)<br />';
+		 universeTotals += 'Micro Universe: '+microComplete+' of '+microTotal+' ('+(microComplete/microTotal*100).toFixed(2)+'% Complete)<br />';
+		 universeTotals += 'Evil Universe: '+evilComplete+' of '+evilTotal+' ('+(evilComplete/evilTotal*100).toFixed(2)+'% Complete)<br />';
+		 universeTotals += 'Antimatter Universe: '+antiComplete+' of '+antiTotal+' ('+(antiComplete/antiTotal*100).toFixed(2)+'% Complete)</p>';
+		$('#achievementList>p').html('<span class="'+aColor+'">'+achievementComplete+'</span> of <span class="yellow">'+achievementTotal+'</span> ('+(achievementComplete/achievementTotal*100).toFixed(2)+'% Complete)<br /><span class="'+mColor+'">'+(masteryLevel*.25)+'%</span> of <span class="yellow">'+(masteryTotal*1.25)+'%</span> Mastery'+universeTotals);
 
 		$.each(saveData.feats, function(index, feat){
 			let div = $('#f-'+index);

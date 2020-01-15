@@ -137,3 +137,7 @@ select {
 #crisprList>div>div {
 	text-transform: capitalize;
 }
+
+.universe-totals {
+	font-size: 12px;
+}
