@@ -1,6 +1,6 @@
 $(function(){
 
-const version = '0.7.16';
+const version = '0.7.19';
 $('#version').text(version);
 
 const global = { race: { species: ''} };
@@ -1416,7 +1416,7 @@ const perksDesc = {
 function createIcon(div, universe, type, item) {
 	if (!type) {
 		let name = div.parent().data('index');
-		let icon = '<svg class="star0" version="1.1" x="0px" y="0px" width="16px" height="16px" viewBox="'+icons[universe].viewbox+'" xml:space="preserve" data-level="0">'+icons[universe].path+'</svg>';
+		let icon = '<svg class="star0 '+(universe == 'star' ? 'normal' : universe)+'" version="1.1" x="0px" y="0px" width="16px" height="16px" viewBox="'+icons[universe].viewbox+'" xml:space="preserve" data-level="0">'+icons[universe].path+'</svg>';
 		let blank = false;
 		if (universe != 'star' || universe != 'normal') {
 			if (universe == 'micro') {
@@ -1442,7 +1442,7 @@ function createIcon(div, universe, type, item) {
 				let uniName = universeData[universe].name;
 				let abbrev = universeData[universe].code;
 				let level = item[abbrev];
-				icon = '<svg class="star'+level+'" version="1.1" x="0px" y="0px" width="16px" height="16px" viewBox="'+icons[universe].viewbox+'" xml:space="preserve" data-level="'+level+'">'+icons[universe].path+'</svg>';
+				icon = '<svg class="star'+level+' '+(universe == 'star' ? 'normal' : universe)+'" version="1.1" x="0px" y="0px" width="16px" height="16px" viewBox="'+icons[universe].viewbox+'" xml:space="preserve" data-level="'+level+'">'+icons[universe].path+'</svg>';
 				div.append(icon).children().last().tooltip({ placement: 'right', html: true, 'title': '<b>'+(universe == 'star' ? 'Overall' : uniName+' Universe')+'</b><hr class="hr-tip" />'+(level - 1)+' Challenges Completed' });
 				break;
 			case 'upgrade':
@@ -1478,6 +1478,10 @@ function applyFilter(name, filterUniverse, filterEarned, filterStar) {
 
 	if (show == true) row.show();
 	else row.hide();
+
+	$('.filter-highlight').removeClass('filter-highlight');
+	//if (filterUniverse == 'normal') $('[class^="star"]').addClass('filter-highlight');
+	$('.'+filterUniverse).addClass('filter-highlight');
 }
 
 $.each(achievements, function(index, achievement){
@@ -1573,7 +1577,7 @@ $('#load').on('click', function(){
 		let achievementTotal = Object.keys(achievements).length;
 		let aColor = (achievementComplete == Object.keys(achievements).length) ? 'yellow' : '';
 		let mColor = (masteryLevel == Object.keys(achievements).length+1) ? 'yellow' : '';
-		$('#achievementList>p').html('<span class="'+aColor+'">'+achievementComplete+'</span> of <span class="yellow">'+achievementTotal+'</span> Complete<br /><span class="'+mColor+'">'+(masteryLevel*.25)+'%</span> of <span class="yellow">'+(masteryTotal*1.25)+'%</span> Mastery');
+		$('#achievementList>p').html('<span class="'+aColor+'">'+achievementComplete+'</span> of <span class="yellow">'+achievementTotal+'</span> ('+(achievementComplete/achievementTotal*100).toFixed(2)+'% Complete)<br /><span class="'+mColor+'">'+(masteryLevel*.25)+'%</span> of <span class="yellow">'+(masteryTotal*1.25)+'%</span> Mastery');
 
 		$.each(saveData.feats, function(index, feat){
 			let div = $('#f-'+index);
@@ -1583,7 +1587,7 @@ $('#load').on('click', function(){
 			}
 		});
 		let fColor = (featComplete == Object.keys(feats).length) ? 'yellow' : '';
-		$('#featList>p').html('<span class="'+fColor+'">'+featComplete+'</span> of <span class="yellow">'+Object.keys(feats).length+'</span> Complete');
+		$('#featList>p').html('<span class="'+fColor+'">'+featComplete+'</span> of <span class="yellow">'+Object.keys(feats).length+'</span> ('+(featComplete/Object.keys(feats).length*100).toFixed(2)+'% Complete)');
 
 		$.each(perks, function(index, details){
 			let perkName = details[0];
@@ -1597,7 +1601,7 @@ $('#load').on('click', function(){
 			}
 		});
 		let pColor = (perkComplete == Object.keys(perks).length) ? 'yellow' : '';
-		$('#perkList>p').html('<span class="'+pColor+'">'+perkComplete+'</span> of <span class="yellow">'+Object.keys(perks).length+'</span> Complete');
+		$('#perkList>p').html('<span class="'+pColor+'">'+perkComplete+'</span> of <span class="yellow">'+Object.keys(perks).length+'</span> ('+(perkComplete/Object.keys(perks).length*100).toFixed(2)+'% Complete)');
 
 		$.each(upgrades, function(type, upgrade){
 			$.each(saveData.genes, function(index, level){
@@ -1609,7 +1613,7 @@ $('#load').on('click', function(){
 			});
 		});
 		let uColor = (upgradeComplete == Object.keys(upgrades).length) ? 'yellow' : '';
-		$('#crisprList>p').html('<span class="'+uColor+'">'+upgradeComplete+'</span> of <span class="yellow">'+Object.keys(upgrades).length+'</span> Purchased');
+		$('#crisprList>p').html('<span class="'+uColor+'">'+upgradeComplete+'</span> of <span class="yellow">'+Object.keys(upgrades).length+'</span> ('+(upgradeComplete/Object.keys(upgrades).length*100).toFixed(2)+'% Purchased)');
 
 		$('.filters').show();
 	}
