@@ -1331,7 +1331,7 @@ const upgradeList = [];
 let i;
 let blackholeDesc = mass_extinctionDesc = creator2Desc = explorerDesc = whitehole2Desc = '';
 let heavyweightDesc = dissipated3Desc = dissipated4Desc = anarchistDesc = '';
-let novice1Desc = novice2Desc = journeyman1Desc = journeyman2Desc = '';
+let novice1Desc = novice2Desc = journeyman1Desc = journeyman2Desc = minersDesc = '';
 for (i = 1; i <= 5; i++) {
 	blackholeDesc += i * 5;
 	if (i < 5) blackholeDesc += '% / ';
@@ -1355,6 +1355,8 @@ for (i = 1; i <= 5; i++) {
 	if (i < 5) journeyman1Desc += ' / +';
 	journeyman2Desc += Math.floor(i / 2);
 	if (i < 5) journeyman2Desc += ' / +';
+	minersDesc += i + (i == 5 ? 2 : (i == 4 ? 1 : 0));
+	if (i < 5) minersDesc += ' / ';
 }
 let dissipated1Desc = [ loc("achieve_perks_dissipated1",[1]) ];
 //let dissipated2Desc = `1kW (${star2}) / +2kw (${star4})`;
@@ -1390,7 +1392,7 @@ const perksDesc = {
 		loc("achieve_perks_creator"),
 		loc("achieve_perks_creator2",[creator2Desc])
 	],
-	miners_dream: loc("achieve_perks_miners_dream"),
+	miners_dream: loc("achieve_perks_miners_dream",[minersDesc]),
 	explorer: loc("achieve_perks_explorer",[explorerDesc]),
 	extinct_junker: loc("achieve_perks_enlightened"),
 	whitehole: [
