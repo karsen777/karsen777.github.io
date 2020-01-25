@@ -134,6 +134,10 @@ a:hover, a:active {
 	margin-bottom: 5px;
 }
 
+#filterRow label {
+	font-size: 13px;
+}
+
 #filterRow .btn {
 	box-shadow: none;
 }
