@@ -13,7 +13,5 @@ To-Do List:
 + Revamp filters & UI
     + Add toggle to show only selected star level or selected level and lower
 	+ Apply filters to other columns
-	+ Show/hide achievements completed in all/no universes
-	+ Search bar to find keywords and tags
-+ Add achievement totals per universe
+	+ Move unearned filter to a new section and allow combining with ratings to see specific unearned universe ratings
 + Add in better detailed descriptions- how to earn, benefits for completion, etc.

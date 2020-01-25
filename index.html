@@ -12,6 +12,7 @@
 		<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 		<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.3.1/js/bootstrap.bundle.js"></script>
 		<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/lz-string/1.4.4/lz-string.min.js"></script>
+		<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery.isotope/3.0.6/isotope.pkgd.min.js"></script>
 		<script type="text/javascript" src="evolve.js"></script>
 		<title>Evolve Progress Tracker</title>
 	</head>
@@ -21,7 +22,7 @@
 
 		<div class="container-fluid">
 			<div class="header row">
-				<div class="col-md-4 pb-2">
+				<div class="col-md-6 pb-2">
 					<div class="row align-items-center justify-content-center h-100">
 						<h1 class="text-center">Evolve Progress Tracker</h1><hr class="hr-tip" />
 						<div class="text-center">
@@ -30,56 +31,51 @@
 						</div>
 					</div>
 				</div>
-				<div class="col-md-3 d-flex align-items-center pb-2">
+				<div class="col-md-4 d-flex align-items-center pb-2">
 					<textarea id="saveTextarea" class="form-control my-3"></textarea>
 				</div>
-				<div class="col-md-1 d-flex align-items-center pb-2">
+				<div class="col-md-2 d-flex align-items-center pb-2">
 					<button id="load" class="btn btn-primary">Import Save</button>
 				</div>
-				<div class="col-md-2 text-center d-flex align-items-center pb-2 text-center">
-					<div class="filters text-center">
-						<label for="universe">Filter By:</label>
-						<select id="universe" class="form-control">
-							<option value="all">All Universes</option>
-							<option value="normal">Normal</option>
-							<option value="anti">Antimatter</option>
-							<option value="evil">Evil</option>
-							<option value="heavy">Heavy</option>
-							<option value="micro">Micro</option>
-						</select>
-						<select id="earned" class="form-control">
-							<option value="all">All Achievements</option>
-							<option value="earned">Earned Only</option>
-							<option value="unearned">Unearned Only</option>
-						</select>
+			</div>
+			<div id="filterRow" class="row d-none">
+				<div class="col-12 text-center">
+					<div class="btn-group btn-group-toggle" data-toggle="buttons" data-filter-group="general">
+						<label class="btn btn-secondary active" data-filter="*"><input type="radio" name="general" autocomplete="off" checked> All</label>
+						<label class="btn btn-secondary" data-filter=".atmosphere"><input type="radio" name="general" autocomplete="off" > Atmosphere</label>
+						<label class="btn btn-secondary" data-filter=".biome"><input type="radio" name="general" autocomplete="off" > Biome</label>
+						<label class="btn btn-secondary" data-filter=".challenge"><input type="radio" name="general" autocomplete="off" > Challenge</label>
+						<label class="btn btn-secondary" data-filter=".combat"><input type="radio" name="general" autocomplete="off" > Combat</label>
+						<label class="btn btn-secondary" data-filter=".fanaticism"><input type="radio" name="general" autocomplete="off" > Fanaticism</label>
+						<label class="btn btn-secondary" data-filter=".genus"><input type="radio" name="general" data-filter=".genus" autocomplete="off" > Genus</label>
+						<label class="btn btn-secondary" data-filter=".perk"><input type="radio" name="general" autocomplete="off" > Perk</label>
+						<label class="btn btn-secondary" data-filter=".progression"><input type="radio" name="general" autocomplete="off" > Progression</label>
+						<label class="btn btn-secondary" data-filter=".reset"><input type="radio" name="general" autocomplete="off" > Reset</label>
+						<label class="btn btn-secondary" data-filter=".species"><input type="radio" name="general" autocomplete="off" > Species</label>
+						<label class="btn btn-secondary" data-filter=".unification"><input type="radio" name="general" autocomplete="off" > Unification</label>
+						<label class="btn btn-secondary" data-filter=".universe"><input type="radio" name="general" autocomplete="off" > Universe</label>
+						<label class="btn btn-secondary" data-filter=".other"><input type="radio" name="general" autocomplete="off" > Other</label>
 					</div>
 				</div>
-				<div class="col-md-2 pb-2">
-					<div class="filters">
-						<div class="form-check">
-							<input class="form-check-input" type="radio" name="rating" value="0" id="rating0" checked>
-							<label class="form-check-label" for="defaultCheck1">All Star Ratings</label>
-						</div>
-						<div class="form-check">
-							<input class="form-check-input" type="radio" name="rating" value="1" id="rating1">
-							<label class="form-check-label" for="defaultCheck1">0-Challenge Rating</label>
-						</div>
-						<div class="form-check">
-							<input class="form-check-input" type="radio" name="rating" value="2" id="rating2">
-							<label class="form-check-label" for="defaultCheck1">1-Challenge Rating</label>
-						</div>
-						<div class="form-check">
-							<input class="form-check-input" type="radio" name="rating" value="3" id="rating3">
-							<label class="form-check-label" for="defaultCheck1">2-Challenge Rating</label>
-						</div>
-						<div class="form-check">
-							<input class="form-check-input" type="radio" name="rating" value="4" id="rating4">
-							<label class="form-check-label" for="defaultCheck1">3-Challenge Rating</label>
-						</div>
-						<div class="form-check">
-							<input class="form-check-input" type="radio" name="rating" value="5" id="rating5">
-							<label class="form-check-label" for="defaultCheck1">4-Challenge Rating</label>
-						</div>
+				<div class="col-5 text-center">
+					<div class="btn-group btn-group-toggle" data-toggle="buttons" data-filter-group="universes">
+						<label class="btn btn-secondary active" data-filter="*"><input type="radio" name="universes" value="all" autocomplete="off" checked> All Universes</label>
+						<label class="btn btn-secondary" data-filter=".normal"><input type="radio" name="universes" value="normal" autocomplete="off" > Normal</label>
+						<label class="btn btn-secondary" data-filter=".antimatter"><input type="radio" name="universes" value="antimatter" autocomplete="off" > Antimatter</label>
+						<label class="btn btn-secondary" data-filter=".evil"><input type="radio" name="universes" value="evil" autocomplete="off" > Evil</label>
+						<label class="btn btn-secondary" data-filter=".heavy"><input type="radio" name="universes" value="heavy" autocomplete="off" > Heavy</label>
+						<label class="btn btn-secondary" data-filter=".micro"><input type="radio" name="universes" value="micro" autocomplete="off" > Micro</label>
+					</div>
+				</div>
+				<div class="col-7 text-center">
+					<div class="btn-group btn-group-toggle" data-toggle="buttons" data-filter-group="rating">
+						<label class="btn btn-secondary active" data-filter="*"><input type="radio" name="rating" autocomplete="off" checked> All Ratings</label>
+						<label class="btn btn-secondary" data-filter="0-star"><input type="radio" name="rating" autocomplete="off" > 0-Challenge</label>
+						<label class="btn btn-secondary" data-filter="1-star"><input type="radio" name="rating" autocomplete="off" > 1-Challenge</label>
+						<label class="btn btn-secondary" data-filter="2-star"><input type="radio" name="rating" autocomplete="off" > 2-Challenge</label>
+						<label class="btn btn-secondary" data-filter="3-star"><input type="radio" name="rating" autocomplete="off" > 3-Challenge</label>
+						<label class="btn btn-secondary" data-filter="4-star"><input type="radio" name="rating" autocomplete="off" > 4-Challenge</label>
+						<label class="btn btn-secondary" data-filter="Unearned"><input type="radio" name="rating" autocomplete="off" > Unearned</label>
 					</div>
 				</div>
 			</div>

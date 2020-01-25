@@ -1,6 +1,6 @@
 $(function(){
 
-const version = '0.7.19';
+const version = '0.7.20';
 $('#version').text(version);
 
 const global = { race: { species: ''} };
@@ -12,7 +12,7 @@ let saveData = {
 };
 
 const icons = {
-	star: {
+	normal: {
 		path: '<path d="M320.012 15.662l88.076 215.246L640 248.153 462.525 398.438l55.265 225.9-197.778-122.363-197.778 122.363 55.264-225.9L0 248.153l231.936-17.245z" />',
 		viewbox: '0 0 640 640'
 	},
@@ -28,7 +28,7 @@ const icons = {
 		path: '<path d="m105.63 236.87c-17.275-2.22-34.678-8.73-49.291-18.44-54.583-36.26-69.355-108.23-33.382-162.64 11.964-18.101 31.389-34.423 51.05-42.899 36.303-15.652 78.013-12.004 110.65 9.678 54.58 36.259 69.36 108.23 33.38 162.65-24.44 36.97-68.62 57.27-112.41 51.65zm9.37-7.17c0-1.12-15.871-50.86-20.804-65.2l-1.719-5-36.926-0.26c-20.309-0.15-37.284 0.09-37.721 0.53-1.104 1.1 4.147 11.87 10.535 21.59 16.439 25.04 41.149 41.59 71.135 47.65 11.07 2.24 15.5 2.44 15.5 0.69zm25.71-0.61c30.52-5.95 55.28-22.38 71.92-47.73 6.39-9.72 11.64-20.49 10.54-21.59-0.44-0.44-17.41-0.68-37.72-0.53l-36.93 0.26-1.72 5c-4.93 14.34-20.8 64.08-20.8 65.2 0 1.77 3.2 1.64 14.71-0.61zm-9.32-38.99c5.25-16.18 9.3-29.79 9.01-30.25-0.28-0.47-9.24-0.85-19.9-0.85s-19.62 0.38-19.9 0.85c-0.46 0.74 17.66 58.14 19.08 60.43 0.3 0.49 0.91 0.52 1.36 0.06s5.11-14.07 10.35-30.24zm-42.19-38.63c0.629-0.63-10.723-36.39-11.936-37.61-0.817-0.81-51.452 35.32-52.097 37.18-0.349 1 63.032 1.43 64.033 0.43zm61.27-20.06c3.65-11.32 6.51-21.41 6.34-22.42-0.32-1.86-34.12-26.99-36.31-26.99s-35.993 25.13-36.308 26.99c-0.169 1.01 2.683 11.1 6.339 22.42l6.647 20.59h46.642l6.65-20.59zm65.36 19.63c-0.64-1.86-51.28-37.99-52.09-37.18-1.22 1.22-12.57 36.98-11.94 37.61 1 1 64.38 0.57 64.03-0.43zm-169.97-24.02c16.09-11.7 29.071-21.78 28.847-22.4-0.397-1.09-12.185-37.499-18.958-58.555-1.846-5.739-3.951-10.632-4.678-10.875-0.727-0.242-4.903 3.259-9.28 7.78-22 22.72-32.81 50.641-31.513 81.39 0.678 16.09 2.371 24.97 4.646 24.37 0.925-0.24 14.846-10.01 30.936-21.71zm183.14 15.73c0.66-3.44 1.44-11.71 1.72-18.39 1.3-30.749-9.51-58.67-31.51-81.39-4.38-4.521-8.55-8.022-9.28-7.78-0.73 0.243-2.83 5.136-4.68 10.875-1.84 5.739-6.93 21.448-11.29 34.908-6.26 19.297-7.68 24.717-6.7 25.627 3.41 3.18 58.29 42.4 59.32 42.4 0.68 0 1.73-2.72 2.42-6.25zm-129.27-54.808c7.573-5.522 13.773-10.467 13.773-10.987 0-1.007-50.318-37.955-51.689-37.955-0.446 0-0.811 0.317-0.811 0.704 0 0.388 3.825 12.484 8.5 26.882s8.5 26.401 8.5 26.674 0.697 2.163 1.548 4.201c1.832 4.389-0.216 5.349 20.179-9.519zm66.613-5.442c3.03-9.35 7.35-22.629 9.59-29.508 4.36-13.403 4.5-13.992 3.26-13.992-1.39 0-51.69 36.953-51.69 37.971 0 1.477 31.75 24.189 32.58 23.309 0.4-0.431 3.22-8.43 6.26-17.78zm-14.4-32.538l29.32-21.329-2.37-1.927c-10.93-8.844-38.4-16.706-58.39-16.706s-47.464 7.862-58.388 16.708l-2.382 1.929 29.885 21.728c16.845 12.25 30.565 21.552 31.435 21.326 0.86-0.22 14.75-9.999 30.89-21.729z" />',
 		viewbox: '0 0 240 240'
 	},
-	anti: {
+	antimatter: {
 		path: '<path d="m100 44.189c0-6.796-10.63-11.822-24.783-14.529 1.155-3.322 2.105-6.538 2.764-9.541 2.193-10.025 1.133-16.856-2.981-19.231-1.019-0.588-2.193-0.888-3.49-0.888-5.62 0-13.46 5.665-21.509 15-8.046-9.335-15.886-15-21.511-15-1.294 0-2.47 0.3-3.491 0.888-5.891 3.4-4.918 15.141-0.175 28.767-14.173 2.701-24.824 7.731-24.824 14.534 0 6.799 10.634 11.822 24.79 14.531-1.161 3.323-2.11 6.536-2.767 9.539-2.194 10.027-1.136 16.857 2.976 19.231 1.021 0.589 2.197 0.886 3.491 0.886 5.625 0 13.464-5.667 21.511-14.998 8.047 9.331 15.886 15 21.509 15 1.297 0 2.472-0.299 3.49-0.888 4.114-2.374 5.174-9.204 2.98-19.231-0.658-3.003-1.608-6.216-2.766-9.539 14.156-2.708 24.786-7.732 24.786-14.531zm-28.49-41.605c0.838 0 1.579 0.187 2.199 0.543 3.016 1.741 3.651 7.733 1.747 16.44-0.661 3.022-1.628 6.264-2.814 9.63-4.166-0.695-8.585-1.194-13.096-1.49-2.572-3.887-5.206-7.464-7.834-10.67 7.581-8.861 14.934-14.453 19.798-14.453zm-9.198 48.71c-1.375 2.379-2.794 4.684-4.242 6.9-2.597 0.132-5.287 0.206-8.069 0.206s-5.474-0.074-8.067-0.206c-1.452-2.217-2.87-4.521-4.242-6.9-1.388-2.406-2.669-4.771-3.849-7.081 1.204-2.369 2.477-4.753 3.851-7.13 1.37-2.377 2.79-4.68 4.24-6.901 2.593-0.131 5.285-0.205 8.067-0.205s5.473 0.074 8.069 0.205c1.448 2.222 2.866 4.524 4.239 6.901 1.37 2.37 2.64 4.747 3.842 7.106-1.202 2.362-2.471 4.739-3.839 7.105zm5.259-4.225c1.587 3.303 3 6.558 4.2 9.72-3.25 0.521-6.758 0.926-10.488 1.203 1.104-1.75 2.194-3.554 3.265-5.404 1.062-1.837 2.059-3.681 3.023-5.519zm-11.277 13.78c-2.068 3.019-4.182 5.854-6.293 8.444-2.109-2.591-4.22-5.426-6.294-8.444 2.095 0.088 4.196 0.138 6.294 0.138 2.099-0.001 4.201-0.05 6.293-0.138zm-17.573-2.857c-3.733-0.277-7.241-0.683-10.49-1.203 1.202-3.157 2.611-6.414 4.197-9.72 0.97 1.858 1.979 3.701 3.026 5.519 1.071 1.85 2.161 3.654 3.267 5.404zm-6.304-16.654c-1.636-3.389-3.046-6.653-4.226-9.741 3.26-0.52 6.781-0.931 10.53-1.212-1.107 1.751-2.197 3.553-3.268 5.407-1.067 1.847-2.065 3.701-3.036 5.546zm11.294-13.805c2.07-3.019 4.181-5.855 6.29-8.449 2.111 2.594 4.225 5.43 6.293 8.449-2.093-0.091-4.194-0.14-6.293-0.14-2.098 0.001-4.199 0.049-6.29 0.14zm20.837 8.259c-1.07-1.859-2.16-3.656-3.265-5.407 3.73 0.281 7.238 0.687 10.488 1.205-1.2 3.157-2.613 6.419-4.2 9.722-0.964-1.838-1.961-3.683-3.023-5.52zm-38.254-32.665c0.619-0.359 1.36-0.543 2.196-0.543 4.864 0 12.217 5.592 19.8 14.453-2.626 3.206-5.262 6.783-7.834 10.67-4.526 0.296-8.962 0.802-13.144 1.5-4.886-13.794-5.036-23.762-1.018-26.08zm-23.709 41.062c0-4.637 8.707-9.493 23.096-12.159 1.487 3.974 3.268 8.069 5.277 12.14-2.061 4.14-3.843 8.229-5.323 12.167-14.364-2.664-23.05-7.516-23.05-12.148zm25.905 41.605c-0.848 0-1.564-0.178-2.196-0.538-3.015-1.742-3.652-7.734-1.746-16.442 0.662-3.023 1.626-6.269 2.814-9.633 4.166 0.696 8.586 1.195 13.092 1.491 2.574 3.885 5.207 7.462 7.834 10.671-7.58 8.86-14.934 14.451-19.798 14.451zm46.962-16.981c1.907 8.708 1.272 14.7-1.743 16.442-0.623 0.355-1.361 0.539-2.199 0.539-4.864 0-12.217-5.592-19.798-14.452 2.628-3.209 5.262-6.786 7.837-10.671 4.508-0.296 8.927-0.795 13.093-1.491 1.186 3.365 2.153 6.61 2.81 9.633zm-1.086-12.475c-1.476-3.933-3.254-8.014-5.31-12.148 2.056-4.135 3.834-8.217 5.312-12.148 14.361 2.665 23.049 7.519 23.049 12.148 0 4.631-8.688 9.483-23.051 12.148z" />',
 		viewbox: '0 0 100 88.379'
 	},
@@ -75,10 +75,6 @@ function loc(key, variables) {
 }
 
 const universeData = {
-	all: {
-		name: 'All',
-		code: 'l'
-	},
 	star: {
 		name: 'Overall',
 		code: 'l'
@@ -87,7 +83,7 @@ const universeData = {
 		name: 'Normal',
 		code: 'l'
 	},
-	anti: {
+	antimatter: {
 		name: 'Antimatter',
 		code: 'a'
 	},
@@ -1413,10 +1409,123 @@ const perksDesc = {
 	]
 }
 
+const keywords = {
+	apocalypse: ['reset'],
+	anarchist: ['reset', 'perk'],
+	squished: ['reset', 'universe'],
+	second_evolution: ['reset', 'fanaticism'],
+	blackhole: ['progression', 'perk'],
+	warmonger: ['combat'],
+	red_tactics: ['combat'],
+	pacifist: ['combat', 'unification'],
+	madagascar_tree: ['fanaticism'],
+	godwin: ['fanaticism'],
+	laser_shark: ['fanaticism'],
+	infested: ['fanaticism'],
+	mass_starvation: ['other'],
+	colonist: ['progression'],
+	world_domination: ['unification'],
+	illuminati: ['unification'],
+	syndicate: ['unification'],
+	cult_of_personality: ['unification'],
+	doomed: ['progression'],
+	pandemonium: ['progression'],
+	blood_war: ['progression'],
+	cross: ['universe'],
+	landfill: ['other'],
+	seeder: ['reset'],
+	macro: ['universe'],
+	marble: ['universe'],
+	explorer: ['biome', 'reset', 'perk'],
+	joyless: ['progression', 'challenge'],
+	biome_grassland: ['biome'],
+	biome_oceanic: ['biome'],
+	biome_forest: ['biome'],
+	biome_desert: ['biome'],
+	biome_volcanic: ['biome'],
+	biome_tundra: ['biome'],
+	biome_hellscape: ['biome'],
+	biome_eden: ['biome'],
+	creator: ['reset', 'perk'],
+	heavyweight: ['reset', 'universe', 'perk'],
+	miners_dream: ['reset', 'perk'],
+	whitehole: ['reset', 'perk'],
+	heavy: ['reset', 'universe'],
+	canceled: ['reset', 'universe'],
+	eviltwin: ['reset', 'universe'],
+	microbang: ['reset', 'universe'],
+	dissipated: ['reset', 'challenge', 'perk'],
+	genus_humanoid: ['genus'],
+	genus_animal: ['genus'],
+	genus_small: ['genus'],
+	genus_giant: ['genus'],
+	genus_reptilian: ['genus'],
+	genus_avian: ['genus'],
+	genus_insectoid: ['genus'],
+	genus_plant: ['genus'],
+	genus_fungi: ['genus'],
+	genus_aquatic: ['genus'],
+	genus_fey: ['genus'],
+	genus_heat: ['genus'],
+	genus_polar: ['genus'],
+	genus_sand: ['genus'],
+	genus_demonic: ['genus'],
+	genus_angelic: ['genus'],
+	atmo_toxic: ['atmosphere'],
+	atmo_mellow: ['atmosphere'],
+	atmo_rage: ['atmosphere'],
+	atmo_stormy: ['atmosphere'],
+	atmo_ozone: ['atmosphere'],
+	atmo_magnetic: ['atmosphere'],
+	atmo_trashed: ['atmosphere'],
+	mass_extinction: ['reset', 'perk'],
+	vigilante: ['reset', 'universe'],
+	extinct_human: ['species'],
+	extinct_elven: ['species'],
+	extinct_orc: ['species'],
+	extinct_cath: ['species'],
+	extinct_wolven: ['species'],
+	extinct_centaur: ['species'],
+	extinct_kobold: ['species'],
+	extinct_goblin: ['species'],
+	extinct_gnome: ['species'],
+	extinct_orge: ['species'],
+	extinct_cyclops: ['species'],
+	extinct_troll: ['species'],
+	extinct_tortoisan: ['species'],
+	extinct_gecko: ['species'],
+	extinct_slitheryn: ['species'],
+	extinct_arraak: ['species'],
+	extinct_pterodacti: ['species'],
+	extinct_dracnid: ['species'],
+	extinct_entish: ['species'],
+	extinct_cacti: ['species'],
+	extinct_sporgar: ['species'],
+	extinct_shroomi: ['species'],
+	extinct_mantis: ['species'],
+	extinct_scorpid: ['species'],
+	extinct_antid: ['species'],
+	extinct_sharkin: ['species'],
+	extinct_octigoran: ['species'],
+	extinct_dryad: ['species'],
+	extinct_satyr: ['species'],
+	extinct_phoenix: ['species'],
+	extinct_salamander: ['species'],
+	extinct_yeti: ['species'],
+	extinct_wendigo: ['species'],
+	extinct_tuskin: ['species'],
+	extinct_kamel: ['species'],
+	extinct_balorg: ['species'],
+	extinct_imp: ['species'],
+	extinct_seraph: ['species'],
+	extinct_unicorn: ['species'],
+	extinct_junker: ['species', 'perk', 'challenge'],
+}
+
 function createIcon(div, universe, type, item) {
 	if (!type) {
 		let name = div.parent().data('index');
-		let icon = '<svg class="star0 '+(universe == 'star' ? 'normal' : universe)+'" version="1.1" x="0px" y="0px" width="16px" height="16px" viewBox="'+icons[universe].viewbox+'" xml:space="preserve" data-level="0">'+icons[universe].path+'</svg>';
+		let icon = '<svg class="svg star0 '+universe+'" version="1.1" x="0px" y="0px" width="16px" height="16px" viewBox="'+icons[universe].viewbox+'" xml:space="preserve" data-level="0">'+icons[universe].path+'</svg>';
 		let blank = false;
 		if (universe != 'star' || universe != 'normal') {
 			if (universe == 'micro') {
@@ -1430,10 +1539,14 @@ function createIcon(div, universe, type, item) {
 		}
 
 		if (blank == true) {
-			icon = '<svg width="16px" height="16px"></svg>';
+			icon = '<svg class="svg" width="16px" height="16px"></svg>';
 			div.append(icon);
 		}
-		else div.append(icon).children().last().tooltip({ placement: 'right', html: true, 'title': '<b>'+(universe == 'star' ? 'Overall' : universeData[universe].name+' Universe')+'</b><hr class="hr-tip" />Achievement Not Awarded' });
+		else {
+			div.append(icon).children().last().tooltip({ placement: 'right', html: true, 'title': '<b>'+(universe == 'normal' ? 'Overall' : universeData[universe].name+' Universe')+'</b><hr class="hr-tip" />Achievement Not Awarded' });
+			div.parent().addClass(universe).addClass(universe+'Unearned');
+			if (universe == 'normal') div.parent().addClass(universe).addClass('Unearned');
+		}
 	}
 	else {
 		let icon;
@@ -1442,8 +1555,10 @@ function createIcon(div, universe, type, item) {
 				let uniName = universeData[universe].name;
 				let abbrev = universeData[universe].code;
 				let level = item[abbrev];
-				icon = '<svg class="star'+level+' '+(universe == 'star' ? 'normal' : universe)+'" version="1.1" x="0px" y="0px" width="16px" height="16px" viewBox="'+icons[universe].viewbox+'" xml:space="preserve" data-level="'+level+'">'+icons[universe].path+'</svg>';
-				div.append(icon).children().last().tooltip({ placement: 'right', html: true, 'title': '<b>'+(universe == 'star' ? 'Overall' : uniName+' Universe')+'</b><hr class="hr-tip" />'+(level - 1)+' Challenges Completed' });
+				icon = '<svg class="svg star'+level+' '+universe+'" version="1.1" x="0px" y="0px" width="16px" height="16px" viewBox="'+icons[universe].viewbox+'" xml:space="preserve" data-level="'+level+'">'+icons[universe].path+'</svg>';
+				div.append(icon).children().last().tooltip({ placement: 'right', html: true, 'title': '<b>'+(universe == 'normal' ? 'Overall' : uniName+' Universe')+'</b><hr class="hr-tip" />'+(level - 1)+' Challenges Completed' });
+				div.parent().addClass(universe).addClass(universe+(level-1)+'-star')
+				if (universe == 'normal') div.parent().addClass((level-1)+'-star');
 				break;
 			case 'upgrade':
 				icon = $('<svg class="checkmark" version="1.1" x="0px" y="0px" width="16px" height="16px" viewBox="'+icons[universe].viewbox+'" xml:space="preserve">'+icons[universe].path+'</svg>');
@@ -1456,36 +1571,13 @@ function createIcon(div, universe, type, item) {
 	}
 }
 
-function applyFilter(name, filterUniverse, filterEarned, filterStar) {
-	let row = $('#achievementList [data-index="' + name + '"]');
-	let iconDiv = row.children('.col-icon').first();
-	let starLevel = (saveData.achievements[name] && saveData.achievements[name][universeData[filterUniverse].code]) ? saveData.achievements[name][universeData[filterUniverse].code] : 0;
-	let show = true;
-
-	if (filterUniverse != 'all') {
-		if (filterUniverse == 'micro') {
-			show = false;
-			if (filters[name] && filters[name]['only'] && filters[name]['only'] == filterUniverse) show = true;
-		}
-		else {
-			if (filters[name] && filters[name]['only'] && filters[name]['only'] != filterUniverse) show = false;
-			if (filters[name] && filters[name]['not'] && filters[name]['not'] == filterUniverse) show = false;
-		}
-	}
-	if (filterEarned == 'earned' && starLevel == 0) show = false;
-	if (filterEarned != 'unearned' && filterStar > 0 && starLevel != filterStar) show = false;
-	if (filterEarned == 'unearned' && starLevel > 0) show = false;
-
-	if (show == true) row.show();
-	else row.hide();
-
-	$('.filter-highlight').removeClass('filter-highlight');
-	$('.'+filterUniverse).addClass('filter-highlight');
-}
-
 $.each(achievements, function(index, achievement){
 	let html = '';
-	html += '<div class="row" data-index="'+index+'"><div id="a-'+index+'" class="col-icon"></div><div>'+achievement.name+'</div></div>';
+	let aKeywords = '';
+	$.each(keywords[index], function(index, value) {
+		aKeywords += ' '+value;
+	});
+	html += '<div class="row'+aKeywords+'" data-index="'+index+'"><div id="a-'+index+'" class="col-icon"></div><div>'+achievement.name+'</div></div>';
 	$('#achievementList>div').append(html);
 	$('#a-'+index).siblings().first().tooltip({ placement: 'right', 'title': achievement.desc+'<hr class="hr-tip"><span class="small">'+achievement.flair+'</span>', html: true });
 });
@@ -1579,29 +1671,28 @@ $('#load').on('click', function(){
 					}
 					else createIcon(div, 'evil');
 					if (achievement['a']) {
-						createIcon(div, 'anti', 'achievement', achievement);
+						createIcon(div, 'antimatter', 'achievement', achievement);
 						antiComplete++;
 					}
-					else createIcon(div, 'anti');
-					achievement['l'] ? createIcon(div, 'star', 'achievement', achievement) : createIcon(div, 'star');
+					else createIcon(div, 'antimatter');
+					achievement['l'] ? createIcon(div, 'normal', 'achievement', achievement) : createIcon(div, 'normal');
 				}
 				else {
 					createIcon(div, 'heavy');
 					createIcon(div, 'micro');
 					createIcon(div, 'evil');
-					createIcon(div, 'anti');
-					createIcon(div, 'star');
+					createIcon(div, 'antimatter');
+					createIcon(div, 'normal');
 				}
 			}
 		});
 		let achievementTotal = Object.keys(achievements).length;
 		let aColor = (achievementComplete == Object.keys(achievements).length) ? 'yellow' : '';
 		let mColor = (masteryLevel == Object.keys(achievements).length+1) ? 'yellow' : '';
-		let heavyTotal = $('[class^="star"].heavy').length;
-		let microTotal = $('[class^="star"].micro').length;
-		let evilTotal = $('[class^="star"].evil').length;
-		let antiTotal = $('[class^="star"].anti').length;
-		console.log(heavyTotal);
+		let heavyTotal = $('.svg.heavy').length;
+		let microTotal = $('.svg.micro').length;
+		let evilTotal = $('.svg.evil').length;
+		let antiTotal = $('.svg.antimatter').length;
 		let universeTotals = '<p class="universe-totals">Heavy Universe: '+heavyComplete+' of '+heavyTotal+' ('+(heavyComplete/heavyTotal*100).toFixed(2)+'% Complete)<br />';
 		 universeTotals += 'Micro Universe: '+microComplete+' of '+microTotal+' ('+(microComplete/microTotal*100).toFixed(2)+'% Complete)<br />';
 		 universeTotals += 'Evil Universe: '+evilComplete+' of '+evilTotal+' ('+(evilComplete/evilTotal*100).toFixed(2)+'% Complete)<br />';
@@ -1612,7 +1703,7 @@ $('#load').on('click', function(){
 			let div = $('#f-'+index);
 			if (div.length) {
 				featComplete++;
-				(feat > 0) ? createIcon(div, 'star', 'feat', feat) : createIcon(div, 'star');
+				(feat > 0) ? createIcon(div, 'normal', 'feat', feat) : createIcon(div, 'normal');
 			}
 		});
 		let fColor = (featComplete == Object.keys(feats).length) ? 'yellow' : '';
@@ -1625,7 +1716,7 @@ $('#load').on('click', function(){
 				let div = $('#p-'+perkName);
 				if (div.length) {
 					perkComplete++;
-					(perkLevel > 0) ? createIcon(div, 'star', 'perk', perkLevel) : createIcon(div, 'star');
+					(perkLevel > 0) ? createIcon(div, 'normal', 'perk', perkLevel) : createIcon(div, 'normal');
 				}
 			}
 		});
@@ -1644,17 +1735,61 @@ $('#load').on('click', function(){
 		let uColor = (upgradeComplete == Object.keys(upgrades).length) ? 'yellow' : '';
 		$('#crisprList>p').html('<span class="'+uColor+'">'+upgradeComplete+'</span> of <span class="yellow">'+Object.keys(upgrades).length+'</span> ('+(upgradeComplete/Object.keys(upgrades).length*100).toFixed(2)+'% Purchased)');
 
-		$('.filters').show();
+		$('#filterRow').removeClass('d-none');
 	}
 });
 
-$('#universe, #earned, input[name="rating"]').on('change', function(){
-	var checked = $('input[name="rating"]').filter(function(){
-		return $(this).prop('checked');
-	});
-	$('#achievementList .col-icon').each(function(){
-		applyFilter($(this).parent().data('index'), $('#universe').val(), $('#earned').val(), checked.val());
-	});
+// Isotope setup
+var $achieves = $('#achievementList>div').isotope({
+  itemSelector: '.row',
+  layoutMode: 'vertical'
 });
+
+// Store filter for each group
+var checks = { 'general': '*', 'universe': '*', 'rating': '*' };
+$('#filterRow').on('click', '.btn', function(event){
+	var $button = $(event.currentTarget);
+	var $buttonGroup = $button.parents('.btn-group');
+	$buttonGroup.children().removeClass('active');
+	$button.button('toggle');
+	var filterGroup = $buttonGroup.attr('data-filter-group');
+	var buttonAttr = $button.attr('data-filter');
+	switch(filterGroup) {
+		case 'universes':
+			checks['universe'] = buttonAttr;
+			let rating = $('#filterRow').find('.btn-group[data-filter-group="rating"] > .active').data('filter');
+			if (checks['rating'] != '*' && buttonAttr != '*') checks['rating'] = buttonAttr+rating;
+			else if (rating != '*') checks['rating'] = '.'+rating;
+			else checks['rating'] = rating;
+			break;
+		case 'rating':
+			if (checks['universe'] != '*' && buttonAttr != '*') {
+				checks['rating'] = checks['universe']+buttonAttr
+			}
+			else {
+				if (buttonAttr != '*') checks['rating'] = '.'+buttonAttr;
+				else checks['rating'] = buttonAttr;
+			}
+			break;
+		default:
+			checks[filterGroup] = buttonAttr;
+
+	}
+	var filterValue = concatValues(checks);
+	$achieves.isotope({ filter: filterValue });
+
+	$('.filter-highlight').removeClass('filter-highlight');
+	if (checks['universe'] != '*') $('.svg'+checks['universe']).addClass('filter-highlight');
+});
+
+// Flatten object by concatenating values
+function concatValues( obj ) {
+  var value = '';
+  for ( var prop in obj ) {
+    value += obj[ prop ];
+  }
+  return value;
+}
+
 
 });

@@ -110,18 +110,6 @@ a:hover, a:active {
 	max-width: 250px;
 }
 
-label {
-	margin-bottom: 0px;
-}
-
-select {
-	margin-bottom: 3px;
-}
-
-.filters {
-	display: none;
-}
-
 #featList>h2 {
 	color: #ff3860;
 }
@@ -140,4 +128,12 @@ select {
 
 .universe-totals {
 	font-size: 12px;
+}
+
+#filterRow > div {
+	margin-bottom: 5px;
+}
+
+#filterRow .btn {
+	box-shadow: none;
 }
