@@ -1627,6 +1627,14 @@ $('#load').on('click', function(){
 		$(this).show();
 	});
 
+	$.each(achievements, function(index, achievement){
+		let row = $('#achievementList div [data-index="'+index+'"]');
+		row.removeClass().addClass('row');
+		$.each(keywords[index], function(i, value) {
+			row.addClass(value);
+		});
+	});
+
 	let importText = $('#saveTextarea').val();
 	if (importText != '') {
 		let data;
@@ -1775,6 +1783,7 @@ $('#filterRow').on('click', '.btn', function(event){
 			checks[filterGroup] = buttonAttr;
 
 	}
+
 	var filterValue = concatValues(checks);
 	$achieves.isotope({ filter: filterValue });
 
