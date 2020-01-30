@@ -1620,9 +1620,9 @@ $('#load').on('click', function(){
 	$('#crisprList>div>div .col-upgrade').empty();
 	$('#crisprList>p').empty();
 	$('.col-icon svg, .col-upgrade svg').tooltip('dispose');
-	$('#universe').val('all');
-	$('#earned').val('all');
-	$('#rating0').prop("checked", true);
+	$('#allGeneral').click();
+	$('#allUniverses').click();
+	$('#allRatings').click();
 	$('#achievementList div').each(function(){
 		$(this).show();
 	});
