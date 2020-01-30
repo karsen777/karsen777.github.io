@@ -41,6 +41,15 @@ a:hover, a:active {
 	background-color: #2b3232;
 }
 
+#achievementList>div {
+	position: relative;
+	width: 100%;
+}
+
+#achievementList>div>.row {
+	width: 100%;
+}
+
 .col-icon {
 	margin-left: 25px;
 	padding-right: 10px;
