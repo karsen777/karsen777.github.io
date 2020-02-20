@@ -1342,7 +1342,7 @@ const upgrades = {
 const upgradeList = [];
 let i;
 let blackholeDesc = mass_extinctionDesc = creator2Desc = explorerDesc = whitehole2Desc = '';
-let heavyweightDesc = dissipated3Desc = dissipated4Desc = anarchistDesc = '';
+let heavyweightDesc = dissipated3Desc = dissipated4Desc = anarchistDesc = steelenDesc = '';
 let novice1Desc = novice2Desc = journeyman1Desc = journeyman2Desc = minersDesc = '';
 for (i = 1; i <= 5; i++) {
 	blackholeDesc += i * 5;
@@ -1353,6 +1353,8 @@ for (i = 1; i <= 5; i++) {
 	if (i < 5) creator2Desc += ' / ';
 	explorerDesc += '+' + (i);
 	if (i < 5) explorerDesc += ' / ';
+	steelenDesc += i * 2;
+	if (i < 5) steelenDesc += '% / ';
 	whitehole2Desc += (i * 5);
 	if (i < 5) whitehole2Desc += '% / ';
 	heavyweightDesc += (i * 4);
@@ -1373,6 +1375,7 @@ for (i = 1; i <= 5; i++) {
 let dissipated1Desc = [ loc("achieve_perks_dissipated1",[1]) ];
 //let dissipated2Desc = `1kW (${star2}) / +2kw (${star4})`;
 let dissipated2Desc = `1kW (2-star) / +2 (4-star)`;
+let  = [ loc("achieve_perks_dissipated1",[1]) ];
 
 const filters = {
 	vigilante: { only: 'evil' },
@@ -1406,6 +1409,7 @@ const perksDesc = {
 	],
 	miners_dream: loc("achieve_perks_miners_dream",[minersDesc]),
 	explorer: loc("achieve_perks_explorer",[explorerDesc]),
+	steelen: loc("achieve_perks_steelen",[steelenDesc]),
 	extinct_junker: loc("achieve_perks_enlightened"),
 	whitehole: [
 		loc("achieve_perks_whitehole"),
@@ -1454,6 +1458,7 @@ const keywords = {
 	marble: ['universe'],
 	explorer: ['biome', 'reset', 'perk'],
 	joyless: ['progression', 'challenge'],
+	steelen: ['challenge', 'perk'],
 	biome_grassland: ['biome'],
 	biome_oceanic: ['biome'],
 	biome_forest: ['biome'],
