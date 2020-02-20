@@ -1,6 +1,6 @@
 $(function(){
 
-const version = '0.7.20';
+const version = '0.7.24';
 $('#version').text(version);
 
 const global = { race: { species: ''} };
@@ -241,6 +241,11 @@ const achievements = {
         name: loc("achieve_joyless_name"),
         desc: loc("achieve_joyless_desc"),
         flair: loc("achieve_joyless_flair")
+    },
+    steelen: {
+        name: loc("achieve_steelen_name"),
+        desc: loc("achieve_steelen_desc"),
+        flair: loc("achieve_steelen_flair")
     },
     biome_grassland: {
         name: loc("achieve_biome_grassland_name"),
@@ -685,6 +690,11 @@ const feats = {
         desc: loc("feat_supermassive_desc"),
         flair: loc("feat_supermassive_flair")
     },
+    steelem: {
+        name: loc("feat_steelem_name"),
+        desc: loc("feat_steelem_desc"),
+        flair: loc("feat_steelem_flair")
+    },
     rocky_road: {
         name: loc("feat_rocky_road_name"),
         desc: loc("feat_rocky_road_desc"),
@@ -719,6 +729,11 @@ const feats = {
         name: loc("feat_nephilim_name"),
         desc: loc("feat_nephilim_desc"),
         flair: loc("feat_nephilim_flair")
+    },
+    valentine: {
+        name: loc("feat_love_name"),
+        desc: loc("feat_love_desc"),
+        flair: loc("feat_love_flair")
     },
     halloween: {
         name: loc("feat_boo_name"),
