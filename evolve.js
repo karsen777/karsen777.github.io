@@ -832,6 +832,7 @@ const perks = [
 	[ 'extinct_junker', 'achievements' ],
 	[ 'anarchist', 'achievements' ],
 	[ 'explorer', 'achievements' ],
+	[ 'steelen', 'achievements' ],
 	[ 'miners_dream', 'achievements' ],
 	[ 'creator', 'achievements' ],
 	[ 'whitehole', 'achievements' ],
