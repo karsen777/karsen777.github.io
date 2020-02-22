@@ -1458,7 +1458,7 @@ const keywords = {
 	marble: ['universe'],
 	explorer: ['biome', 'reset', 'perk'],
 	joyless: ['progression', 'challenge'],
-	steelen: ['challenge', 'perk'],
+	steelen: ['challenge', 'reset', 'perk'],
 	biome_grassland: ['biome'],
 	biome_oceanic: ['biome'],
 	biome_forest: ['biome'],
@@ -1604,7 +1604,7 @@ $.each(achievements, function(index, achievement){
 });
 $.each(feats, function(index, feat){
 	let html = '';
-	html += '<div class="row"><div id="f-'+index+'" class="col-icon"></div><div>'+feat.name+'</div></div>';
+	html += '<div class="row"><div id="f-'+index+'" class="col-upgrade"></div><div>'+feat.name+'</div></div>';
 	$('#featList>div').append(html);
 	$('#f-'+index).siblings().first().tooltip({ placement: 'right', 'title': feat.desc+'<hr class="hr-tip"><span class="small">'+feat.flair+'</span>', html: true });
 });
@@ -1612,7 +1612,7 @@ $.each(perks, function(index, details){
 	let perkName = details[0];
 	let perk = (details[1] == 'achievements') ? achievements[perkName] : feats[perkName];
 	let html = '';
-	html += '<div class="row"><div id="p-'+perkName+'" class="col-icon"></div><div>'+perk.name+'</div></div>';
+	html += '<div class="row"><div id="p-'+perkName+'" class="col-upgrade"></div><div>'+perk.name+'</div></div>';
 	$('#perkList>div').append(html);
 	let perkBonus = '';
 	if (Array.isArray(perksDesc[perkName])) {
