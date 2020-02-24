@@ -1634,9 +1634,9 @@ $.each(upgrades, function(index, upgrade){
 $('#load').on('click', function(){
 	$('#achievementList>div>div .col-icon').empty();
 	$('#achievementList>p').empty();
-	$('#featList>div>div .col-icon').empty();
+	$('#featList>div>div .col-upgrade').empty();
 	$('#featList>p').empty();
-	$('#perkList>div>div .col-icon').empty();
+	$('#perkList>div>div .col-upgrade').empty();
 	$('#perkList>p').empty();
 	$('#crisprList>div>div .col-upgrade').empty();
 	$('#crisprList>p').empty();
