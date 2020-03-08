@@ -1669,7 +1669,7 @@ $('#load').on('click', function(){
 	if (importText != '') {
 		let data;
 		let masteryLevel = achievementComplete = featComplete = perkComplete = upgradeComplete = 0;
-		let masteryTotal = (Object.keys(achievements).length+1);
+		let masteryTotal = Object.keys(achievements).length;
 		try {
 			data = JSON.parse(LZString.decompressFromBase64(importText));
 			saveData.achievements = data.stats.achieve ? data.stats.achieve : {};
