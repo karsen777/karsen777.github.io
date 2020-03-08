@@ -1,6 +1,6 @@
 $(function(){
 
-const version = '0.7.24';
+const version = '0.7.26';
 $('#version').text(version);
 
 const global = { race: { species: ''} };
@@ -730,6 +730,11 @@ const feats = {
         desc: loc("feat_nephilim_desc"),
         flair: loc("feat_nephilim_flair")
     },
+    friday: {
+        name: loc("feat_friday_name"),
+        desc: loc("feat_friday_desc"),
+        flair: loc("feat_friday_flair")
+    },
     valentine: {
         name: loc("feat_love_name"),
         desc: loc("feat_love_desc"),
@@ -832,6 +837,7 @@ const perks = [
 	[ 'extinct_junker', 'achievements' ],
 	[ 'anarchist', 'achievements' ],
 	[ 'explorer', 'achievements' ],
+	[ 'joyless', 'achievements' ],
 	[ 'steelen', 'achievements' ],
 	[ 'miners_dream', 'achievements' ],
 	[ 'creator', 'achievements' ],
@@ -1341,17 +1347,19 @@ const upgrades = {
 
 const upgradeList = [];
 let i;
-let blackholeDesc = mass_extinctionDesc = creator2Desc = explorerDesc = whitehole2Desc = '';
+let blackholeDesc = mass_extinctionDesc = creatorDesc = explorerDesc = whitehole2Desc = '';
 let heavyweightDesc = dissipated3Desc = dissipated4Desc = anarchistDesc = steelenDesc = '';
-let novice1Desc = novice2Desc = journeyman1Desc = journeyman2Desc = minersDesc = '';
+let novice1Desc = novice2Desc = journeyman1Desc = journeyman2Desc = minersDesc = joylessDesc = '';
 for (i = 1; i <= 5; i++) {
 	blackholeDesc += i * 5;
 	if (i < 5) blackholeDesc += '% / ';
-	mass_extinctionDesc += i + 1;
-	if (i < 5) mass_extinctionDesc += 'x / ';
-	creator2Desc += '+' + (i - 1) * 50;
-	if (i < 5) creator2Desc += ' / ';
-	explorerDesc += '+' + (i);
+	mass_extinctionDesc += '+' + (i - 1) * 50;
+	if (i < 5) mass_extinctionDesc += '% / ';
+	creatorDesc += 'x' + ((i+2)/2);
+	if (i < 5) creatorDesc += ' / ';
+	joylessDesc += i * 2;
+	if (i < 5) joylessDesc += '% / +';
+	explorerDesc += '+' + i;
 	if (i < 5) explorerDesc += ' / ';
 	steelenDesc += i * 2;
 	if (i < 5) steelenDesc += '% / ';
@@ -1402,13 +1410,14 @@ const filters = {
 
 const perksDesc = {
 	blackhole: loc("achieve_perks_blackhole",[blackholeDesc]),
-	mass_extinction: loc("achieve_perks_mass_extinction",[mass_extinctionDesc]),
-	creator: [
-		loc("achieve_perks_creator"),
-		loc("achieve_perks_creator2",[creator2Desc])
+	mass_extinction: [
+		loc("achieve_perks_mass_extinction"),
+		loc("achieve_perks_mass_extinction2",[mass_extinctionDesc]),
 	],
+	creator: loc("achieve_perks_creator",[creatorDesc]),
 	miners_dream: loc("achieve_perks_miners_dream",[minersDesc]),
 	explorer: loc("achieve_perks_explorer",[explorerDesc]),
+	joyless: loc("achieve_perks_joyless",[joylessDesc]),
 	steelen: loc("achieve_perks_steelen",[steelenDesc]),
 	extinct_junker: loc("achieve_perks_enlightened"),
 	whitehole: [
@@ -1683,7 +1692,6 @@ $('#load').on('click', function(){
 					achievementComplete++;
 					let starLevel = achievement.l;
 					masteryLevel += achievement.l;
-					if (index == 'joyless') masteryLevel += achievement.l;
 					if (achievement['h']) {
 						createIcon(div, 'heavy', 'achievement', achievement);
 						heavyComplete++;
