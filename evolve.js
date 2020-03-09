@@ -1353,10 +1353,10 @@ let novice1Desc = novice2Desc = journeyman1Desc = journeyman2Desc = minersDesc =
 for (i = 1; i <= 5; i++) {
 	blackholeDesc += i * 5;
 	if (i < 5) blackholeDesc += '% / ';
-	mass_extinctionDesc += '+' + (i - 1) * 50;
+	mass_extinctionDesc += (i - 1) * 50;
 	if (i < 5) mass_extinctionDesc += '% / ';
-	creatorDesc += 'x' + ((i+2)/2);
-	if (i < 5) creatorDesc += ' / ';
+	creatorDesc += ((i+2)/2);
+	if (i < 5) creatorDesc += 'x / ';
 	joylessDesc += i * 2;
 	if (i < 5) joylessDesc += '% / +';
 	explorerDesc += '+' + i;
