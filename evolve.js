@@ -1449,7 +1449,7 @@ const keywords = {
 	pacifist: ['combat', 'unification'],
 	madagascar_tree: ['fanaticism'],
 	godwin: ['fanaticism'],
-	laser_shark: ['fanaticism'],
+	laser_shark: ['other'],
 	infested: ['fanaticism'],
 	mass_starvation: ['other'],
 	colonist: ['progression'],
