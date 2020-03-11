@@ -1641,29 +1641,7 @@ $.each(upgrades, function(index, upgrade){
 });
 
 $('#load').on('click', function(){
-	$('#achievementList>div>div .col-icon').empty();
-	$('#achievementList>p').empty();
-	$('#featList>div>div .col-upgrade').empty();
-	$('#featList>p').empty();
-	$('#perkList>div>div .col-upgrade').empty();
-	$('#perkList>p').empty();
-	$('#crisprList>div>div .col-upgrade').empty();
-	$('#crisprList>p').empty();
-	$('.col-icon svg, .col-upgrade svg').tooltip('dispose');
-	$('#allGeneral').click();
-	$('#allUniverses').click();
-	$('#allRatings').click();
-	$('#achievementList div').each(function(){
-		$(this).show();
-	});
-
-	$.each(achievements, function(index, achievement){
-		let row = $('#achievementList div [data-index="'+index+'"]');
-		row.removeClass().addClass('row');
-		$.each(keywords[index], function(i, value) {
-			row.addClass(value);
-		});
-	});
+	clearScreen();
 
 	let importText = $('#saveTextarea').val();
 	if (importText != '') {
@@ -1829,5 +1807,34 @@ function concatValues( obj ) {
   return value;
 }
 
+function clearScreen() {
+	$('#achievementList>div>div .col-icon').empty();
+	$('#achievementList>p').empty();
+	$('#featList>div>div .col-upgrade').empty();
+	$('#featList>p').empty();
+	$('#perkList>div>div .col-upgrade').empty();
+	$('#perkList>p').empty();
+	$('#crisprList>div>div .col-upgrade').empty();
+	$('#crisprList>p').empty();
+	$('.col-icon svg, .col-upgrade svg').tooltip('dispose');
+	$('#allGeneral').click();
+	$('#allUniverses').click();
+	$('#allRatings').click();
+	$('#achievementList div').each(function(){
+		$(this).show();
+	});
 
+	$.each(achievements, function(index, achievement){
+		let row = $('#achievementList div [data-index="'+index+'"]');
+		row.removeClass().addClass('row');
+		$.each(keywords[index], function(i, value) {
+			row.addClass(value);
+		});
+	});
+}
+
+
+$('#clear').on('click', function(){
+	clearScreen();
+});
 });

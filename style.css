@@ -150,3 +150,7 @@ a:hover, a:active {
 #filterRow .btn {
 	box-shadow: none;
 }
+
+#buttons .btn:not(:first-child) {
+	margin-top: 10px;
+}
