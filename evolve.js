@@ -1807,7 +1807,7 @@ function concatValues( obj ) {
   return value;
 }
 
-function clearScreen() {
+function clearScreen(clear = false) {
 	$('#achievementList>div>div .col-icon').empty();
 	$('#achievementList>p').empty();
 	$('#featList>div>div .col-upgrade').empty();
@@ -1816,6 +1816,7 @@ function clearScreen() {
 	$('#perkList>p').empty();
 	$('#crisprList>div>div .col-upgrade').empty();
 	$('#crisprList>p').empty();
+	if (clear == true) $('#saveTextarea').val('');
 	$('.col-icon svg, .col-upgrade svg').tooltip('dispose');
 	$('#allGeneral').click();
 	$('#allUniverses').click();
@@ -1835,6 +1836,6 @@ function clearScreen() {
 
 
 $('#clear').on('click', function(){
-	clearScreen();
+	clearScreen(true);
 });
 });
