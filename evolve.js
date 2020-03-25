@@ -1,6 +1,6 @@
 $(function(){
 
-const version = '0.7.26';
+const version = '0.8.0';
 $('#version').text(version);
 
 const global = { race: { species: ''} };
@@ -12,7 +12,7 @@ let saveData = {
 };
 
 const icons = {
-	normal: {
+	standard: {
 		path: '<path d="M320.012 15.662l88.076 215.246L640 248.153 462.525 398.438l55.265 225.9-197.778-122.363-197.778 122.363 55.264-225.9L0 248.153l231.936-17.245z" />',
 		viewbox: '0 0 640 640'
 	},
@@ -75,12 +75,8 @@ function loc(key, variables) {
 }
 
 const universeData = {
-	star: {
-		name: 'Overall',
-		code: 'l'
-	},
-	normal: {
-		name: 'Normal',
+	standard: {
+		name: 'Standard',
 		code: 'l'
 	},
 	antimatter: {
@@ -101,11 +97,22 @@ const universeData = {
 	}
 }
 
+// Achievements/feats from src/achieve.js -> var achievements = {
 const achievements = {
     apocalypse: {
         name: loc("achieve_apocalypse_name"),
         desc: loc("achieve_apocalypse_desc"),
         flair: loc("achieve_apocalypse_flair")
+    },
+    ascended: {
+        name: loc("achieve_ascended_name"),
+        desc: loc("achieve_ascended_desc"),
+        flair: loc("achieve_ascended_flair")
+    },
+    dreaded: {
+        name: loc("achieve_dreaded_name"),
+        desc: loc("achieve_dreaded_desc"),
+        flair: loc("achieve_dreaded_flair")
     },
     anarchist: {
         name: loc("achieve_anarchist_name"),
@@ -141,6 +148,11 @@ const achievements = {
         name: loc("achieve_pacifist_name"),
         desc: loc("achieve_pacifist_desc"),
         flair: loc("achieve_pacifist_flair")
+    },
+    neutralized: {
+        name: loc("achieve_neutralized_name"),
+        desc: loc("achieve_neutralized_desc"),
+        flair: loc("achieve_neutralized_flair")
     },
     madagascar_tree: {
         name: loc("achieve_madagascar_tree_name"),
@@ -656,6 +668,11 @@ const achievements = {
         name: loc("achieve_extinct_junker_name"),
         desc: loc("achieve_extinct_junker_desc"),
         flair: loc("achieve_extinct_junker_flair")
+    },
+    extinct_custom: {
+        name: loc("achieve_extinct_custom_name"),
+        desc: loc("achieve_extinct_custom_desc"),
+        flair: loc("achieve_extinct_custom_flair")
     }
 };
 
@@ -745,6 +762,11 @@ const feats = {
         desc: loc("feat_love_desc"),
         flair: loc("feat_love_flair")
     },
+    leprechaun: {
+        name: loc("feat_leprechaun_name"),
+        desc: loc("feat_leprechaun_desc"),
+        flair: loc("feat_leprechaun_flair")
+    },
     halloween: {
         name: loc("feat_boo_name"),
         desc: loc("feat_boo_desc"),
@@ -779,6 +801,7 @@ const perks = [
 	[ 'journeyman', 'feats' ],
 ];
 
+// CRISPR upgrades from src/arpa.js -> const genePool = {
 const upgrades = {
     genetic_memory: {
         id: 'genes-genetic_memory',
@@ -1191,6 +1214,74 @@ const upgrades = {
             return false;
         }
     },
+    universal: {
+        id: 'genes-universal',
+        title: loc('arpa_genepool_universal_title'),
+        desc: loc('arpa_genepool_universal_desc'),
+        reqs: {challenge:2},
+        grant: ['challenge',3],
+        condition(){
+            return global.race.universe !== 'standard' ? true : false;
+        },
+        cost: 400,
+        effect(){ return crispr_effect($(this)[0].cost); },
+        action(){
+            if (payPlasmids('universal')){
+                return true;
+            }
+            return false;
+        }
+    },
+    standard: {
+        id: 'genes-standard',
+        title: loc('arpa_genepool_standard_title'),
+        desc: loc('arpa_genepool_standard_desc'),
+        reqs: {challenge:3},
+        grant: ['challenge',4],
+        condition(){
+            return global.race.universe !== 'standard' ? true : false;
+        },
+        cost: 2500,
+        effect(){ return crispr_effect($(this)[0].cost); },
+        action(){
+            if (payPlasmids('standard')){
+                return true;
+            }
+            return false;
+        }
+    },
+    mastered: {
+        id: 'genes-mastered',
+        title: loc('arpa_genepool_mastered_title'),
+        desc: loc('arpa_genepool_mastered_desc'),
+        reqs: {challenge:4},
+        grant: ['challenge',5],
+        cost: 4000,
+        effect(){ return crispr_effect($(this)[0].cost); },
+        action(){
+            if (payPlasmids('mastered')){
+                return true;
+            }
+            return false;
+        }
+    },
+    negotiator: {
+        id: 'genes-negotiator',
+        title: loc('arpa_genepool_negotiator_title'),
+        desc: loc('arpa_genepool_negotiator_desc'),
+        reqs: {challenge:2},
+        grant: ['trader',1],
+        cost: 750,
+        effect(){ return crispr_effect($(this)[0].cost); },
+        action(){
+            if (payPlasmids('negotiator')){
+                global.genes['trader'] = 1;
+                vBind({el: `#galaxyTrade`},'update');
+                return true;
+            }
+            return false;
+        }
+    },
     ancients: {
         id: 'genes-ancients',
         title: loc('arpa_genepool_ancients_title'),
@@ -1203,6 +1294,52 @@ const upgrades = {
             if (payPlasmids('ancients')){
                 global.genes['ancients'] = 1;
                 drawTech();
+                return true;
+            }
+            return false;
+        }
+    },
+    faith: {
+        id: 'genes-faith',
+        title: loc('arpa_genepool_faith_title'),
+        desc: loc('arpa_genepool_faith_desc'),
+        reqs: { ancients: 1 },
+        grant: ['ancients',2],
+        cost: 300,
+        effect(){ return crispr_effect($(this)[0].cost); },
+        action(){
+            if (payPlasmids('faith')){
+                global.civic.priest.display = true;
+                return true;
+            }
+            return false;
+        }
+    },
+    acolyte: {
+        id: 'genes-acolyte',
+        title: loc('arpa_genepool_acolyte_title'),
+        desc: loc('arpa_genepool_acolyte_desc'),
+        reqs: { ancients: 2 },
+        grant: ['ancients',3],
+        cost: 900,
+        effect(){ return crispr_effect($(this)[0].cost); },
+        action(){
+            if (payPlasmids('acolyte')){
+                return true;
+            }
+            return false;
+        }
+    },
+    conviction: {
+        id: 'genes-conviction',
+        title: loc('arpa_genepool_conviction_title'),
+        desc: loc('arpa_genepool_conviction_desc'),
+        reqs: { ancients: 3 },
+        grant: ['ancients',4],
+        cost: 2200,
+        effect(){ return crispr_effect($(this)[0].cost); },
+        action(){
+            if (payPlasmids('conviction')){
                 return true;
             }
             return false;
@@ -1225,6 +1362,21 @@ const upgrades = {
             return false;
         }
     },
+    /*preeminence: {
+        id: 'genes-preeminence',
+        title: loc('arpa_genepool_preeminence_title'),
+        desc: loc('arpa_genepool_preeminence_desc'),
+        reqs: {transcendence: 1, challenge:3},
+        grant: ['transcendence',2],
+        cost: 4200,
+        effect(){ return crispr_effect($(this)[0].cost); },
+        action(){
+            if (payPlasmids('preeminence')){
+                return true;
+            }
+            return false;
+        }
+    },*/
     bleeding_effect: {
         id: 'genes-bleeding_effect',
         title: loc('arpa_genepool_bleeding_effect_title'),
@@ -1335,7 +1487,7 @@ const filters = {
 	canceled: { only: 'antimatter' },
 	eviltwin: { only: 'evil' },
 	microbang: { only: 'micro' },
-	whitehole: { only: 'normal' }
+	whitehole: { only: 'standard' }
 }
 
 const perksDesc = {
@@ -1370,6 +1522,8 @@ const perksDesc = {
 
 const keywords = {
 	apocalypse: ['reset'],
+	ascended: ['reset'],
+	dreaded: ['reset'],
 	anarchist: ['reset', 'perk'],
 	squished: ['reset', 'universe'],
 	second_evolution: ['reset', 'fanaticism'],
@@ -1377,6 +1531,7 @@ const keywords = {
 	warmonger: ['combat'],
 	red_tactics: ['combat'],
 	pacifist: ['combat', 'unification'],
+	neutralized: ['combat'],
 	madagascar_tree: ['fanaticism'],
 	godwin: ['fanaticism'],
 	laser_shark: ['other'],
@@ -1480,6 +1635,7 @@ const keywords = {
 	extinct_seraph: ['species', 'universe'],
 	extinct_unicorn: ['species', 'universe'],
 	extinct_junker: ['species', 'perk', 'challenge'],
+	extinct_custom: ['species'],
 }
 
 function createIcon(div, universe, type, item) {
@@ -1487,15 +1643,9 @@ function createIcon(div, universe, type, item) {
 		let name = div.parent().data('index');
 		let icon = '<svg class="svg star0 '+universe+'" version="1.1" x="0px" y="0px" width="16px" height="16px" viewBox="'+icons[universe].viewbox+'" xml:space="preserve" data-level="0">'+icons[universe].path+'</svg>';
 		let blank = false;
-		if (universe != 'normal') {
-			if (universe == 'micro') {
-				blank = true;
-				if (filters[name] && filters[name]['only'] && filters[name]['only'] == universe) blank = false;
-			}
-			else {
-				if (filters[name] && filters[name]['only'] && filters[name]['only'] != universe) blank = true;
-				if (filters[name] && filters[name]['not'] && filters[name]['not'] == universe) blank = true;
-			}
+		if (universe != 'standard') {
+			if (filters[name] && filters[name]['only'] && filters[name]['only'] != universe) blank = true;
+			if (filters[name] && filters[name]['not'] && filters[name]['not'] == universe) blank = true;
 		}
 
 		if (blank == true) {
@@ -1503,9 +1653,9 @@ function createIcon(div, universe, type, item) {
 			div.append(icon);
 		}
 		else {
-			div.append(icon).children().last().tooltip({ placement: 'right', html: true, 'title': '<b>'+(universe == 'normal' ? 'Overall' : universeData[universe].name+' Universe')+'</b><hr class="hr-tip" />Achievement Not Awarded' });
+			div.append(icon).children().last().tooltip({ placement: 'right', html: true, 'title': '<b>'+(universe == 'standard' ? 'Overall' : universeData[universe].name+' Universe')+'</b><hr class="hr-tip" />Achievement Not Awarded' });
 			div.parent().addClass(universe).addClass(universe+'Unearned');
-			if (universe == 'normal') div.parent().addClass(universe).addClass('Unearned');
+			if (universe == 'standard') div.parent().addClass(universe).addClass('Unearned');
 		}
 	}
 	else {
@@ -1516,9 +1666,8 @@ function createIcon(div, universe, type, item) {
 				let abbrev = universeData[universe].code;
 				let level = item[abbrev];
 				icon = '<svg class="svg star'+level+' '+universe+'" version="1.1" x="0px" y="0px" width="16px" height="16px" viewBox="'+icons[universe].viewbox+'" xml:space="preserve" data-level="'+level+'">'+icons[universe].path+'</svg>';
-				div.append(icon).children().last().tooltip({ placement: 'right', html: true, 'title': '<b>'+(universe == 'normal' ? 'Overall' : uniName+' Universe')+'</b><hr class="hr-tip" />'+(level - 1)+' Challenges Completed' });
+				div.append(icon).children().last().tooltip({ placement: 'right', html: true, 'title': '<b>'+uniName+' Universe</b><hr class="hr-tip" />'+(level - 1)+' Challenges Completed' });
 				div.parent().addClass(universe).addClass(universe+(level-1)+'-star')
-				if (universe == 'normal') div.parent().addClass((level-1)+'-star');
 				break;
 			case 'upgrade':
 				icon = $('<svg class="checkmark" version="1.1" x="0px" y="0px" width="16px" height="16px" viewBox="'+icons[universe].viewbox+'" xml:space="preserve">'+icons[universe].path+'</svg>');
@@ -1576,8 +1725,7 @@ $('#load').on('click', function(){
 	let importText = $('#saveTextarea').val();
 	if (importText != '') {
 		let data;
-		let masteryLevel = achievementComplete = featComplete = perkComplete = upgradeComplete = 0;
-		let masteryTotal = Object.keys(achievements).length;
+		let featComplete = perkComplete = upgradeComplete = 0;
 		try {
 			data = JSON.parse(LZString.decompressFromBase64(importText));
 			saveData.achievements = data.stats.achieve ? data.stats.achieve : {};
@@ -1588,6 +1736,7 @@ $('#load').on('click', function(){
 			return false;
 		}
 
+		let standardComplete = 0;
 		let heavyComplete = 0;
 		let microComplete = 0;
 		let antiComplete = 0;
@@ -1597,9 +1746,6 @@ $('#load').on('click', function(){
 			if (div.length) {
 				let achievement = saveData.achievements[index];
 				if (achievement) {
-					achievementComplete++;
-					let starLevel = achievement.l;
-					masteryLevel += achievement.l;
 					if (achievement['h']) {
 						createIcon(div, 'heavy', 'achievement', achievement);
 						heavyComplete++;
@@ -1620,35 +1766,43 @@ $('#load').on('click', function(){
 						antiComplete++;
 					}
 					else createIcon(div, 'antimatter');
-					achievement['l'] ? createIcon(div, 'normal', 'achievement', achievement) : createIcon(div, 'normal');
+					if (achievement['l']) {
+						createIcon(div, 'standard', 'achievement', achievement);
+						standardComplete++;
+					}
+					else createIcon(div, 'standard');
 				}
 				else {
 					createIcon(div, 'heavy');
 					createIcon(div, 'micro');
 					createIcon(div, 'evil');
 					createIcon(div, 'antimatter');
-					createIcon(div, 'normal');
+					createIcon(div, 'standard');
 				}
 			}
 		});
-		let achievementTotal = Object.keys(achievements).length;
-		let aColor = (achievementComplete == Object.keys(achievements).length) ? 'yellow' : '';
-		let mColor = (masteryLevel == Object.keys(achievements).length+1) ? 'yellow' : '';
+		let allComplete = standardComplete + heavyComplete + microComplete + evilComplete + antiComplete;
+
+		let standardTotal = $('.svg.standard').length;
 		let heavyTotal = $('.svg.heavy').length;
 		let microTotal = $('.svg.micro').length;
 		let evilTotal = $('.svg.evil').length;
 		let antiTotal = $('.svg.antimatter').length;
-		let universeTotals = '<p class="universe-totals">Heavy Universe: '+heavyComplete+' of '+heavyTotal+' ('+(heavyComplete/heavyTotal*100).toFixed(2)+'% Complete)<br />';
-		 universeTotals += 'Micro Universe: '+microComplete+' of '+microTotal+' ('+(microComplete/microTotal*100).toFixed(2)+'% Complete)<br />';
-		 universeTotals += 'Evil Universe: '+evilComplete+' of '+evilTotal+' ('+(evilComplete/evilTotal*100).toFixed(2)+'% Complete)<br />';
-		 universeTotals += 'Antimatter Universe: '+antiComplete+' of '+antiTotal+' ('+(antiComplete/antiTotal*100).toFixed(2)+'% Complete)</p>';
-		$('#achievementList>p').html('<span class="'+aColor+'">'+achievementComplete+'</span> of <span class="yellow">'+achievementTotal+'</span> ('+(achievementComplete/achievementTotal*100).toFixed(2)+'% Complete)<br /><span class="'+mColor+'">'+(masteryLevel*.25)+'%</span> of <span class="yellow">'+(masteryTotal*1.25)+'%</span> Mastery'+universeTotals);
+		let allTotal = standardTotal + heavyTotal + microTotal + evilTotal + antiTotal;
+
+		let html = '<span class="'+(allComplete == allTotal ? 'yellow' : '')+'">'+allComplete+'</span> of <span class="yellow">'+allTotal+'</span> Total Achievements<br />'+(allComplete/allTotal*100).toFixed(2)+'% Complete<br /><p class="universe-totals">';
+		html += 'Standard Universe: '+standardComplete+' of '+standardTotal+' (<span class="'+(standardComplete == standardTotal ? 'yellow' : '')+'">'+(standardComplete/standardTotal*100).toFixed(2)+'% Complete</span>)<br />';
+		html += 'Heavy Universe: '+heavyComplete+' of '+heavyTotal+' (<span class="'+(heavyComplete == heavyTotal ? 'yellow' : '')+'">'+(heavyComplete/heavyTotal*100).toFixed(2)+'% Complete</span>)<br />';
+		html += 'Micro Universe: '+microComplete+' of '+microTotal+' (<span class="'+(microComplete == microTotal ? 'yellow' : '')+'">'+(microComplete/microTotal*100).toFixed(2)+'% Complete</span>)<br />';
+		html += 'Evil Universe: '+evilComplete+' of '+evilTotal+' (<span class="'+(evilComplete == evilTotal ? 'yellow' : '')+'">'+(evilComplete/evilTotal*100).toFixed(2)+'% Complete</span>)<br />';
+		html += 'Antimatter Universe: '+antiComplete+' of '+antiTotal+' (<span class="'+(antiComplete == antiTotal ? 'yellow' : '')+'">'+(antiComplete/antiTotal*100).toFixed(2)+'% Complete</span>)</p>';
+		$('#achievementList>p').html(html);
 
 		$.each(saveData.feats, function(index, feat){
 			let div = $('#f-'+index);
 			if (div.length) {
 				featComplete++;
-				(feat > 0) ? createIcon(div, 'normal', 'feat', feat) : createIcon(div, 'normal');
+				(feat > 0) ? createIcon(div, 'standard', 'feat', feat) : createIcon(div, 'standard');
 			}
 		});
 		let fColor = (featComplete == Object.keys(feats).length) ? 'yellow' : '';
@@ -1661,7 +1815,7 @@ $('#load').on('click', function(){
 				let div = $('#p-'+perkName);
 				if (div.length) {
 					perkComplete++;
-					(perkLevel > 0) ? createIcon(div, 'normal', 'perk', perkLevel) : createIcon(div, 'normal');
+					(perkLevel > 0) ? createIcon(div, 'standard', 'perk', perkLevel) : createIcon(div, 'standard');
 				}
 			}
 		});
@@ -1768,4 +1922,5 @@ function clearScreen(clear = false) {
 $('#clear').on('click', function(){
 	clearScreen(true);
 });
+
 });
