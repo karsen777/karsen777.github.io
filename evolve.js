@@ -154,6 +154,11 @@ const achievements = {
         desc: loc("achieve_neutralized_desc"),
         flair: loc("achieve_neutralized_flair")
     },
+    paradise: {
+        name: loc("achieve_paradise_name"),
+        desc: loc("achieve_paradise_desc"),
+        flair: loc("achieve_paradise_flair")
+    },
     madagascar_tree: {
         name: loc("achieve_madagascar_tree_name"),
         desc: loc("achieve_madagascar_tree_desc"),
@@ -677,6 +682,11 @@ const achievements = {
 };
 
 const feats = {
+    utopia: {
+        name: loc("feat_utopia_name"),
+        desc: loc("feat_utopia_desc"),
+        flair: loc("feat_utopia_flair")
+    },
     take_no_advice: {
         name: loc("feat_take_no_advice_name"),
         desc: loc("feat_take_no_advice_desc"),
@@ -696,6 +706,11 @@ const feats = {
         name: loc("feat_the_misery_name"),
         desc: loc("feat_the_misery_desc"),
         flair: loc("feat_the_misery_flair")
+    },
+    garbage_pie: {
+        name: loc("feat_garbage_pie_name"),
+        desc: loc("feat_garbage_pie_desc"),
+        flair: loc("feat_garbage_pie_flair")
     },
     blank_slate: {
         name: loc("feat_blank_slate_name"),
@@ -1532,6 +1547,7 @@ const keywords = {
 	red_tactics: ['combat'],
 	pacifist: ['combat', 'unification'],
 	neutralized: ['combat'],
+	paradise: ['other'],
 	madagascar_tree: ['fanaticism'],
 	godwin: ['fanaticism'],
 	laser_shark: ['other'],
