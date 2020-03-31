@@ -796,6 +796,11 @@ const feats = {
         name: loc("feat_xmas_name"),
         desc: loc("feat_xmas_desc"),
         flair: loc("feat_xmas_flair")
+    },
+    fool: {
+        name: loc("feat_fool_name"),
+        desc: loc("feat_fool_desc"),
+        flair: loc("feat_fool_flair")
     }
 }
 
