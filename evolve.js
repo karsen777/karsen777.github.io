@@ -1,6 +1,6 @@
 $(function(){
 
-const version = '0.8.0';
+const version = '0.8.13';
 $('#version').text(version);
 
 const global = { race: { species: ''} };
@@ -97,7 +97,7 @@ const universeData = {
 	}
 }
 
-// Achievements/feats from src/achieve.js -> var achievements = {
+// Achievements/feats from src/achieve.js -> const achievements = {
 const achievements = {
     apocalypse: {
         name: loc("achieve_apocalypse_name"),
@@ -108,6 +108,11 @@ const achievements = {
         name: loc("achieve_ascended_name"),
         desc: loc("achieve_ascended_desc"),
         flair: loc("achieve_ascended_flair")
+    },
+    technophobe: {
+        name: loc("achieve_technophobe_name"),
+        desc: loc("achieve_technophobe_desc"),
+        flair: loc("achieve_technophobe_flair")
     },
     dreaded: {
         name: loc("achieve_dreaded_name"),
@@ -707,6 +712,11 @@ const feats = {
         desc: loc("feat_the_misery_desc"),
         flair: loc("feat_the_misery_flair")
     },
+    energetic: {
+        name: loc("feat_energetic_name"),
+        desc: loc("feat_energetic_desc"),
+        flair: loc("feat_energetic_flair")
+    },
     garbage_pie: {
         name: loc("feat_garbage_pie_name"),
         desc: loc("feat_garbage_pie_desc"),
@@ -782,6 +792,16 @@ const feats = {
         desc: loc("feat_leprechaun_desc"),
         flair: loc("feat_leprechaun_flair")
     },
+    easter: {
+        name: loc("feat_easter_name"),
+        desc: loc("feat_easter_desc"),
+        flair: loc("feat_easter_flair")
+    },
+    egghunt: {
+        name: loc("feat_egghunt_name"),
+        desc: loc("feat_egghunt_desc"),
+        flair: loc("feat_egghunt_flair")
+    },
     halloween: {
         name: loc("feat_boo_name"),
         desc: loc("feat_boo_desc"),
@@ -817,6 +837,7 @@ const perks = [
 	[ 'blackhole', 'achievements' ],
 	[ 'dissipated', 'achievements' ],
 	[ 'heavyweight', 'achievements' ],
+	[ 'technophobe', 'achievements' ],
 	[ 'novice', 'feats' ],
 	[ 'journeyman', 'feats' ],
 ];
@@ -1296,7 +1317,7 @@ const upgrades = {
         action(){
             if (payPlasmids('negotiator')){
                 global.genes['trader'] = 1;
-                vBind({el: `#galaxyTrade`},'update');
+                updateTrades();
                 return true;
             }
             return false;
@@ -1444,7 +1465,7 @@ const upgrades = {
             }
             return false;
         }
-    }
+    },
 }
 
 const upgradeList = [];
@@ -1452,6 +1473,7 @@ let i;
 let blackholeDesc = mass_extinctionDesc = creatorDesc = explorerDesc = whitehole2Desc = '';
 let heavyweightDesc = dissipated3Desc = dissipated4Desc = anarchistDesc = steelenDesc = '';
 let novice1Desc = novice2Desc = journeyman1Desc = journeyman2Desc = minersDesc = joylessDesc = '';
+let technoDesc5 = '';
 for (i = 1; i <= 5; i++) {
 	blackholeDesc += i * 5;
 	if (i < 5) blackholeDesc += '% / ';
@@ -1481,11 +1503,12 @@ for (i = 1; i <= 5; i++) {
 	if (i < 5) journeyman2Desc += ' / +';
 	minersDesc += i + (i == 5 ? 2 : (i == 4 ? 1 : 0));
 	if (i < 5) minersDesc += ' / ';
+	technoDesc5 += i;
+	if (i < 5) technoDesc5 += ' / +';
 }
-let dissipated1Desc = [ loc("achieve_perks_dissipated1",[1]) ];
+technoDesc5 += ' per universe';
 //let dissipated2Desc = `1kW (${star2}) / +2kw (${star4})`;
 let dissipated2Desc = `1kW (2-star) / +2 (4-star)`;
-let  = [ loc("achieve_perks_dissipated1",[1]) ];
 
 const filters = {
 	vigilante: { only: 'evil' },
@@ -1534,6 +1557,13 @@ const perksDesc = {
 		loc("achieve_perks_dissipated4",[1])
 	],
 	anarchist: loc("achieve_perks_anarchist",[anarchistDesc]),
+	technophobe: [
+		loc("achieve_perks_technophobe1",[25]),
+		loc("achieve_perks_technophobe2",['+']),
+		loc("achieve_perks_technophobe3a",['bonus']),
+		loc("achieve_perks_technophobe4",[10]),
+		loc("achieve_perks_technophobe5",[technoDesc5])
+	],
 	novice: loc("achieve_perks_novice",[novice1Desc, novice2Desc]),
 	journeyman: [
 		loc("achieve_perks_journeyman2",[journeyman1Desc, journeyman2Desc]),
@@ -1543,6 +1573,7 @@ const perksDesc = {
 const keywords = {
 	apocalypse: ['reset'],
 	ascended: ['reset'],
+	technophobe: ['reset', 'challenge', 'perk'],
 	dreaded: ['reset'],
 	anarchist: ['reset', 'perk'],
 	squished: ['reset', 'universe'],
@@ -1702,26 +1733,23 @@ function createIcon(div, universe, type, item) {
 }
 
 $.each(achievements, function(index, achievement){
-	let html = '';
 	let aKeywords = '';
 	$.each(keywords[index], function(index, value) {
 		aKeywords += ' '+value;
 	});
-	html += '<div class="row'+aKeywords+'" data-index="'+index+'"><div id="a-'+index+'" class="col-icon"></div><div>'+achievement.name+'</div></div>';
+	let html = '<div class="row'+aKeywords+'" data-index="'+index+'"><div id="a-'+index+'" class="col-icon"></div><div>'+achievement.name+'</div></div>';
 	$('#achievementList>div').append(html);
 	$('#a-'+index).siblings().first().tooltip({ placement: 'right', 'title': achievement.desc+'<hr class="hr-tip"><span class="small">'+achievement.flair+'</span>', html: true });
 });
 $.each(feats, function(index, feat){
-	let html = '';
-	html += '<div class="row"><div id="f-'+index+'" class="col-upgrade"></div><div>'+feat.name+'</div></div>';
+	let html = '<div class="row"><div id="f-'+index+'" class="col-upgrade"></div><div>'+feat.name+'</div></div>';
 	$('#featList>div').append(html);
 	$('#f-'+index).siblings().first().tooltip({ placement: 'right', 'title': feat.desc+'<hr class="hr-tip"><span class="small">'+feat.flair+'</span>', html: true });
 });
 $.each(perks, function(index, details){
 	let perkName = details[0];
 	let perk = (details[1] == 'achievements') ? achievements[perkName] : feats[perkName];
-	let html = '';
-	html += '<div class="row"><div id="p-'+perkName+'" class="col-upgrade"></div><div>'+perk.name+'</div></div>';
+	let html = '<div class="row"><div id="p-'+perkName+'" class="col-upgrade"></div><div>'+perk.name+'</div></div>';
 	$('#perkList>div').append(html);
 	let perkBonus = '';
 	if (Array.isArray(perksDesc[perkName])) {
@@ -1734,10 +1762,9 @@ $.each(perks, function(index, details){
 });
 $.each(upgrades, function(index, upgrade){
 	upgradeList.push(index);
-	let html = '';
-	html += '<div class="row"><div id="g-'+index+'" class="col-upgrade"></div><div>'+upgrade.title+' <span class="small">('+upgrade.grant[0]+' '+upgrade.grant[1]+')</span></div></div>';
+	let html = '<div class="row"><div id="g-'+index+'" class="col-upgrade"></div><div>'+upgrade.title+' <span class="small">('+upgrade.grant[0]+' '+upgrade.grant[1]+')</span></div></div>';
 	$('#crisprList>div').append(html);
-	$('#g-'+index).siblings().first().tooltip({ placement: 'right', 'title': upgrade.title+'<hr class="hr-tip"><span class="small">'+upgrade.desc+'</span>', html: true });
+	$('#g-'+index).siblings().first().tooltip({ placement: 'right', 'title': upgrade.title+'<hr class="hr-tip">'+upgrade.cost+' '+(index == 'bleeding_effect' ? 'Anti-Plasmids' : 'Plasmids')+'<hr class="hr-tip"><span class="small">'+upgrade.desc+'</span>', html: true });
 });
 
 $('#load').on('click', function(){
