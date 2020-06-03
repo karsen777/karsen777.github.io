@@ -1565,7 +1565,8 @@ const filters = {
 	canceled: { only: 'antimatter' },
 	eviltwin: { only: 'evil' },
 	microbang: { only: 'micro' },
-	whitehole: { only: 'standard' }
+	whitehole: { only: 'standard' },
+    double_density: { only: 'heavy' }
 }
 
 const perksDesc = {
