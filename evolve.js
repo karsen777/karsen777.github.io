@@ -1,6 +1,6 @@
 $(function(){
 
-const version = '0.8.17';
+const version = '0.9.0';
 $('#version').text(version);
 
 const global = { race: { species: ''} };
@@ -163,6 +163,11 @@ const achievements = {
         name: loc("achieve_paradise_name"),
         desc: loc("achieve_paradise_desc"),
         flair: loc("achieve_paradise_flair")
+    },
+    scrooge: {
+        name: loc("achieve_scrooge_name"),
+        desc: loc("achieve_scrooge_desc"),
+        flair: loc("achieve_scrooge_flair")
     },
     madagascar_tree: {
         name: loc("achieve_madagascar_tree_name"),
@@ -358,6 +363,26 @@ const achievements = {
         name: loc("achieve_dissipated_name"),
         desc: loc("achieve_dissipated_desc"),
         flair: loc("achieve_dissipated_flair")
+    },
+    shaken: {
+        name: loc("achieve_shaken_name"),
+        desc: loc("achieve_shaken_desc"),
+        flair: loc("achieve_shaken_flair")
+    },
+    iron_will: {
+        name: loc("achieve_iron_will_name"),
+        desc: loc("achieve_iron_will_desc"),
+        flair: loc("achieve_iron_will_flair")
+    },
+    failed_history: {
+        name: loc("achieve_failed_history_name"),
+        desc: loc("achieve_failed_history_desc"),
+        flair: loc("achieve_failed_history_flair")
+    },
+    blacken_the_sun: {
+        name: loc("achieve_blacken_the_sun_name"),
+        desc: loc("achieve_blacken_the_sun_desc"),
+        flair: loc("achieve_blacken_the_sun_flair")
     },
     genus_humanoid: {
         name: loc("achieve_genus_humanoid_name"),
@@ -604,11 +629,11 @@ const achievements = {
         desc: loc("achieve_extinct_cacti_desc"),
         flair: loc("achieve_extinct_cacti_flair")
     },
-    /*extinct_pinguicula: {
+    extinct_pinguicula: {
         name: loc("achieve_extinct_pinguicula_name"),
         desc: loc("achieve_extinct_pinguicula_desc"),
         flair: loc("achieve_extinct_pinguicula_flair")
-    },*/
+    },
     extinct_sporgar: {
         name: loc("achieve_extinct_sporgar_name"),
         desc: loc("achieve_extinct_sporgar_desc"),
@@ -871,6 +896,8 @@ const perks = [
 	[ 'whitehole', 'achievements' ],
 	[ 'blackhole', 'achievements' ],
 	[ 'dissipated', 'achievements' ],
+	[ 'iron_will', 'achievements' ],
+	[ 'failed_history', 'achievements' ],
 	[ 'heavyweight', 'achievements' ],
 	[ 'technophobe', 'achievements' ],
 	[ 'novice', 'feats' ],
@@ -1592,6 +1619,14 @@ const perksDesc = {
 		loc("achieve_perks_dissipated3",[1]),
 		loc("achieve_perks_dissipated4",[1])
 	],
+    iron_will: [
+		loc("achieve_perks_iron_will1",[0.15]),
+		loc("achieve_perks_iron_will2",[10]),
+		loc("achieve_perks_iron_will3",[6]),
+		loc("achieve_perks_iron_will4",[1]),
+		loc("achieve_perks_iron_will5")
+    ],
+	failed_history: loc("achieve_perks_failed_history",[1]),
 	anarchist: loc("achieve_perks_anarchist",[anarchistDesc]),
 	technophobe: [
 		loc("achieve_perks_technophobe1",[25]),
