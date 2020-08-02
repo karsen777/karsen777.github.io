@@ -574,10 +574,10 @@ const achievements = {
         desc: loc("achieve_extinct_gnome_desc"),
         flair: loc("achieve_extinct_gnome_flair")
     },
-    extinct_orge: {
-        name: loc("achieve_extinct_orge_name"),
-        desc: loc("achieve_extinct_orge_desc"),
-        flair: loc("achieve_extinct_orge_flair")
+    extinct_ogre: {
+        name: loc("achieve_extinct_ogre_name"),
+        desc: loc("achieve_extinct_ogre_desc"),
+        flair: loc("achieve_extinct_ogre_flair")
     },
     extinct_cyclops: {
         name: loc("achieve_extinct_cyclops_name"),
@@ -1857,7 +1857,7 @@ const keywords = {
 	extinct_kobold: ['species'],
 	extinct_goblin: ['species'],
 	extinct_gnome: ['species'],
-	extinct_orge: ['species'],
+	extinct_ogre: ['species'],
 	extinct_cyclops: ['species'],
 	extinct_troll: ['species'],
 	extinct_tortoisan: ['species'],
