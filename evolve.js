@@ -1,6 +1,6 @@
 $(function(){
 
-const version = '0.9.11';
+const version = '0.9.12';
 $('#version').text(version);
 
 const global = { race: { species: ''} };
@@ -781,6 +781,11 @@ const feats = {
         name: loc("feat_garbage_pie_name"),
         desc: loc("feat_garbage_pie_desc"),
         flair: loc("feat_garbage_pie_flair")
+    },
+    finish_line: {
+        name: loc("feat_finish_line_name"),
+        desc: loc("feat_finish_line_desc"),
+        flair: loc("feat_finish_line_flair")
     },
     blank_slate: {
         name: loc("feat_blank_slate_name"),
