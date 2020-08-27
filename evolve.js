@@ -905,6 +905,7 @@ const perks = [
 	[ 'failed_history', 'achievements' ],
 	[ 'heavyweight', 'achievements' ],
 	[ 'technophobe', 'achievements' ],
+	[ 'ascended', 'achievements' ],
 	[ 'novice', 'feats' ],
 	[ 'journeyman', 'feats' ],
 ];
@@ -1761,6 +1762,9 @@ const perksDesc = {
 		'4 Star: '+loc("achieve_perks_technophobe4",[10]),
 		loc("achieve_perks_technophobe5",[technoDesc5]).substring(loc("achieve_perks_technophobe5",[technoDesc5]).length-1, 1)+' per star level'
 	],
+    ascended: [
+        '+1 gene during custom species creation per star level per universe (max of +5 genes per universe). This perk is not currently listed on the stats page in-game.'
+    ],
 	novice: loc("achieve_perks_novice",[novice1Desc, novice2Desc]),
 	journeyman: [
 		loc("achieve_perks_journeyman2",[journeyman1Desc, journeyman2Desc]),
