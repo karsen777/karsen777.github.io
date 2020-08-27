@@ -1753,11 +1753,13 @@ const perksDesc = {
 	failed_history: loc("achieve_perks_failed_history",[1]),
 	anarchist: loc("achieve_perks_anarchist",[anarchistDesc]),
 	technophobe: [
-		loc("achieve_perks_technophobe1",[25]),
-		loc("achieve_perks_technophobe2",['']),
-		loc("achieve_perks_technophobe3a",['bonus']),
-		loc("achieve_perks_technophobe4",[10]),
-		loc("achieve_perks_technophobe5",[technoDesc5])
+		'0 Star: '+loc("achieve_perks_technophobe1",[25]),
+		'1 Star: '+loc("achieve_perks_technophobe2",[10]),
+		'2 Star: '+loc("achieve_perks_technophobe3a",['bonus'])+' (1 per universe completion)',
+		'3 Star: Additional '+loc("achieve_perks_technophobe2",[15]),
+		'4 Star: +5% Thermal Collector Efficiency per 3-star achievement in non-standard universes',
+		'4 Star: '+loc("achieve_perks_technophobe4",[10]),
+		loc("achieve_perks_technophobe5",[technoDesc5]).substring(loc("achieve_perks_technophobe5",[technoDesc5]).length-1, 1)+' per star level'
 	],
 	novice: loc("achieve_perks_novice",[novice1Desc, novice2Desc]),
 	journeyman: [
