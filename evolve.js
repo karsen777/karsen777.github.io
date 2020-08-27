@@ -1693,7 +1693,6 @@ for (i = 1; i <= 5; i++) {
 	technoDesc5 += i;
 	if (i < 5) technoDesc5 += ' / +';
 }
-technoDesc5 += ' per universe';
 //let dissipated2Desc = `1kW (${star2}) / +2kw (${star4})`;
 let dissipated2Desc = `1kW (2-star) / +2 (4-star)`;
 
@@ -1755,7 +1754,7 @@ const perksDesc = {
 	anarchist: loc("achieve_perks_anarchist",[anarchistDesc]),
 	technophobe: [
 		loc("achieve_perks_technophobe1",[25]),
-		loc("achieve_perks_technophobe2",['+']),
+		loc("achieve_perks_technophobe2",['']),
 		loc("achieve_perks_technophobe3a",['bonus']),
 		loc("achieve_perks_technophobe4",[10]),
 		loc("achieve_perks_technophobe5",[technoDesc5])
