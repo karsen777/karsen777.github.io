@@ -1,6 +1,6 @@
 $(function(){
 
-const version = '0.9.12';
+const version = '1.0.3';
 $('#version').text(version);
 
 const global = { race: { species: ''} };
@@ -35,6 +35,10 @@ const icons = {
 	checkmark: {
 		path: '<path d="M7.629,14.566c0.125,0.125,0.291,0.188,0.456,0.188c0.164,0,0.329-0.062,0.456-0.188l8.219-8.221c0.252-0.252,0.252-0.659,0-0.911c-0.252-0.252-0.659-0.252-0.911,0l-7.764,7.763L4.152,9.267c-0.252-0.251-0.66-0.251-0.911,0c-0.252,0.252-0.252,0.66,0,0.911L7.629,14.566z" />',
 		viewbox: '0 0 20 20'
+	},
+	magic: {
+		path: '<path d="m 2077.0957,2355.0556 c -24.8548,-6.6306 -43.8442,-12.4931 -65.1438,-20.1115 -171.2303,-61.2458 -332.546,-186.5828 -484.656,-376.562 -106.9479,-133.5736 -211.9033,-304.0752 -307.5304,-499.5874 -70.9505,-145.0603 -137.2376,-301.6744 -201.0755,-475.07329 -4.0445,-10.9859 -7.4891,-20.1129 -7.6546,-20.2824 -0.1656,-0.1694 -2.0374,1.7618 -4.1597,4.2917 -41.97221,50.03289 -102.85691,112.12769 -165.25321,168.53769 -153.4012,138.6841 -322.8342,254.6704 -451.2868,308.9308 -4.8375,2.0435 -9.6944,4.102 -10.793,4.5744 l -1.9977,0.8591 14.4133,7.0194 c 72.3515,35.2357 143.3639,78.5554 206.1228,125.7414 218.7562,164.4739 368.1707,393.9487 437.81411,672.4065 3.7109,14.8375 9.1943,38.7303 9.0117,39.2665 -0.069,0.2024 -1.3235,-3.0502 -2.788,-7.228 -74.09121,-211.3582 -207.71511,-385.1177 -394.71211,-513.2685 -102.107,-69.9749 -219.4845,-126.1019 -348.488,-166.6383 -76.1077,-23.9151 -155.9429,-42.2005 -232.883496,-53.3396 -6.991,-1.0121 -12.8528,-1.8883 -13.0261,-1.947 -0.1733,-0.059 2.0738,-1.6288 4.9936,-3.4891 2.9198,-1.8603 15.625,-10.0516 28.2339,-18.2031 204.092496,-131.9427 358.291896,-247.07 478.472596,-357.2338 37.0992,-34.0071 77.0506,-73.8638 107.6314,-107.3762 86.2451,-94.51319 148.9362,-188.57859 189.3356,-284.08999 30.7863,-72.7845 49.1302,-147.8337 55.0585,-225.2576 0.8677,-11.3324 1.6179,-24.3907 1.6179,-28.1635 l 0,-2.8677 -2.3833,-0.2589 c -5.6397,-0.6126 -53.3922,-2.328 -84.3238,-3.0291 -26.1322,-0.5923 -105.9829,-0.2965 -125.748,0.4658 -35.3648,1.3639 -61.1426,2.7941 -86.7072,4.8105 -195.6367,15.431 -343.0035,61.1297 -446.9275,138.593 -2.4968,1.8611 -4.029,2.8664 -3.4048,2.2341 0.9758,-0.9885 397.2225,-336.9788 399.0477,-338.3654 0.4983,-0.3785 8.2687,0.05 30.6293,1.691 273.5285,20.0676 411.83311,27.9616 556.33281,31.7538 29.6737,0.7788 110.952,1.0595 138.2321,0.4775 83.5286,-1.7821 143.7695,-6.6707 194.0695,-15.7487 47.0041,-8.4831 83.1621,-21.2812 103.3974,-36.5973 1.6154,-1.2226 2.9812,-2.1619 3.0353,-2.0872 0.054,0.075 -0.079,2.1785 -0.2952,4.6753 -0.578,6.6693 -0.5481,29.498 0.048,36.3171 3.3368,38.2002 14.0507,70.8483 33.8884,103.2667 18.8519,30.8073 47.6861,61.0826 82.1419,86.2473 37.3245,27.2597 81.564,49.9843 131.8765,67.7412 4.8688,1.7184 8.2555,3.0024 7.5259,2.8535 -0.7295,-0.1489 -6.3473,-1.3924 -12.484,-2.7634 -39.6642,-8.861 -104.6887,-20.5993 -168.0021,-30.328 -137.3768,-21.1093 -273.1583,-35.4146 -362.8049,-38.2235 l -9.8479,-0.3086 -0.224,1.0898 c -0.1233,0.5995 -0.335,2.5199 -0.4706,4.2677 -1.3397,17.2691 -1.7023,22.4205 -2.2846,32.4584 -2.3935,41.2643 -2.3955,89.1364 -0.01,134.8273 11.3803,217.5701 77.3475,473.27869 189.8401,735.87559 89.2575,208.3584 210.5193,422.3508 332.3606,586.5215 22.7139,30.605 33.0709,42.8702 44.5166,52.7187 25.6187,22.0437 46.811,23.8716 65.2335,5.6265 19.5207,-19.3327 34.7161,-60.9422 45.5423,-124.7077 19.3386,-113.9042 23.2932,-297.6572 10.9059,-506.7671 -4.6678,-78.7985 -10.1013,-140.5522 -20.8699,-237.1961 -5.9357,-53.2693 -7.4546,-65.7004 -8.6502,-70.7914 -4.7369,-20.171 -27.3114,-47.5028 -65.7926,-79.6576 -11.906,-9.9486 -20.1748,-16.4224 -39.1544,-30.6551 -8.4267,-6.3191 -15.3189,-11.6171 -15.3159,-11.7734 0,-0.1563 1.2797,-0.9816 2.8373,-1.8339 14.6036,-7.9917 42.9197,-26.1494 64.2088,-41.17369 35.0761,-24.7546 77.4208,-59.2093 108.4143,-88.2139 58.9609,-55.1774 106.4613,-109.4316 139.8321,-159.7139 2.693,-4.0578 4.9524,-7.3218 5.0209,-7.2532 0.069,0.068 -0.9793,4.6953 -2.3284,10.2819 -52.0714,215.624 -73.4586,458.30359 -63.0753,715.71049 8.1008,200.8217 36.667,415.9599 82.2909,619.7502 l 2.6625,11.8924 -4.124,2.8336 c -25.7438,17.6888 -44.4201,32.0283 -57.3292,44.017 -19.4405,18.0544 -30.6873,35.3946 -36.0405,55.5665 -3.2336,12.1849 -4.2393,21.7435 -4.2035,39.9489 0.043,21.9591 1.571,38.7035 9.4024,103.0498 1.3371,10.9859 2.4091,19.9949 2.3823,20.0199 -0.027,0.025 -1.8874,-0.445 -4.1345,-1.0444 z m 326.7144,-985.6489 c -17.4427,-32.7693 -52.6734,-76.4714 -96.8446,-120.1314 -30.3662,-30.0148 -57.7931,-52.8046 -81.5396,-67.7535 -6.8082,-4.2859 -19.6404,-11.0063 -22.8544,-11.9693 -0.9739,-0.2918 -1.7706,-0.6524 -1.7706,-0.8014 0,-0.149 1.2767,-0.754 2.8373,-1.3444 8.1023,-3.0654 22.7254,-11.5869 35.2957,-20.5684 21.4993,-15.3612 43.2465,-34.1516 68.6986,-59.358 42.609,-42.1976 76.3979,-83.8447 94.6619,-116.67699 2.2626,-4.0672 4.2245,-7.6252 4.36,-7.9065 0.1826,-0.3795 0.3097,-0.3795 0.4923,0 0.1354,0.2813 2.0845,3.8162 4.3314,7.8552 18.2956,32.88899 52.1844,74.66389 94.6871,116.72119 25.6446,25.3759 47.2008,44.0026 68.702,59.3651 12.5703,8.9815 27.1934,17.503 35.2957,20.5684 1.5605,0.5904 2.8373,1.1777 2.8373,1.3051 0,0.1274 -1.2768,0.7145 -2.8373,1.305 -1.5605,0.5904 -5.6973,2.5407 -9.1928,4.334 -24.7032,12.6736 -57.8306,39.0407 -94.1346,74.9245 -44.1711,43.66 -79.4018,87.3621 -96.8445,120.1314 -1.5749,2.9588 -2.9656,5.3796 -3.0904,5.3796 -0.1249,0 -1.5156,-2.4208 -3.0905,-5.3796 z M 166.36129,670.71331 c 0.452,-0.4994 0.9239,-0.9079 1.0487,-0.9079 0.1248,0 -0.1428,0.4085 -0.5947,0.9079 -0.4519,0.4993 -0.9238,0.9079 -1.0487,0.9079 -0.1248,0 0.1428,-0.4086 0.5947,-0.9079 z" />',
+		viewbox: '0 0 2666 2666'
 	}
 };
 
@@ -94,658 +98,56 @@ const universeData = {
 	micro: {
 		name: 'Micro',
 		code: 'm'
+	},
+	magic: {
+		name: 'Magic',
+		code: 'mg'
 	}
 }
 
-// Achievements/feats from src/achieve.js -> const achievements = {
-const achievements = {
-    apocalypse: {
-        name: loc("achieve_apocalypse_name"),
-        desc: loc("achieve_apocalypse_desc"),
-        flair: loc("achieve_apocalypse_flair")
-    },
-    ascended: {
-        name: loc("achieve_ascended_name"),
-        desc: loc("achieve_ascended_desc"),
-        flair: loc("achieve_ascended_flair")
-    },
-    technophobe: {
-        name: loc("achieve_technophobe_name"),
-        desc: loc("achieve_technophobe_desc"),
-        flair: loc("achieve_technophobe_flair")
-    },
-    dreaded: {
-        name: loc("achieve_dreaded_name"),
-        desc: loc("achieve_dreaded_desc"),
-        flair: loc("achieve_dreaded_flair")
-    },
-    anarchist: {
-        name: loc("achieve_anarchist_name"),
-        desc: loc("achieve_anarchist_desc"),
-        flair: loc("achieve_anarchist_flair")
-    },
-    squished: {
-        name: loc("achieve_squished_name"),
-        desc: loc("achieve_squished_desc"),
-        flair: loc("achieve_squished_flair")
-    },
-    second_evolution: {
-        name: loc("achieve_second_evolution_name"),
-        desc: loc("achieve_second_evolution_desc"),
-        flair: loc("achieve_second_evolution_flair")
-    },
-    blackhole: {
-        name: loc("achieve_blackhole_name"),
-        desc: loc("achieve_blackhole_desc"),
-        flair: loc("achieve_blackhole_flair")
-    },
-    warmonger: {
-        name: loc("achieve_warmonger_name"),
-        desc: loc("achieve_warmonger_desc"),
-        flair: loc("achieve_warmonger_flair")
-    },
-    red_tactics: {
-        name: loc("achieve_red_tactics_name"),
-        desc: loc("achieve_red_tactics_desc"),
-        flair: loc("achieve_red_tactics_flair")
-    },
-    pacifist: {
-        name: loc("achieve_pacifist_name"),
-        desc: loc("achieve_pacifist_desc"),
-        flair: loc("achieve_pacifist_flair")
-    },
-    neutralized: {
-        name: loc("achieve_neutralized_name"),
-        desc: loc("achieve_neutralized_desc"),
-        flair: loc("achieve_neutralized_flair")
-    },
-    paradise: {
-        name: loc("achieve_paradise_name"),
-        desc: loc("achieve_paradise_desc"),
-        flair: loc("achieve_paradise_flair")
-    },
-    scrooge: {
-        name: loc("achieve_scrooge_name"),
-        desc: loc("achieve_scrooge_desc"),
-        flair: loc("achieve_scrooge_flair")
-    },
-    madagascar_tree: {
-        name: loc("achieve_madagascar_tree_name"),
-        desc: loc("achieve_madagascar_tree_desc"),
-        flair: loc("achieve_madagascar_tree_flair")
-    },
-    godwin: {
-        name: loc("achieve_godwin_name"),
-        desc: loc("achieve_godwin_desc"),
-        flair: loc("achieve_godwin_flair")
-    },
-    laser_shark: {
-        name: loc("achieve_laser_shark_name"),
-        desc: loc("achieve_laser_shark_desc"),
-        flair: loc("achieve_laser_shark_flair")
-    },
-    infested: {
-        name: loc("achieve_infested_name"),
-        desc: loc("achieve_infested_desc"),
-        flair: loc("achieve_infested_flair")
-    },
-    mass_starvation: {
-        name: loc("achieve_mass_starvation_name"),
-        desc: loc("achieve_mass_starvation_desc"),
-        flair: loc("achieve_mass_starvation_flair")
-    },
-    colonist: {
-        name: loc("achieve_colonist_name"),
-        desc: loc("achieve_colonist_desc"),
-        flair: loc("achieve_colonist_flair",[global.race.species])
-    },
-    world_domination: {
-        name: loc("achieve_world_domination_name"),
-        desc: loc("achieve_world_domination_desc"),
-        flair: loc("achieve_world_domination_flair")
-    },
-    illuminati: {
-        name: loc("achieve_illuminati_name"),
-        desc: loc("achieve_illuminati_desc"),
-        flair: loc("achieve_illuminati_flair")
-    },
-    syndicate: {
-        name: loc("achieve_syndicate_name"),
-        desc: loc("achieve_syndicate_desc"),
-        flair: loc("achieve_syndicate_flair")
-    },
-    cult_of_personality: {
-        name: loc("achieve_cult_of_personality_name"),
-        desc: loc("achieve_cult_of_personality_desc"),
-        flair: loc("achieve_cult_of_personality_flair")
-    },
-    double_density: {
-        name: loc("achieve_double_density_name"),
-        desc: loc("achieve_double_density_desc"),
-        flair: loc("achieve_double_density_flair")
-    },
-    doomed: {
-        name: loc("achieve_doomed_name"),
-        desc: loc("achieve_doomed_desc"),
-        flair: loc("achieve_doomed_flair")
-    },
-    pandemonium: {
-        name: loc("achieve_pandemonium_name"),
-        desc: loc("achieve_pandemonium_desc"),
-        flair: loc("achieve_pandemonium_flair")
-    },
-    blood_war: {
-        name: loc("achieve_blood_war_name"),
-        desc: loc("achieve_blood_war_desc"),
-        flair: loc("achieve_blood_war_flair")
-    },
-    cross: {
-        name: loc("achieve_cross_name"),
-        desc: loc("achieve_cross_desc"),
-        flair: loc("achieve_cross_flair")
-    },
-    landfill: {
-        name: loc("achieve_landfill_name"),
-        desc: loc("achieve_landfill_desc"),
-        flair: loc("achieve_landfill_flair")
-    },
-    seeder: {
-        name: loc("achieve_seeder_name"),
-        desc: loc("achieve_seeder_desc"),
-        flair: loc("achieve_seeder_flair")
-    },
-    macro: {
-        name: loc("achieve_macro_name"),
-        desc: loc("achieve_macro_desc"),
-        flair: loc("achieve_macro_flair")
-    },
-    marble: {
-        name: loc("achieve_marble_name"),
-        desc: loc("achieve_marble_desc"),
-        flair: loc("achieve_marble_flair")
-    },
-    explorer: {
-        name: loc("achieve_biome_explorer_name"),
-        desc: loc("achieve_biome_explorer_desc"),
-        flair: loc("achieve_biome_explorer_flair")
-    },
-    joyless: {
-        name: loc("achieve_joyless_name"),
-        desc: loc("achieve_joyless_desc"),
-        flair: loc("achieve_joyless_flair")
-    },
-    steelen: {
-        name: loc("achieve_steelen_name"),
-        desc: loc("achieve_steelen_desc"),
-        flair: loc("achieve_steelen_flair")
-    },
-    biome_grassland: {
-        name: loc("achieve_biome_grassland_name"),
-        desc: loc("achieve_biome_grassland_desc"),
-        flair: loc("achieve_biome_grassland_flair")
-    },
-    biome_oceanic: {
-        name: loc("achieve_biome_oceanic_name"),
-        desc: loc("achieve_biome_oceanic_desc"),
-        flair: loc("achieve_biome_oceanic_flair")
-    },
-    biome_forest: {
-        name: loc("achieve_biome_forest_name"),
-        desc: loc("achieve_biome_forest_desc"),
-        flair: loc("achieve_biome_forest_flair")
-    },
-    biome_desert: {
-        name: loc("achieve_biome_desert_name"),
-        desc: loc("achieve_biome_desert_desc"),
-        flair: loc("achieve_biome_desert_flair")
-    },
-    biome_volcanic: {
-        name: loc("achieve_biome_volcanic_name"),
-        desc: loc("achieve_biome_volcanic_desc"),
-        flair: loc("achieve_biome_volcanic_flair")
-    },
-    biome_tundra: {
-        name: loc("achieve_biome_tundra_name"),
-        desc: loc("achieve_biome_tundra_desc"),
-        flair: loc("achieve_biome_tundra_flair")
-    },
-    biome_hellscape: {
-        name: loc("achieve_biome_hellscape_name"),
-        desc: loc("achieve_biome_hellscape_desc"),
-        flair: loc("achieve_biome_hellscape_flair")
-    },
-    biome_eden: {
-        name: loc("achieve_biome_eden_name"),
-        desc: loc("achieve_biome_eden_desc"),
-        flair: loc("achieve_biome_eden_flair")
-    },
-    creator: {
-        name: loc("achieve_creator_name"),
-        desc: loc("achieve_creator_desc"),
-        flair: loc("achieve_creator_flair")
-    },
-    heavyweight: {
-        name: loc("achieve_heavyweight_name"),
-        desc: loc("achieve_heavyweight_desc"),
-        flair: loc("achieve_heavyweight_flair")
-    },
-    miners_dream: {
-        name: loc("achieve_miners_dream_name"),
-        desc: loc("achieve_miners_dream_desc"),
-        flair: loc("achieve_miners_dream_flair")
-    },
-    whitehole: {
-        name: loc("achieve_whitehole_name"),
-        desc: loc("achieve_whitehole_desc"),
-        flair: loc("achieve_whitehole_flair")
-    },
-    heavy: {
-        name: loc("achieve_heavy_name"),
-        desc: loc("achieve_heavy_desc"),
-        flair: loc("achieve_heavy_flair")
-    },
-    canceled: {
-        name: loc("achieve_canceled_name"),
-        desc: loc("achieve_canceled_desc"),
-        flair: loc("achieve_canceled_flair")
-    },
-    eviltwin: {
-        name: loc("achieve_eviltwin_name"),
-        desc: loc("achieve_eviltwin_desc"),
-        flair: loc("achieve_eviltwin_flair")
-    },
-    microbang: {
-        name: loc("achieve_microbang_name"),
-        desc: loc("achieve_microbang_desc"),
-        flair: loc("achieve_microbang_flair")
-    },
-    dissipated: {
-        name: loc("achieve_dissipated_name"),
-        desc: loc("achieve_dissipated_desc"),
-        flair: loc("achieve_dissipated_flair")
-    },
-    shaken: {
-        name: loc("achieve_shaken_name"),
-        desc: loc("achieve_shaken_desc"),
-        flair: loc("achieve_shaken_flair")
-    },
-    iron_will: {
-        name: loc("achieve_iron_will_name"),
-        desc: loc("achieve_iron_will_desc"),
-        flair: loc("achieve_iron_will_flair")
-    },
-    failed_history: {
-        name: loc("achieve_failed_history_name"),
-        desc: loc("achieve_failed_history_desc"),
-        flair: loc("achieve_failed_history_flair")
-    },
-    blacken_the_sun: {
-        name: loc("achieve_blacken_the_sun_name"),
-        desc: loc("achieve_blacken_the_sun_desc"),
-        flair: loc("achieve_blacken_the_sun_flair")
-    },
-    genus_humanoid: {
-        name: loc("achieve_genus_humanoid_name"),
-        desc: loc("achieve_genus_humanoid_desc"),
-        flair: loc("achieve_genus_humanoid_flair")
-    },
-    genus_animal: {
-        name: loc("achieve_genus_animal_name"),
-        desc: loc("achieve_genus_animal_desc"),
-        flair: loc("achieve_genus_animal_flair")
-    },
-    genus_small: {
-        name: loc("achieve_genus_small_name"),
-        desc: loc("achieve_genus_small_desc"),
-        flair: loc("achieve_genus_small_flair")
-    },
-    genus_giant: {
-        name: loc("achieve_genus_giant_name"),
-        desc: loc("achieve_genus_giant_desc"),
-        flair: loc("achieve_genus_giant_flair")
-    },
-    genus_reptilian: {
-        name: loc("achieve_genus_reptilian_name"),
-        desc: loc("achieve_genus_reptilian_desc"),
-        flair: loc("achieve_genus_reptilian_flair")
-    },
-    genus_avian: {
-        name: loc("achieve_genus_avian_name"),
-        desc: loc("achieve_genus_avian_desc"),
-        flair: loc("achieve_genus_avian_flair")
-    },
-    genus_insectoid: {
-        name: loc("achieve_genus_insectoid_name"),
-        desc: loc("achieve_genus_insectoid_desc"),
-        flair: loc("achieve_genus_insectoid_flair")
-    },
-    genus_plant: {
-        name: loc("achieve_genus_plant_name"),
-        desc: loc("achieve_genus_plant_desc"),
-        flair: loc("achieve_genus_plant_flair")
-    },
-    genus_fungi: {
-        name: loc("achieve_genus_fungi_name"),
-        desc: loc("achieve_genus_fungi_desc"),
-        flair: loc("achieve_genus_fungi_flair")
-    },
-    genus_aquatic: {
-        name: loc("achieve_genus_aquatic_name"),
-        desc: loc("achieve_genus_aquatic_desc"),
-        flair: loc("achieve_genus_aquatic_flair")
-    },
-    genus_fey: {
-        name: loc("achieve_genus_fey_name"),
-        desc: loc("achieve_genus_fey_desc"),
-        flair: loc("achieve_genus_fey_flair")
-    },
-    genus_heat: {
-        name: loc("achieve_genus_heat_name"),
-        desc: loc("achieve_genus_heat_desc"),
-        flair: loc("achieve_genus_heat_flair")
-    },
-    genus_polar: {
-        name: loc("achieve_genus_polar_name"),
-        desc: loc("achieve_genus_polar_desc"),
-        flair: loc("achieve_genus_polar_flair")
-    },
-    genus_sand: {
-        name: loc("achieve_genus_sand_name"),
-        desc: loc("achieve_genus_sand_desc"),
-        flair: loc("achieve_genus_sand_flair")
-    },
-    genus_demonic: {
-        name: loc("achieve_genus_demonic_name"),
-        desc: loc("achieve_genus_demonic_desc"),
-        flair: loc("achieve_genus_demonic_flair")
-    },
-    genus_angelic: {
-        name: loc("achieve_genus_angelic_name"),
-        desc: loc("achieve_genus_angelic_desc"),
-        flair: loc("achieve_genus_angelic_flair")
-    },
-    atmo_toxic: {
-        name: loc("achieve_atmo_toxic_name"),
-        desc: loc("achieve_atmo_toxic_desc"),
-        flair: loc("achieve_atmo_toxic_flair")
-    },
-    atmo_mellow: {
-        name: loc("achieve_atmo_mellow_name"),
-        desc: loc("achieve_atmo_mellow_desc"),
-        flair: loc("achieve_atmo_mellow_flair")
-    },
-    atmo_rage: {
-        name: loc("achieve_atmo_rage_name"),
-        desc: loc("achieve_atmo_rage_desc"),
-        flair: loc("achieve_atmo_rage_flair")
-    },
-    atmo_stormy: {
-        name: loc("achieve_atmo_stormy_name"),
-        desc: loc("achieve_atmo_stormy_desc"),
-        flair: loc("achieve_atmo_stormy_flair")
-    },
-    atmo_ozone: {
-        name: loc("achieve_atmo_ozone_name"),
-        desc: loc("achieve_atmo_ozone_desc"),
-        flair: loc("achieve_atmo_ozone_flair")
-    },
-    atmo_magnetic: {
-        name: loc("achieve_atmo_magnetic_name"),
-        desc: loc("achieve_atmo_magnetic_desc"),
-        flair: loc("achieve_atmo_magnetic_flair")
-    },
-    atmo_trashed: {
-        name: loc("achieve_atmo_trashed_name"),
-        desc: loc("achieve_atmo_trashed_desc"),
-        flair: loc("achieve_atmo_trashed_flair")
-    },
-    atmo_elliptical: {
-        name: loc("achieve_atmo_elliptical_name"),
-        desc: loc("achieve_atmo_elliptical_desc"),
-        flair: loc("achieve_atmo_elliptical_flair")
-    },
-    atmo_flare: {
-        name: loc("achieve_atmo_flare_name"),
-        desc: loc("achieve_atmo_flare_desc"),
-        flair: loc("achieve_atmo_flare_flair")
-    },
-    atmo_dense: {
-        name: loc("achieve_atmo_dense_name"),
-        desc: loc("achieve_atmo_dense_desc"),
-        flair: loc("achieve_atmo_dense_flair")
-    },
-    atmo_unstable: {
-        name: loc("achieve_atmo_unstable_name"),
-        desc: loc("achieve_atmo_unstable_desc"),
-        flair: loc("achieve_atmo_unstable_flair")
-    },
-    mass_extinction: {
-        name: loc("achieve_mass_extinction_name"),
-        desc: loc("achieve_mass_extinction_desc"),
-        flair: loc("achieve_mass_extinction_flair")
-    },
-    vigilante: {
-        name: loc("achieve_vigilante_name"),
-        desc: loc("achieve_vigilante_desc"),
-        flair: loc("achieve_vigilante_flair")
-    },
-    extinct_human: {
-        name: loc("achieve_extinct_human_name"),
-        desc: loc("achieve_extinct_human_desc"),
-        flair: loc("achieve_extinct_human_flair")
-    },
-    extinct_elven: {
-        name: loc("achieve_extinct_elven_name"),
-        desc: loc("achieve_extinct_elven_desc"),
-        flair: loc("achieve_extinct_elven_flair")
-    },
-    extinct_orc: {
-        name: loc("achieve_extinct_orc_name"),
-        desc: loc("achieve_extinct_orc_desc"),
-        flair: loc("achieve_extinct_orc_flair")
-    },
-    extinct_cath: {
-        name: loc("achieve_extinct_cath_name"),
-        desc: loc("achieve_extinct_cath_desc"),
-        flair: loc("achieve_extinct_cath_flair")
-    },
-    extinct_wolven: {
-        name: loc("achieve_extinct_wolven_name"),
-        desc: loc("achieve_extinct_wolven_desc"),
-        flair: loc("achieve_extinct_wolven_flair")
-    },
-    extinct_centaur: {
-        name: loc("achieve_extinct_centaur_name"),
-        desc: loc("achieve_extinct_centaur_desc"),
-        flair: loc("achieve_extinct_centaur_flair")
-    },
-    extinct_kobold: {
-        name: loc("achieve_extinct_kobold_name"),
-        desc: loc("achieve_extinct_kobold_desc"),
-        flair: loc("achieve_extinct_kobold_flair")
-    },
-    extinct_goblin: {
-        name: loc("achieve_extinct_goblin_name"),
-        desc: loc("achieve_extinct_goblin_desc"),
-        flair: loc("achieve_extinct_goblin_flair")
-    },
-    extinct_gnome: {
-        name: loc("achieve_extinct_gnome_name"),
-        desc: loc("achieve_extinct_gnome_desc"),
-        flair: loc("achieve_extinct_gnome_flair")
-    },
-    extinct_ogre: {
-        name: loc("achieve_extinct_ogre_name"),
-        desc: loc("achieve_extinct_ogre_desc"),
-        flair: loc("achieve_extinct_ogre_flair")
-    },
-    extinct_cyclops: {
-        name: loc("achieve_extinct_cyclops_name"),
-        desc: loc("achieve_extinct_cyclops_desc"),
-        flair: loc("achieve_extinct_cyclops_flair")
-    },
-    extinct_troll: {
-        name: loc("achieve_extinct_troll_name"),
-        desc: loc("achieve_extinct_troll_desc"),
-        flair: loc("achieve_extinct_troll_flair")
-    },
-    extinct_tortoisan: {
-        name: loc("achieve_extinct_tortoisan_name"),
-        desc: loc("achieve_extinct_tortoisan_desc"),
-        flair: loc("achieve_extinct_tortoisan_flair")
-    },
-    extinct_gecko: {
-        name: loc("achieve_extinct_gecko_name"),
-        desc: loc("achieve_extinct_gecko_desc"),
-        flair: loc("achieve_extinct_gecko_flair")
-    },
-    extinct_slitheryn: {
-        name: loc("achieve_extinct_slitheryn_name"),
-        desc: loc("achieve_extinct_slitheryn_desc"),
-        flair: loc("achieve_extinct_slitheryn_flair")
-    },
-    extinct_arraak: {
-        name: loc("achieve_extinct_arraak_name"),
-        desc: loc("achieve_extinct_arraak_desc"),
-        flair: loc("achieve_extinct_arraak_flair")
-    },
-    extinct_pterodacti: {
-        name: loc("achieve_extinct_pterodacti_name"),
-        desc: loc("achieve_extinct_pterodacti_desc"),
-        flair: loc("achieve_extinct_pterodacti_flair")
-    },
-    extinct_dracnid: {
-        name: loc("achieve_extinct_dracnid_name"),
-        desc: loc("achieve_extinct_dracnid_desc"),
-        flair: loc("achieve_extinct_dracnid_flair")
-    },
-    extinct_entish: {
-        name: loc("achieve_extinct_entish_name"),
-        desc: loc("achieve_extinct_entish_desc"),
-        flair: loc("achieve_extinct_entish_flair")
-    },
-    extinct_cacti: {
-        name: loc("achieve_extinct_cacti_name"),
-        desc: loc("achieve_extinct_cacti_desc"),
-        flair: loc("achieve_extinct_cacti_flair")
-    },
-    extinct_pinguicula: {
-        name: loc("achieve_extinct_pinguicula_name"),
-        desc: loc("achieve_extinct_pinguicula_desc"),
-        flair: loc("achieve_extinct_pinguicula_flair")
-    },
-    extinct_sporgar: {
-        name: loc("achieve_extinct_sporgar_name"),
-        desc: loc("achieve_extinct_sporgar_desc"),
-        flair: loc("achieve_extinct_sporgar_flair")
-    },
-    extinct_shroomi: {
-        name: loc("achieve_extinct_shroomi_name"),
-        desc: loc("achieve_extinct_shroomi_desc"),
-        flair: loc("achieve_extinct_shroomi_flair")
-    },
-    extinct_moldling: {
-        name: loc("achieve_extinct_moldling_name"),
-        desc: loc("achieve_extinct_moldling_desc"),
-        flair: loc("achieve_extinct_moldling_flair")
-    },
-    extinct_mantis: {
-        name: loc("achieve_extinct_mantis_name"),
-        desc: loc("achieve_extinct_mantis_desc"),
-        flair: loc("achieve_extinct_mantis_flair")
-    },
-    extinct_scorpid: {
-        name: loc("achieve_extinct_scorpid_name"),
-        desc: loc("achieve_extinct_scorpid_desc"),
-        flair: loc("achieve_extinct_scorpid_flair")
-    },
-    extinct_antid: {
-        name: loc("achieve_extinct_antid_name"),
-        desc: loc("achieve_extinct_antid_desc"),
-        flair: loc("achieve_extinct_antid_flair")
-    },
-    extinct_sharkin: {
-        name: loc("achieve_extinct_sharkin_name"),
-        desc: loc("achieve_extinct_sharkin_desc"),
-        flair: loc("achieve_extinct_sharkin_flair")
-    },
-    extinct_octigoran: {
-        name: loc("achieve_extinct_octigoran_name"),
-        desc: loc("achieve_extinct_octigoran_desc"),
-        flair: loc("achieve_extinct_octigoran_flair")
-    },
-    extinct_dryad: {
-        name: loc("achieve_extinct_dryad_name"),
-        desc: loc("achieve_extinct_dryad_desc"),
-        flair: loc("achieve_extinct_dryad_flair")
-    },
-    extinct_satyr: {
-        name: loc("achieve_extinct_satyr_name"),
-        desc: loc("achieve_extinct_satyr_desc"),
-        flair: loc("achieve_extinct_satyr_flair")
-    },
-    extinct_phoenix: {
-        name: loc("achieve_extinct_phoenix_name"),
-        desc: loc("achieve_extinct_phoenix_desc"),
-        flair: loc("achieve_extinct_phoenix_flair")
-    },
-    extinct_salamander: {
-        name: loc("achieve_extinct_salamander_name"),
-        desc: loc("achieve_extinct_salamander_desc"),
-        flair: loc("achieve_extinct_salamander_flair")
-    },
-    extinct_yeti: {
-        name: loc("achieve_extinct_yeti_name"),
-        desc: loc("achieve_extinct_yeti_desc"),
-        flair: loc("achieve_extinct_yeti_flair")
-    },
-    extinct_wendigo: {
-        name: loc("achieve_extinct_wendigo_name"),
-        desc: loc("achieve_extinct_wendigo_desc"),
-        flair: loc("achieve_extinct_wendigo_flair")
-    },
-    extinct_tuskin: {
-        name: loc("achieve_extinct_tuskin_name"),
-        desc: loc("achieve_extinct_tuskin_desc"),
-        flair: loc("achieve_extinct_tuskin_flair")
-    },
-    extinct_kamel: {
-        name: loc("achieve_extinct_kamel_name"),
-        desc: loc("achieve_extinct_kamel_desc"),
-        flair: loc("achieve_extinct_kamel_flair")
-    },
-    extinct_balorg: {
-        name: loc("achieve_extinct_balorg_name"),
-        desc: loc("achieve_extinct_balorg_desc"),
-        flair: loc("achieve_extinct_balorg_flair")
-    },
-    extinct_imp: {
-        name: loc("achieve_extinct_imp_name"),
-        desc: loc("achieve_extinct_imp_desc"),
-        flair: loc("achieve_extinct_imp_flair")
-    },
-    extinct_seraph: {
-        name: loc("achieve_extinct_seraph_name"),
-        desc: loc("achieve_extinct_seraph_desc"),
-        flair: loc("achieve_extinct_seraph_flair")
-    },
-    extinct_unicorn: {
-        name: loc("achieve_extinct_unicorn_name"),
-        desc: loc("achieve_extinct_unicorn_desc"),
-        flair: loc("achieve_extinct_unicorn_flair")
-    },
-    extinct_junker: {
-        name: loc("achieve_extinct_junker_name"),
-        desc: loc("achieve_extinct_junker_desc"),
-        flair: loc("achieve_extinct_junker_flair")
-    },
-    extinct_custom: {
-        name: loc("achieve_extinct_custom_name"),
-        desc: loc("achieve_extinct_custom_desc"),
-        flair: loc("achieve_extinct_custom_flair")
-    }
+// Achievements/feats from src/achieve.js -> const achieve_list = { ...
+const achieve_list = {
+    misc: [
+        'apocalypse','ascended','dreaded','anarchist','second_evolution','blackhole','warmonger',
+        'red_tactics','pacifist','neutralized','paradise','scrooge','madagascar_tree','godwin',
+        'laser_shark','infested','mass_starvation','colonist','world_domination','illuminati',
+        'syndicate','cult_of_personality','doomed','pandemonium','blood_war','landfill','seeder',
+        'miners_dream','shaken','blacken_the_sun','resonance','enlightenment','gladiator','corrupted'
+    ],
+    species: [
+        'mass_extinction','extinct_human','extinct_elven','extinct_orc','extinct_cath','extinct_wolven','extinct_centaur','extinct_kobold',
+        'extinct_goblin','extinct_gnome','extinct_ogre','extinct_cyclops','extinct_troll','extinct_tortoisan','extinct_gecko','extinct_slitheryn',
+        'extinct_arraak','extinct_pterodacti','extinct_dracnid','extinct_entish','extinct_cacti','extinct_pinguicula','extinct_sporgar',
+        'extinct_shroomi','extinct_moldling','extinct_mantis','extinct_scorpid','extinct_antid','extinct_sharkin','extinct_octigoran','extinct_dryad',
+        'extinct_satyr','extinct_phoenix','extinct_salamander','extinct_yeti','extinct_wendigo','extinct_tuskin','extinct_kamel','extinct_balorg',
+        'extinct_imp','extinct_seraph','extinct_unicorn','extinct_junker','extinct_custom'
+    ],
+    genus: [
+        'creator','genus_humanoid','genus_animal','genus_small','genus_giant','genus_reptilian','genus_avian','genus_insectoid',
+        'genus_plant','genus_fungi','genus_aquatic','genus_fey','genus_heat','genus_polar','genus_sand','genus_demonic','genus_angelic'
+    ],
+    planet: [
+        'explorer','biome_grassland','biome_oceanic','biome_forest','biome_desert','biome_volcanic','biome_tundra','biome_hellscape','biome_eden',
+        'atmo_toxic','atmo_mellow','atmo_rage','atmo_stormy','atmo_ozone','atmo_magnetic','atmo_trashed','atmo_elliptical','atmo_flare','atmo_dense',
+        'atmo_unstable'
+    ],
+    universe: [
+        'vigilante','squished','double_density','cross','macro','marble','heavyweight','whitehole','heavy','canceled',
+        'eviltwin','microbang','pw_apocalypse','fullmetal','pass'
+    ],
+    challenge: ['joyless','steelen','dissipated','technophobe','iron_will','failed_history'],    
 };
 
+const achievements = {};
+Object.keys(achieve_list).forEach(function(type){
+    achieve_list[type].forEach(achieve => achievements[achieve] = {
+        name: loc(`achieve_${achieve}_name`),
+        desc: loc(`achieve_${achieve}_desc`),
+        flair: loc(`achieve_${achieve}_flair`),
+        type: type
+    });
+});
+	
 const feats = {
     utopia: {
         name: loc("feat_utopia_name"),
@@ -812,6 +214,11 @@ const feats = {
         desc: loc("feat_demon_slayer_desc"),
         flair: loc("feat_demon_slayer_flair")
     },
+    equilibrium: {
+        name: loc("feat_equilibrium_name"),
+        desc: loc("feat_equilibrium_desc"),
+        flair: loc("feat_equilibrium_flair")
+    },
     novice: {
         name: loc("feat_novice_name"),
         desc: loc("feat_achievement_hunter_desc",[10]),
@@ -842,6 +249,11 @@ const feats = {
         desc: loc("feat_nephilim_desc"),
         flair: loc("feat_nephilim_flair")
     },
+    twisted: {
+        name: loc("feat_twisted_name"),
+        desc: loc("feat_twisted_desc"),
+        flair: loc("feat_twisted_flair")
+    },
     friday: {
         name: loc("feat_friday_name"),
         desc: loc("feat_friday_desc"),
@@ -871,6 +283,11 @@ const feats = {
         name: loc("feat_boo_name"),
         desc: loc("feat_boo_desc"),
         flair: loc("feat_boo_flair")
+    },
+    trickortreat: {
+        name: loc("feat_trickortreat_name"),
+        desc: loc("feat_trickortreat_desc"),
+        flair: loc("feat_trickortreat_flair")
     },
     thanksgiving: {
         name: loc("feat_gobble_gobble_name"),
@@ -2002,6 +1419,7 @@ $('#load').on('click', function(){
 		let microComplete = 0;
 		let antiComplete = 0;
 		let evilComplete = 0;
+		let magicComplete = 0;
 		$.each(achievements, function(index, achieve){
 			let div = $('#a-'+index);
 			if (div.length) {
@@ -2027,17 +1445,24 @@ $('#load').on('click', function(){
 						antiComplete++;
 					}
 					else createIcon(div, 'antimatter');
+					if (achievement['mg']) {
+						createIcon(div, 'magic', 'achievement', achievement);
+						magicComplete++;
+					}
+					else createIcon(div, 'magic');					
 					if (achievement['l']) {
 						createIcon(div, 'standard', 'achievement', achievement);
 						standardComplete++;
-					}
+					}					
 					else createIcon(div, 'standard');
+
 				}
 				else {
 					createIcon(div, 'heavy');
 					createIcon(div, 'micro');
 					createIcon(div, 'evil');
 					createIcon(div, 'antimatter');
+					createIcon(div, 'magic');
 					createIcon(div, 'standard');
 				}
 			}
@@ -2049,14 +1474,16 @@ $('#load').on('click', function(){
 		let microTotal = $('.svg.micro').length;
 		let evilTotal = $('.svg.evil').length;
 		let antiTotal = $('.svg.antimatter').length;
-		let allTotal = standardTotal + heavyTotal + microTotal + evilTotal + antiTotal;
+		let magicTotal = $('.svg.magic').length;
+		let allTotal = standardTotal + heavyTotal + microTotal + evilTotal + antiTotal + magicTotal;
 
 		let html = '<span class="'+(allComplete == allTotal ? 'yellow' : '')+'">'+allComplete+'</span> of <span class="yellow">'+allTotal+'</span> Total Achievement Levels<br />'+(allComplete/allTotal*100).toFixed(2)+'% Complete<br /><p class="universe-totals">';
 		html += 'Standard Universe: '+standardComplete+' of '+standardTotal+' (<span class="'+(standardComplete == standardTotal ? 'yellow' : '')+'">'+(standardComplete/standardTotal*100).toFixed(2)+'% Complete</span>)<br />';
 		html += 'Heavy Universe: '+heavyComplete+' of '+heavyTotal+' (<span class="'+(heavyComplete == heavyTotal ? 'yellow' : '')+'">'+(heavyComplete/heavyTotal*100).toFixed(2)+'% Complete</span>)<br />';
 		html += 'Micro Universe: '+microComplete+' of '+microTotal+' (<span class="'+(microComplete == microTotal ? 'yellow' : '')+'">'+(microComplete/microTotal*100).toFixed(2)+'% Complete</span>)<br />';
 		html += 'Evil Universe: '+evilComplete+' of '+evilTotal+' (<span class="'+(evilComplete == evilTotal ? 'yellow' : '')+'">'+(evilComplete/evilTotal*100).toFixed(2)+'% Complete</span>)<br />';
-		html += 'Antimatter Universe: '+antiComplete+' of '+antiTotal+' (<span class="'+(antiComplete == antiTotal ? 'yellow' : '')+'">'+(antiComplete/antiTotal*100).toFixed(2)+'% Complete</span>)</p>';
+		html += 'Antimatter Universe: '+antiComplete+' of '+antiTotal+' (<span class="'+(antiComplete == antiTotal ? 'yellow' : '')+'">'+(antiComplete/antiTotal*100).toFixed(2)+'% Complete</span>)<br />';
+		html += 'Magic Universe: '+magicComplete+' of '+magicTotal+' (<span class="'+(magicComplete == magicTotal ? 'yellow' : '')+'">'+(antiComplete/magicTotal*100).toFixed(2)+'% Complete</span>)</p>';
 		$('#achievementList>p').html(html);
 
 		$.each(saveData.feats, function(index, feat){
