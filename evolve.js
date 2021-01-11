@@ -1,14 +1,23 @@
 $(function(){
 
-const version = '0.9.12';
+const version = '1.0.21';
 $('#version').text(version);
 
-const global = { race: { species: ''} };
+const date = new Date();
+let hallowed = { active: false};
+let easter = { active: false};
+
+const global = { race: { species: ''}, settings: { boring: true}, blood: {} };
 let achievementCount = featCount = 0;
+let genome = {};
+let unlockedTraits = {};
 let saveData = {
 	achievements: {},
 	feats: {},
-	genes: {}
+	genes: {},
+    blood: {},
+    genes: {},
+    custom: {}
 };
 
 const icons = {
@@ -31,6 +40,10 @@ const icons = {
 	antimatter: {
 		path: '<path d="m100 44.189c0-6.796-10.63-11.822-24.783-14.529 1.155-3.322 2.105-6.538 2.764-9.541 2.193-10.025 1.133-16.856-2.981-19.231-1.019-0.588-2.193-0.888-3.49-0.888-5.62 0-13.46 5.665-21.509 15-8.046-9.335-15.886-15-21.511-15-1.294 0-2.47 0.3-3.491 0.888-5.891 3.4-4.918 15.141-0.175 28.767-14.173 2.701-24.824 7.731-24.824 14.534 0 6.799 10.634 11.822 24.79 14.531-1.161 3.323-2.11 6.536-2.767 9.539-2.194 10.027-1.136 16.857 2.976 19.231 1.021 0.589 2.197 0.886 3.491 0.886 5.625 0 13.464-5.667 21.511-14.998 8.047 9.331 15.886 15 21.509 15 1.297 0 2.472-0.299 3.49-0.888 4.114-2.374 5.174-9.204 2.98-19.231-0.658-3.003-1.608-6.216-2.766-9.539 14.156-2.708 24.786-7.732 24.786-14.531zm-28.49-41.605c0.838 0 1.579 0.187 2.199 0.543 3.016 1.741 3.651 7.733 1.747 16.44-0.661 3.022-1.628 6.264-2.814 9.63-4.166-0.695-8.585-1.194-13.096-1.49-2.572-3.887-5.206-7.464-7.834-10.67 7.581-8.861 14.934-14.453 19.798-14.453zm-9.198 48.71c-1.375 2.379-2.794 4.684-4.242 6.9-2.597 0.132-5.287 0.206-8.069 0.206s-5.474-0.074-8.067-0.206c-1.452-2.217-2.87-4.521-4.242-6.9-1.388-2.406-2.669-4.771-3.849-7.081 1.204-2.369 2.477-4.753 3.851-7.13 1.37-2.377 2.79-4.68 4.24-6.901 2.593-0.131 5.285-0.205 8.067-0.205s5.473 0.074 8.069 0.205c1.448 2.222 2.866 4.524 4.239 6.901 1.37 2.37 2.64 4.747 3.842 7.106-1.202 2.362-2.471 4.739-3.839 7.105zm5.259-4.225c1.587 3.303 3 6.558 4.2 9.72-3.25 0.521-6.758 0.926-10.488 1.203 1.104-1.75 2.194-3.554 3.265-5.404 1.062-1.837 2.059-3.681 3.023-5.519zm-11.277 13.78c-2.068 3.019-4.182 5.854-6.293 8.444-2.109-2.591-4.22-5.426-6.294-8.444 2.095 0.088 4.196 0.138 6.294 0.138 2.099-0.001 4.201-0.05 6.293-0.138zm-17.573-2.857c-3.733-0.277-7.241-0.683-10.49-1.203 1.202-3.157 2.611-6.414 4.197-9.72 0.97 1.858 1.979 3.701 3.026 5.519 1.071 1.85 2.161 3.654 3.267 5.404zm-6.304-16.654c-1.636-3.389-3.046-6.653-4.226-9.741 3.26-0.52 6.781-0.931 10.53-1.212-1.107 1.751-2.197 3.553-3.268 5.407-1.067 1.847-2.065 3.701-3.036 5.546zm11.294-13.805c2.07-3.019 4.181-5.855 6.29-8.449 2.111 2.594 4.225 5.43 6.293 8.449-2.093-0.091-4.194-0.14-6.293-0.14-2.098 0.001-4.199 0.049-6.29 0.14zm20.837 8.259c-1.07-1.859-2.16-3.656-3.265-5.407 3.73 0.281 7.238 0.687 10.488 1.205-1.2 3.157-2.613 6.419-4.2 9.722-0.964-1.838-1.961-3.683-3.023-5.52zm-38.254-32.665c0.619-0.359 1.36-0.543 2.196-0.543 4.864 0 12.217 5.592 19.8 14.453-2.626 3.206-5.262 6.783-7.834 10.67-4.526 0.296-8.962 0.802-13.144 1.5-4.886-13.794-5.036-23.762-1.018-26.08zm-23.709 41.062c0-4.637 8.707-9.493 23.096-12.159 1.487 3.974 3.268 8.069 5.277 12.14-2.061 4.14-3.843 8.229-5.323 12.167-14.364-2.664-23.05-7.516-23.05-12.148zm25.905 41.605c-0.848 0-1.564-0.178-2.196-0.538-3.015-1.742-3.652-7.734-1.746-16.442 0.662-3.023 1.626-6.269 2.814-9.633 4.166 0.696 8.586 1.195 13.092 1.491 2.574 3.885 5.207 7.462 7.834 10.671-7.58 8.86-14.934 14.451-19.798 14.451zm46.962-16.981c1.907 8.708 1.272 14.7-1.743 16.442-0.623 0.355-1.361 0.539-2.199 0.539-4.864 0-12.217-5.592-19.798-14.452 2.628-3.209 5.262-6.786 7.837-10.671 4.508-0.296 8.927-0.795 13.093-1.491 1.186 3.365 2.153 6.61 2.81 9.633zm-1.086-12.475c-1.476-3.933-3.254-8.014-5.31-12.148 2.056-4.135 3.834-8.217 5.312-12.148 14.361 2.665 23.049 7.519 23.049 12.148 0 4.631-8.688 9.483-23.051 12.148z" />',
 		viewbox: '0 0 100 88.379'
+	},
+	magic: {
+		path: '<path d="m 2077.0957,2355.0556 c -24.8548,-6.6306 -43.8442,-12.4931 -65.1438,-20.1115 -171.2303,-61.2458 -332.546,-186.5828 -484.656,-376.562 -106.9479,-133.5736 -211.9033,-304.0752 -307.5304,-499.5874 -70.9505,-145.0603 -137.2376,-301.6744 -201.0755,-475.07329 -4.0445,-10.9859 -7.4891,-20.1129 -7.6546,-20.2824 -0.1656,-0.1694 -2.0374,1.7618 -4.1597,4.2917 -41.97221,50.03289 -102.85691,112.12769 -165.25321,168.53769 -153.4012,138.6841 -322.8342,254.6704 -451.2868,308.9308 -4.8375,2.0435 -9.6944,4.102 -10.793,4.5744 l -1.9977,0.8591 14.4133,7.0194 c 72.3515,35.2357 143.3639,78.5554 206.1228,125.7414 218.7562,164.4739 368.1707,393.9487 437.81411,672.4065 3.7109,14.8375 9.1943,38.7303 9.0117,39.2665 -0.069,0.2024 -1.3235,-3.0502 -2.788,-7.228 -74.09121,-211.3582 -207.71511,-385.1177 -394.71211,-513.2685 -102.107,-69.9749 -219.4845,-126.1019 -348.488,-166.6383 -76.1077,-23.9151 -155.9429,-42.2005 -232.883496,-53.3396 -6.991,-1.0121 -12.8528,-1.8883 -13.0261,-1.947 -0.1733,-0.059 2.0738,-1.6288 4.9936,-3.4891 2.9198,-1.8603 15.625,-10.0516 28.2339,-18.2031 204.092496,-131.9427 358.291896,-247.07 478.472596,-357.2338 37.0992,-34.0071 77.0506,-73.8638 107.6314,-107.3762 86.2451,-94.51319 148.9362,-188.57859 189.3356,-284.08999 30.7863,-72.7845 49.1302,-147.8337 55.0585,-225.2576 0.8677,-11.3324 1.6179,-24.3907 1.6179,-28.1635 l 0,-2.8677 -2.3833,-0.2589 c -5.6397,-0.6126 -53.3922,-2.328 -84.3238,-3.0291 -26.1322,-0.5923 -105.9829,-0.2965 -125.748,0.4658 -35.3648,1.3639 -61.1426,2.7941 -86.7072,4.8105 -195.6367,15.431 -343.0035,61.1297 -446.9275,138.593 -2.4968,1.8611 -4.029,2.8664 -3.4048,2.2341 0.9758,-0.9885 397.2225,-336.9788 399.0477,-338.3654 0.4983,-0.3785 8.2687,0.05 30.6293,1.691 273.5285,20.0676 411.83311,27.9616 556.33281,31.7538 29.6737,0.7788 110.952,1.0595 138.2321,0.4775 83.5286,-1.7821 143.7695,-6.6707 194.0695,-15.7487 47.0041,-8.4831 83.1621,-21.2812 103.3974,-36.5973 1.6154,-1.2226 2.9812,-2.1619 3.0353,-2.0872 0.054,0.075 -0.079,2.1785 -0.2952,4.6753 -0.578,6.6693 -0.5481,29.498 0.048,36.3171 3.3368,38.2002 14.0507,70.8483 33.8884,103.2667 18.8519,30.8073 47.6861,61.0826 82.1419,86.2473 37.3245,27.2597 81.564,49.9843 131.8765,67.7412 4.8688,1.7184 8.2555,3.0024 7.5259,2.8535 -0.7295,-0.1489 -6.3473,-1.3924 -12.484,-2.7634 -39.6642,-8.861 -104.6887,-20.5993 -168.0021,-30.328 -137.3768,-21.1093 -273.1583,-35.4146 -362.8049,-38.2235 l -9.8479,-0.3086 -0.224,1.0898 c -0.1233,0.5995 -0.335,2.5199 -0.4706,4.2677 -1.3397,17.2691 -1.7023,22.4205 -2.2846,32.4584 -2.3935,41.2643 -2.3955,89.1364 -0.01,134.8273 11.3803,217.5701 77.3475,473.27869 189.8401,735.87559 89.2575,208.3584 210.5193,422.3508 332.3606,586.5215 22.7139,30.605 33.0709,42.8702 44.5166,52.7187 25.6187,22.0437 46.811,23.8716 65.2335,5.6265 19.5207,-19.3327 34.7161,-60.9422 45.5423,-124.7077 19.3386,-113.9042 23.2932,-297.6572 10.9059,-506.7671 -4.6678,-78.7985 -10.1013,-140.5522 -20.8699,-237.1961 -5.9357,-53.2693 -7.4546,-65.7004 -8.6502,-70.7914 -4.7369,-20.171 -27.3114,-47.5028 -65.7926,-79.6576 -11.906,-9.9486 -20.1748,-16.4224 -39.1544,-30.6551 -8.4267,-6.3191 -15.3189,-11.6171 -15.3159,-11.7734 0,-0.1563 1.2797,-0.9816 2.8373,-1.8339 14.6036,-7.9917 42.9197,-26.1494 64.2088,-41.17369 35.0761,-24.7546 77.4208,-59.2093 108.4143,-88.2139 58.9609,-55.1774 106.4613,-109.4316 139.8321,-159.7139 2.693,-4.0578 4.9524,-7.3218 5.0209,-7.2532 0.069,0.068 -0.9793,4.6953 -2.3284,10.2819 -52.0714,215.624 -73.4586,458.30359 -63.0753,715.71049 8.1008,200.8217 36.667,415.9599 82.2909,619.7502 l 2.6625,11.8924 -4.124,2.8336 c -25.7438,17.6888 -44.4201,32.0283 -57.3292,44.017 -19.4405,18.0544 -30.6873,35.3946 -36.0405,55.5665 -3.2336,12.1849 -4.2393,21.7435 -4.2035,39.9489 0.043,21.9591 1.571,38.7035 9.4024,103.0498 1.3371,10.9859 2.4091,19.9949 2.3823,20.0199 -0.027,0.025 -1.8874,-0.445 -4.1345,-1.0444 z m 326.7144,-985.6489 c -17.4427,-32.7693 -52.6734,-76.4714 -96.8446,-120.1314 -30.3662,-30.0148 -57.7931,-52.8046 -81.5396,-67.7535 -6.8082,-4.2859 -19.6404,-11.0063 -22.8544,-11.9693 -0.9739,-0.2918 -1.7706,-0.6524 -1.7706,-0.8014 0,-0.149 1.2767,-0.754 2.8373,-1.3444 8.1023,-3.0654 22.7254,-11.5869 35.2957,-20.5684 21.4993,-15.3612 43.2465,-34.1516 68.6986,-59.358 42.609,-42.1976 76.3979,-83.8447 94.6619,-116.67699 2.2626,-4.0672 4.2245,-7.6252 4.36,-7.9065 0.1826,-0.3795 0.3097,-0.3795 0.4923,0 0.1354,0.2813 2.0845,3.8162 4.3314,7.8552 18.2956,32.88899 52.1844,74.66389 94.6871,116.72119 25.6446,25.3759 47.2008,44.0026 68.702,59.3651 12.5703,8.9815 27.1934,17.503 35.2957,20.5684 1.5605,0.5904 2.8373,1.1777 2.8373,1.3051 0,0.1274 -1.2768,0.7145 -2.8373,1.305 -1.5605,0.5904 -5.6973,2.5407 -9.1928,4.334 -24.7032,12.6736 -57.8306,39.0407 -94.1346,74.9245 -44.1711,43.66 -79.4018,87.3621 -96.8445,120.1314 -1.5749,2.9588 -2.9656,5.3796 -3.0904,5.3796 -0.1249,0 -1.5156,-2.4208 -3.0905,-5.3796 z M 166.36129,670.71331 c 0.452,-0.4994 0.9239,-0.9079 1.0487,-0.9079 0.1248,0 -0.1428,0.4085 -0.5947,0.9079 -0.4519,0.4993 -0.9238,0.9079 -1.0487,0.9079 -0.1248,0 0.1428,-0.4086 0.5947,-0.9079 z"/>',
+        viewbox: '0 0 2666 2666'
 	},
 	checkmark: {
 		path: '<path d="M7.629,14.566c0.125,0.125,0.291,0.188,0.456,0.188c0.164,0,0.329-0.062,0.456-0.188l8.219-8.221c0.252-0.252,0.252-0.659,0-0.911c-0.252-0.252-0.659-0.252-0.911,0l-7.764,7.763L4.152,9.267c-0.252-0.251-0.66-0.251-0.911,0c-0.252,0.252-0.252,0.66,0,0.911L7.629,14.566z" />',
@@ -94,657 +107,903 @@ const universeData = {
 	micro: {
 		name: 'Micro',
 		code: 'm'
+	},
+	magic: {
+		name: 'Magic',
+		code: 'mg'
 	}
 }
 
-// Achievements/feats from src/achieve.js -> const achievements = {
-const achievements = {
-    apocalypse: {
-        name: loc("achieve_apocalypse_name"),
-        desc: loc("achieve_apocalypse_desc"),
-        flair: loc("achieve_apocalypse_flair")
-    },
-    ascended: {
-        name: loc("achieve_ascended_name"),
-        desc: loc("achieve_ascended_desc"),
-        flair: loc("achieve_ascended_flair")
-    },
-    technophobe: {
-        name: loc("achieve_technophobe_name"),
-        desc: loc("achieve_technophobe_desc"),
-        flair: loc("achieve_technophobe_flair")
-    },
-    dreaded: {
-        name: loc("achieve_dreaded_name"),
-        desc: loc("achieve_dreaded_desc"),
-        flair: loc("achieve_dreaded_flair")
-    },
-    anarchist: {
-        name: loc("achieve_anarchist_name"),
-        desc: loc("achieve_anarchist_desc"),
-        flair: loc("achieve_anarchist_flair")
-    },
-    squished: {
-        name: loc("achieve_squished_name"),
-        desc: loc("achieve_squished_desc"),
-        flair: loc("achieve_squished_flair")
-    },
-    second_evolution: {
-        name: loc("achieve_second_evolution_name"),
-        desc: loc("achieve_second_evolution_desc"),
-        flair: loc("achieve_second_evolution_flair")
-    },
-    blackhole: {
-        name: loc("achieve_blackhole_name"),
-        desc: loc("achieve_blackhole_desc"),
-        flair: loc("achieve_blackhole_flair")
-    },
-    warmonger: {
-        name: loc("achieve_warmonger_name"),
-        desc: loc("achieve_warmonger_desc"),
-        flair: loc("achieve_warmonger_flair")
-    },
-    red_tactics: {
-        name: loc("achieve_red_tactics_name"),
-        desc: loc("achieve_red_tactics_desc"),
-        flair: loc("achieve_red_tactics_flair")
-    },
-    pacifist: {
-        name: loc("achieve_pacifist_name"),
-        desc: loc("achieve_pacifist_desc"),
-        flair: loc("achieve_pacifist_flair")
-    },
-    neutralized: {
-        name: loc("achieve_neutralized_name"),
-        desc: loc("achieve_neutralized_desc"),
-        flair: loc("achieve_neutralized_flair")
-    },
-    paradise: {
-        name: loc("achieve_paradise_name"),
-        desc: loc("achieve_paradise_desc"),
-        flair: loc("achieve_paradise_flair")
-    },
-    scrooge: {
-        name: loc("achieve_scrooge_name"),
-        desc: loc("achieve_scrooge_desc"),
-        flair: loc("achieve_scrooge_flair")
-    },
-    madagascar_tree: {
-        name: loc("achieve_madagascar_tree_name"),
-        desc: loc("achieve_madagascar_tree_desc"),
-        flair: loc("achieve_madagascar_tree_flair")
-    },
-    godwin: {
-        name: loc("achieve_godwin_name"),
-        desc: loc("achieve_godwin_desc"),
-        flair: loc("achieve_godwin_flair")
-    },
-    laser_shark: {
-        name: loc("achieve_laser_shark_name"),
-        desc: loc("achieve_laser_shark_desc"),
-        flair: loc("achieve_laser_shark_flair")
-    },
-    infested: {
-        name: loc("achieve_infested_name"),
-        desc: loc("achieve_infested_desc"),
-        flair: loc("achieve_infested_flair")
-    },
-    mass_starvation: {
-        name: loc("achieve_mass_starvation_name"),
-        desc: loc("achieve_mass_starvation_desc"),
-        flair: loc("achieve_mass_starvation_flair")
-    },
-    colonist: {
-        name: loc("achieve_colonist_name"),
-        desc: loc("achieve_colonist_desc"),
-        flair: loc("achieve_colonist_flair",[global.race.species])
-    },
-    world_domination: {
-        name: loc("achieve_world_domination_name"),
-        desc: loc("achieve_world_domination_desc"),
-        flair: loc("achieve_world_domination_flair")
-    },
-    illuminati: {
-        name: loc("achieve_illuminati_name"),
-        desc: loc("achieve_illuminati_desc"),
-        flair: loc("achieve_illuminati_flair")
-    },
-    syndicate: {
-        name: loc("achieve_syndicate_name"),
-        desc: loc("achieve_syndicate_desc"),
-        flair: loc("achieve_syndicate_flair")
-    },
-    cult_of_personality: {
-        name: loc("achieve_cult_of_personality_name"),
-        desc: loc("achieve_cult_of_personality_desc"),
-        flair: loc("achieve_cult_of_personality_flair")
-    },
-    double_density: {
-        name: loc("achieve_double_density_name"),
-        desc: loc("achieve_double_density_desc"),
-        flair: loc("achieve_double_density_flair")
-    },
-    doomed: {
-        name: loc("achieve_doomed_name"),
-        desc: loc("achieve_doomed_desc"),
-        flair: loc("achieve_doomed_flair")
-    },
-    pandemonium: {
-        name: loc("achieve_pandemonium_name"),
-        desc: loc("achieve_pandemonium_desc"),
-        flair: loc("achieve_pandemonium_flair")
-    },
-    blood_war: {
-        name: loc("achieve_blood_war_name"),
-        desc: loc("achieve_blood_war_desc"),
-        flair: loc("achieve_blood_war_flair")
-    },
-    cross: {
-        name: loc("achieve_cross_name"),
-        desc: loc("achieve_cross_desc"),
-        flair: loc("achieve_cross_flair")
-    },
-    landfill: {
-        name: loc("achieve_landfill_name"),
-        desc: loc("achieve_landfill_desc"),
-        flair: loc("achieve_landfill_flair")
-    },
-    seeder: {
-        name: loc("achieve_seeder_name"),
-        desc: loc("achieve_seeder_desc"),
-        flair: loc("achieve_seeder_flair")
-    },
-    macro: {
-        name: loc("achieve_macro_name"),
-        desc: loc("achieve_macro_desc"),
-        flair: loc("achieve_macro_flair")
-    },
-    marble: {
-        name: loc("achieve_marble_name"),
-        desc: loc("achieve_marble_desc"),
-        flair: loc("achieve_marble_flair")
-    },
-    explorer: {
-        name: loc("achieve_biome_explorer_name"),
-        desc: loc("achieve_biome_explorer_desc"),
-        flair: loc("achieve_biome_explorer_flair")
-    },
-    joyless: {
-        name: loc("achieve_joyless_name"),
-        desc: loc("achieve_joyless_desc"),
-        flair: loc("achieve_joyless_flair")
-    },
-    steelen: {
-        name: loc("achieve_steelen_name"),
-        desc: loc("achieve_steelen_desc"),
-        flair: loc("achieve_steelen_flair")
-    },
-    biome_grassland: {
-        name: loc("achieve_biome_grassland_name"),
-        desc: loc("achieve_biome_grassland_desc"),
-        flair: loc("achieve_biome_grassland_flair")
-    },
-    biome_oceanic: {
-        name: loc("achieve_biome_oceanic_name"),
-        desc: loc("achieve_biome_oceanic_desc"),
-        flair: loc("achieve_biome_oceanic_flair")
-    },
-    biome_forest: {
-        name: loc("achieve_biome_forest_name"),
-        desc: loc("achieve_biome_forest_desc"),
-        flair: loc("achieve_biome_forest_flair")
-    },
-    biome_desert: {
-        name: loc("achieve_biome_desert_name"),
-        desc: loc("achieve_biome_desert_desc"),
-        flair: loc("achieve_biome_desert_flair")
-    },
-    biome_volcanic: {
-        name: loc("achieve_biome_volcanic_name"),
-        desc: loc("achieve_biome_volcanic_desc"),
-        flair: loc("achieve_biome_volcanic_flair")
-    },
-    biome_tundra: {
-        name: loc("achieve_biome_tundra_name"),
-        desc: loc("achieve_biome_tundra_desc"),
-        flair: loc("achieve_biome_tundra_flair")
-    },
-    biome_hellscape: {
-        name: loc("achieve_biome_hellscape_name"),
-        desc: loc("achieve_biome_hellscape_desc"),
-        flair: loc("achieve_biome_hellscape_flair")
-    },
-    biome_eden: {
-        name: loc("achieve_biome_eden_name"),
-        desc: loc("achieve_biome_eden_desc"),
-        flair: loc("achieve_biome_eden_flair")
-    },
-    creator: {
-        name: loc("achieve_creator_name"),
-        desc: loc("achieve_creator_desc"),
-        flair: loc("achieve_creator_flair")
-    },
-    heavyweight: {
-        name: loc("achieve_heavyweight_name"),
-        desc: loc("achieve_heavyweight_desc"),
-        flair: loc("achieve_heavyweight_flair")
-    },
-    miners_dream: {
-        name: loc("achieve_miners_dream_name"),
-        desc: loc("achieve_miners_dream_desc"),
-        flair: loc("achieve_miners_dream_flair")
-    },
-    whitehole: {
-        name: loc("achieve_whitehole_name"),
-        desc: loc("achieve_whitehole_desc"),
-        flair: loc("achieve_whitehole_flair")
-    },
-    heavy: {
-        name: loc("achieve_heavy_name"),
-        desc: loc("achieve_heavy_desc"),
-        flair: loc("achieve_heavy_flair")
-    },
-    canceled: {
-        name: loc("achieve_canceled_name"),
-        desc: loc("achieve_canceled_desc"),
-        flair: loc("achieve_canceled_flair")
-    },
-    eviltwin: {
-        name: loc("achieve_eviltwin_name"),
-        desc: loc("achieve_eviltwin_desc"),
-        flair: loc("achieve_eviltwin_flair")
-    },
-    microbang: {
-        name: loc("achieve_microbang_name"),
-        desc: loc("achieve_microbang_desc"),
-        flair: loc("achieve_microbang_flair")
-    },
-    dissipated: {
-        name: loc("achieve_dissipated_name"),
-        desc: loc("achieve_dissipated_desc"),
-        flair: loc("achieve_dissipated_flair")
-    },
-    shaken: {
-        name: loc("achieve_shaken_name"),
-        desc: loc("achieve_shaken_desc"),
-        flair: loc("achieve_shaken_flair")
-    },
-    iron_will: {
-        name: loc("achieve_iron_will_name"),
-        desc: loc("achieve_iron_will_desc"),
-        flair: loc("achieve_iron_will_flair")
-    },
-    failed_history: {
-        name: loc("achieve_failed_history_name"),
-        desc: loc("achieve_failed_history_desc"),
-        flair: loc("achieve_failed_history_flair")
-    },
-    blacken_the_sun: {
-        name: loc("achieve_blacken_the_sun_name"),
-        desc: loc("achieve_blacken_the_sun_desc"),
-        flair: loc("achieve_blacken_the_sun_flair")
-    },
-    genus_humanoid: {
-        name: loc("achieve_genus_humanoid_name"),
-        desc: loc("achieve_genus_humanoid_desc"),
-        flair: loc("achieve_genus_humanoid_flair")
-    },
-    genus_animal: {
-        name: loc("achieve_genus_animal_name"),
-        desc: loc("achieve_genus_animal_desc"),
-        flair: loc("achieve_genus_animal_flair")
-    },
-    genus_small: {
-        name: loc("achieve_genus_small_name"),
-        desc: loc("achieve_genus_small_desc"),
-        flair: loc("achieve_genus_small_flair")
-    },
-    genus_giant: {
-        name: loc("achieve_genus_giant_name"),
-        desc: loc("achieve_genus_giant_desc"),
-        flair: loc("achieve_genus_giant_flair")
-    },
-    genus_reptilian: {
-        name: loc("achieve_genus_reptilian_name"),
-        desc: loc("achieve_genus_reptilian_desc"),
-        flair: loc("achieve_genus_reptilian_flair")
-    },
-    genus_avian: {
-        name: loc("achieve_genus_avian_name"),
-        desc: loc("achieve_genus_avian_desc"),
-        flair: loc("achieve_genus_avian_flair")
-    },
-    genus_insectoid: {
-        name: loc("achieve_genus_insectoid_name"),
-        desc: loc("achieve_genus_insectoid_desc"),
-        flair: loc("achieve_genus_insectoid_flair")
-    },
-    genus_plant: {
-        name: loc("achieve_genus_plant_name"),
-        desc: loc("achieve_genus_plant_desc"),
-        flair: loc("achieve_genus_plant_flair")
-    },
-    genus_fungi: {
-        name: loc("achieve_genus_fungi_name"),
-        desc: loc("achieve_genus_fungi_desc"),
-        flair: loc("achieve_genus_fungi_flair")
-    },
-    genus_aquatic: {
-        name: loc("achieve_genus_aquatic_name"),
-        desc: loc("achieve_genus_aquatic_desc"),
-        flair: loc("achieve_genus_aquatic_flair")
-    },
-    genus_fey: {
-        name: loc("achieve_genus_fey_name"),
-        desc: loc("achieve_genus_fey_desc"),
-        flair: loc("achieve_genus_fey_flair")
-    },
-    genus_heat: {
-        name: loc("achieve_genus_heat_name"),
-        desc: loc("achieve_genus_heat_desc"),
-        flair: loc("achieve_genus_heat_flair")
-    },
-    genus_polar: {
-        name: loc("achieve_genus_polar_name"),
-        desc: loc("achieve_genus_polar_desc"),
-        flair: loc("achieve_genus_polar_flair")
-    },
-    genus_sand: {
-        name: loc("achieve_genus_sand_name"),
-        desc: loc("achieve_genus_sand_desc"),
-        flair: loc("achieve_genus_sand_flair")
-    },
-    genus_demonic: {
-        name: loc("achieve_genus_demonic_name"),
-        desc: loc("achieve_genus_demonic_desc"),
-        flair: loc("achieve_genus_demonic_flair")
-    },
-    genus_angelic: {
-        name: loc("achieve_genus_angelic_name"),
-        desc: loc("achieve_genus_angelic_desc"),
-        flair: loc("achieve_genus_angelic_flair")
-    },
-    atmo_toxic: {
-        name: loc("achieve_atmo_toxic_name"),
-        desc: loc("achieve_atmo_toxic_desc"),
-        flair: loc("achieve_atmo_toxic_flair")
-    },
-    atmo_mellow: {
-        name: loc("achieve_atmo_mellow_name"),
-        desc: loc("achieve_atmo_mellow_desc"),
-        flair: loc("achieve_atmo_mellow_flair")
-    },
-    atmo_rage: {
-        name: loc("achieve_atmo_rage_name"),
-        desc: loc("achieve_atmo_rage_desc"),
-        flair: loc("achieve_atmo_rage_flair")
-    },
-    atmo_stormy: {
-        name: loc("achieve_atmo_stormy_name"),
-        desc: loc("achieve_atmo_stormy_desc"),
-        flair: loc("achieve_atmo_stormy_flair")
-    },
-    atmo_ozone: {
-        name: loc("achieve_atmo_ozone_name"),
-        desc: loc("achieve_atmo_ozone_desc"),
-        flair: loc("achieve_atmo_ozone_flair")
-    },
-    atmo_magnetic: {
-        name: loc("achieve_atmo_magnetic_name"),
-        desc: loc("achieve_atmo_magnetic_desc"),
-        flair: loc("achieve_atmo_magnetic_flair")
-    },
-    atmo_trashed: {
-        name: loc("achieve_atmo_trashed_name"),
-        desc: loc("achieve_atmo_trashed_desc"),
-        flair: loc("achieve_atmo_trashed_flair")
-    },
-    atmo_elliptical: {
-        name: loc("achieve_atmo_elliptical_name"),
-        desc: loc("achieve_atmo_elliptical_desc"),
-        flair: loc("achieve_atmo_elliptical_flair")
-    },
-    atmo_flare: {
-        name: loc("achieve_atmo_flare_name"),
-        desc: loc("achieve_atmo_flare_desc"),
-        flair: loc("achieve_atmo_flare_flair")
-    },
-    atmo_dense: {
-        name: loc("achieve_atmo_dense_name"),
-        desc: loc("achieve_atmo_dense_desc"),
-        flair: loc("achieve_atmo_dense_flair")
-    },
-    atmo_unstable: {
-        name: loc("achieve_atmo_unstable_name"),
-        desc: loc("achieve_atmo_unstable_desc"),
-        flair: loc("achieve_atmo_unstable_flair")
-    },
-    mass_extinction: {
-        name: loc("achieve_mass_extinction_name"),
-        desc: loc("achieve_mass_extinction_desc"),
-        flair: loc("achieve_mass_extinction_flair")
-    },
-    vigilante: {
-        name: loc("achieve_vigilante_name"),
-        desc: loc("achieve_vigilante_desc"),
-        flair: loc("achieve_vigilante_flair")
-    },
-    extinct_human: {
-        name: loc("achieve_extinct_human_name"),
-        desc: loc("achieve_extinct_human_desc"),
-        flair: loc("achieve_extinct_human_flair")
-    },
-    extinct_elven: {
-        name: loc("achieve_extinct_elven_name"),
-        desc: loc("achieve_extinct_elven_desc"),
-        flair: loc("achieve_extinct_elven_flair")
-    },
-    extinct_orc: {
-        name: loc("achieve_extinct_orc_name"),
-        desc: loc("achieve_extinct_orc_desc"),
-        flair: loc("achieve_extinct_orc_flair")
-    },
-    extinct_cath: {
-        name: loc("achieve_extinct_cath_name"),
-        desc: loc("achieve_extinct_cath_desc"),
-        flair: loc("achieve_extinct_cath_flair")
-    },
-    extinct_wolven: {
-        name: loc("achieve_extinct_wolven_name"),
-        desc: loc("achieve_extinct_wolven_desc"),
-        flair: loc("achieve_extinct_wolven_flair")
-    },
-    extinct_centaur: {
-        name: loc("achieve_extinct_centaur_name"),
-        desc: loc("achieve_extinct_centaur_desc"),
-        flair: loc("achieve_extinct_centaur_flair")
-    },
-    extinct_kobold: {
-        name: loc("achieve_extinct_kobold_name"),
-        desc: loc("achieve_extinct_kobold_desc"),
-        flair: loc("achieve_extinct_kobold_flair")
-    },
-    extinct_goblin: {
-        name: loc("achieve_extinct_goblin_name"),
-        desc: loc("achieve_extinct_goblin_desc"),
-        flair: loc("achieve_extinct_goblin_flair")
-    },
-    extinct_gnome: {
-        name: loc("achieve_extinct_gnome_name"),
-        desc: loc("achieve_extinct_gnome_desc"),
-        flair: loc("achieve_extinct_gnome_flair")
-    },
-    extinct_ogre: {
-        name: loc("achieve_extinct_ogre_name"),
-        desc: loc("achieve_extinct_ogre_desc"),
-        flair: loc("achieve_extinct_ogre_flair")
-    },
-    extinct_cyclops: {
-        name: loc("achieve_extinct_cyclops_name"),
-        desc: loc("achieve_extinct_cyclops_desc"),
-        flair: loc("achieve_extinct_cyclops_flair")
-    },
-    extinct_troll: {
-        name: loc("achieve_extinct_troll_name"),
-        desc: loc("achieve_extinct_troll_desc"),
-        flair: loc("achieve_extinct_troll_flair")
-    },
-    extinct_tortoisan: {
-        name: loc("achieve_extinct_tortoisan_name"),
-        desc: loc("achieve_extinct_tortoisan_desc"),
-        flair: loc("achieve_extinct_tortoisan_flair")
-    },
-    extinct_gecko: {
-        name: loc("achieve_extinct_gecko_name"),
-        desc: loc("achieve_extinct_gecko_desc"),
-        flair: loc("achieve_extinct_gecko_flair")
-    },
-    extinct_slitheryn: {
-        name: loc("achieve_extinct_slitheryn_name"),
-        desc: loc("achieve_extinct_slitheryn_desc"),
-        flair: loc("achieve_extinct_slitheryn_flair")
-    },
-    extinct_arraak: {
-        name: loc("achieve_extinct_arraak_name"),
-        desc: loc("achieve_extinct_arraak_desc"),
-        flair: loc("achieve_extinct_arraak_flair")
-    },
-    extinct_pterodacti: {
-        name: loc("achieve_extinct_pterodacti_name"),
-        desc: loc("achieve_extinct_pterodacti_desc"),
-        flair: loc("achieve_extinct_pterodacti_flair")
-    },
-    extinct_dracnid: {
-        name: loc("achieve_extinct_dracnid_name"),
-        desc: loc("achieve_extinct_dracnid_desc"),
-        flair: loc("achieve_extinct_dracnid_flair")
-    },
-    extinct_entish: {
-        name: loc("achieve_extinct_entish_name"),
-        desc: loc("achieve_extinct_entish_desc"),
-        flair: loc("achieve_extinct_entish_flair")
-    },
-    extinct_cacti: {
-        name: loc("achieve_extinct_cacti_name"),
-        desc: loc("achieve_extinct_cacti_desc"),
-        flair: loc("achieve_extinct_cacti_flair")
-    },
-    extinct_pinguicula: {
-        name: loc("achieve_extinct_pinguicula_name"),
-        desc: loc("achieve_extinct_pinguicula_desc"),
-        flair: loc("achieve_extinct_pinguicula_flair")
-    },
-    extinct_sporgar: {
-        name: loc("achieve_extinct_sporgar_name"),
-        desc: loc("achieve_extinct_sporgar_desc"),
-        flair: loc("achieve_extinct_sporgar_flair")
-    },
-    extinct_shroomi: {
-        name: loc("achieve_extinct_shroomi_name"),
-        desc: loc("achieve_extinct_shroomi_desc"),
-        flair: loc("achieve_extinct_shroomi_flair")
-    },
-    extinct_moldling: {
-        name: loc("achieve_extinct_moldling_name"),
-        desc: loc("achieve_extinct_moldling_desc"),
-        flair: loc("achieve_extinct_moldling_flair")
-    },
-    extinct_mantis: {
-        name: loc("achieve_extinct_mantis_name"),
-        desc: loc("achieve_extinct_mantis_desc"),
-        flair: loc("achieve_extinct_mantis_flair")
-    },
-    extinct_scorpid: {
-        name: loc("achieve_extinct_scorpid_name"),
-        desc: loc("achieve_extinct_scorpid_desc"),
-        flair: loc("achieve_extinct_scorpid_flair")
-    },
-    extinct_antid: {
-        name: loc("achieve_extinct_antid_name"),
-        desc: loc("achieve_extinct_antid_desc"),
-        flair: loc("achieve_extinct_antid_flair")
-    },
-    extinct_sharkin: {
-        name: loc("achieve_extinct_sharkin_name"),
-        desc: loc("achieve_extinct_sharkin_desc"),
-        flair: loc("achieve_extinct_sharkin_flair")
-    },
-    extinct_octigoran: {
-        name: loc("achieve_extinct_octigoran_name"),
-        desc: loc("achieve_extinct_octigoran_desc"),
-        flair: loc("achieve_extinct_octigoran_flair")
-    },
-    extinct_dryad: {
-        name: loc("achieve_extinct_dryad_name"),
-        desc: loc("achieve_extinct_dryad_desc"),
-        flair: loc("achieve_extinct_dryad_flair")
-    },
-    extinct_satyr: {
-        name: loc("achieve_extinct_satyr_name"),
-        desc: loc("achieve_extinct_satyr_desc"),
-        flair: loc("achieve_extinct_satyr_flair")
-    },
-    extinct_phoenix: {
-        name: loc("achieve_extinct_phoenix_name"),
-        desc: loc("achieve_extinct_phoenix_desc"),
-        flair: loc("achieve_extinct_phoenix_flair")
-    },
-    extinct_salamander: {
-        name: loc("achieve_extinct_salamander_name"),
-        desc: loc("achieve_extinct_salamander_desc"),
-        flair: loc("achieve_extinct_salamander_flair")
-    },
-    extinct_yeti: {
-        name: loc("achieve_extinct_yeti_name"),
-        desc: loc("achieve_extinct_yeti_desc"),
-        flair: loc("achieve_extinct_yeti_flair")
-    },
-    extinct_wendigo: {
-        name: loc("achieve_extinct_wendigo_name"),
-        desc: loc("achieve_extinct_wendigo_desc"),
-        flair: loc("achieve_extinct_wendigo_flair")
-    },
-    extinct_tuskin: {
-        name: loc("achieve_extinct_tuskin_name"),
-        desc: loc("achieve_extinct_tuskin_desc"),
-        flair: loc("achieve_extinct_tuskin_flair")
-    },
-    extinct_kamel: {
-        name: loc("achieve_extinct_kamel_name"),
-        desc: loc("achieve_extinct_kamel_desc"),
-        flair: loc("achieve_extinct_kamel_flair")
-    },
-    extinct_balorg: {
-        name: loc("achieve_extinct_balorg_name"),
-        desc: loc("achieve_extinct_balorg_desc"),
-        flair: loc("achieve_extinct_balorg_flair")
-    },
-    extinct_imp: {
-        name: loc("achieve_extinct_imp_name"),
-        desc: loc("achieve_extinct_imp_desc"),
-        flair: loc("achieve_extinct_imp_flair")
-    },
-    extinct_seraph: {
-        name: loc("achieve_extinct_seraph_name"),
-        desc: loc("achieve_extinct_seraph_desc"),
-        flair: loc("achieve_extinct_seraph_flair")
-    },
-    extinct_unicorn: {
-        name: loc("achieve_extinct_unicorn_name"),
-        desc: loc("achieve_extinct_unicorn_desc"),
-        flair: loc("achieve_extinct_unicorn_flair")
-    },
-    extinct_junker: {
-        name: loc("achieve_extinct_junker_name"),
-        desc: loc("achieve_extinct_junker_desc"),
-        flair: loc("achieve_extinct_junker_flair")
-    },
-    extinct_custom: {
-        name: loc("achieve_extinct_custom_name"),
-        desc: loc("achieve_extinct_custom_desc"),
-        flair: loc("achieve_extinct_custom_flair")
-    }
+// Races from src/races.js -> const races = {
+const races = {
+    protoplasm: {
+        name: loc('race_protoplasm'),
+        desc: loc('race_protoplasm_desc'),
+        type: 'organism',
+        home: loc('race_prehistoric'),
+        entity: 'ooze',
+        traits: {},
+        solar: {
+            red: loc('race_human_solar_red'),
+            hell: loc('race_human_solar_hell'),
+            gas: loc('race_human_solar_gas'),
+            gas_moon: loc('race_human_solar_gas_moon'),
+            dwarf: loc('race_human_solar_dwarf'),
+        },
+        fanaticism: 'none'
+    },
+    human: {
+        name: loc('race_human'),
+        desc: loc('race_human_desc'),
+        type: 'humanoid',
+        home: loc('race_human_home'),
+        entity: loc('race_human_entity'),
+        traits: {
+            creative: 1,
+            diverse: 1
+        },
+        solar: {
+            red: loc('race_human_solar_red'),
+            hell: loc('race_human_solar_hell'),
+            gas: loc('race_human_solar_gas'),
+            gas_moon: loc('race_human_solar_gas_moon'),
+            dwarf: loc('race_human_solar_dwarf'),
+        },
+        fanaticism: 'creative'
+    },
+    elven: {
+        name: loc('race_elven'),
+        desc: loc(!global.settings.boring && date.getMonth() === 11 && date.getDate() >= 17 ? 'race_xmas_elf_desc' : 'race_elven_desc'),
+        type: 'humanoid',
+        home: loc(!global.settings.boring && date.getMonth() === 11 && date.getDate() >= 17 ? 'race_xmas_elf_home' : 'race_elven_home'),
+        entity: loc('race_elven_entity'),
+        traits: {
+            studious: 1,
+            arrogant: 1
+        },
+        solar: {
+            red: loc(!global.settings.boring && date.getMonth() === 11 && date.getDate() >= 17 ? 'race_xmas_elf_solar_red' : 'race_elven_solar_red'),
+            hell: loc(!global.settings.boring && date.getMonth() === 11 && date.getDate() >= 17 ? 'race_xmas_elf_solar_hell' : 'race_elven_solar_hell'),
+            gas: loc(!global.settings.boring && date.getMonth() === 11 && date.getDate() >= 17 ? 'race_xmas_elf_solar_gas' : 'race_elven_solar_gas'),
+            gas_moon: loc(!global.settings.boring && date.getMonth() === 11 && date.getDate() >= 17 ? 'race_xmas_elf_solar_gas_moon' : 'race_elven_solar_gas_moon'),
+            dwarf: loc(!global.settings.boring && date.getMonth() === 11 && date.getDate() >= 17 ? 'race_xmas_elf_solar_dwarf' : 'race_elven_solar_dwarf'),
+        },
+        fanaticism: 'studious'
+    },
+    orc: {
+        name: loc('race_orc'),
+        desc: loc('race_orc_desc'),
+        type: 'humanoid',
+        home: loc('race_orc_home'),
+        entity: loc('race_orc_entity'),
+        traits: {
+            brute: 1,
+            angry: 1
+        },
+        solar: {
+            red: loc('race_orc_solar_red'),
+            hell: loc('race_orc_solar_hell'),
+            gas: loc('race_orc_solar_gas'),
+            gas_moon: loc('race_orc_solar_gas_moon'),
+            dwarf: loc('race_orc_solar_dwarf'),
+        },
+        fanaticism: 'brute'
+    },
+    cath: {
+        name: loc('race_cath'),
+        desc: loc('race_cath_desc'),
+        type: 'animal',
+        home: loc('race_cath_home'),
+        entity: loc('race_cath_entity'),
+        traits: {
+            lazy: 1,
+            carnivore: 1
+        },
+        solar: {
+            red: loc('race_cath_solar_red'),
+            hell: loc('race_cath_solar_hell'),
+            gas: loc('race_cath_solar_gas'),
+            gas_moon: loc('race_cath_solar_gas_moon'),
+            dwarf: loc('race_cath_solar_dwarf'),
+        },
+        fanaticism: 'carnivore'
+    },
+    wolven: {
+        name: easter.active ? loc('race_rabbit') : loc('race_wolven'),
+        desc: easter.active ? loc('race_rabbit_desc') : loc('race_wolven_desc'),
+        type: 'animal',
+        home: easter.active ? loc('race_rabbit_home') : loc('race_wolven_home'),
+        entity: easter.active ? loc('race_rabbit_entity') : loc('race_wolven_entity'),
+        traits: {
+            pack_mentality: 1,
+            tracker: 1
+        },
+        solar: {
+            red: easter.active ? loc('race_rabbit_solar_red') : loc('race_wolven_solar_red'),
+            hell: easter.active ? loc('race_rabbit_solar_hell') : loc('race_wolven_solar_hell'),
+            gas: easter.active ? loc('race_rabbit_solar_gas') : loc('race_wolven_solar_gas'),
+            gas_moon: easter.active ? loc('race_rabbit_solar_gas_moon') : loc('race_wolven_solar_gas_moon'),
+            dwarf: easter.active ? loc('race_rabbit_solar_dwarf') : loc('race_wolven_solar_dwarf'),
+        },
+        fanaticism: 'tracker'
+    },
+    centaur: {
+        name: loc('race_centaur'),
+        desc: loc('race_centaur_desc'),
+        type: 'animal',
+        home: loc('race_centaur_home'),
+        entity: loc('race_centaur_entity'),
+        traits: {
+            beast_of_burden: 1,
+            herbivore: 1
+        },
+        solar: {
+            red: loc('race_centaur_solar_red'),
+            hell: loc('race_centaur_solar_hell'),
+            gas: loc('race_centaur_solar_gas'),
+            gas_moon: loc('race_centaur_solar_gas_moon'),
+            dwarf: loc('race_centaur_solar_dwarf'),
+        },
+        fanaticism: 'beast_of_burden'
+    },
+    kobold: {
+        name: loc('race_kobold'),
+        desc: loc('race_kobold_desc'),
+        type: 'small',
+        home: loc('race_kobold_home'),
+        entity: loc('race_kobold_entity'),
+        traits: {
+            pack_rat: 1,
+            paranoid: 1
+        },
+        solar: {
+            red: loc('race_kobold_solar_red'),
+            hell: loc('race_kobold_solar_hell'),
+            gas: loc('race_kobold_solar_gas'),
+            gas_moon: loc('race_kobold_solar_gas_moon'),
+            dwarf: loc('race_kobold_solar_dwarf'),
+        },
+        fanaticism: 'pack_rat'
+    },
+    goblin: {
+        name: loc('race_goblin'),
+        desc: loc('race_goblin_desc'),
+        type: 'small',
+        home: loc('race_goblin_home'),
+        entity: loc('race_goblin_entity'),
+        traits: {
+            greedy: 1,
+            merchant: 1
+        },
+        solar: {
+            red: loc('race_goblin_solar_red'),
+            hell: loc('race_goblin_solar_hell'),
+            gas: loc('race_goblin_solar_gas'),
+            gas_moon: loc('race_goblin_solar_gas_moon'),
+            dwarf: loc('race_goblin_solar_dwarf'),
+        },
+        fanaticism: 'merchant'
+    },
+    gnome: {
+        name: loc('race_gnome'),
+        desc: loc('race_gnome_desc'),
+        type: 'small',
+        home: loc('race_gnome_home'),
+        entity: loc('race_gnome_entity'),
+        traits: {
+            smart: 1,
+            puny: 1
+        },
+        solar: {
+            red: loc('race_gnome_solar_red'),
+            hell: loc('race_gnome_solar_hell'),
+            gas: loc('race_gnome_solar_gas'),
+            gas_moon: loc('race_gnome_solar_gas_moon'),
+            dwarf: loc('race_gnome_solar_dwarf'),
+        },
+        fanaticism: 'smart'
+    },
+    ogre: {
+        name: loc('race_ogre'),
+        desc: loc('race_ogre_desc'),
+        type: 'giant',
+        home: loc('race_ogre_home'),
+        entity: loc('race_ogre_entity'),
+        traits: {
+            dumb: 1,
+            tough: 1
+        },
+        solar: {
+            red: loc('race_ogre_solar_red'),
+            hell: loc('race_ogre_solar_hell'),
+            gas: loc('race_ogre_solar_gas'),
+            gas_moon: loc('race_ogre_solar_gas_moon'),
+            dwarf: loc('race_ogre_solar_dwarf'),
+        },
+        fanaticism: 'tough'
+    },
+    cyclops: {
+        name: loc('race_cyclops'),
+        desc: loc('race_cyclops_desc'),
+        type: 'giant',
+        home: loc('race_cyclops_home'),
+        entity: loc('race_cyclops_entity'),
+        traits: {
+            nearsighted: 1,
+            intelligent: 1
+        },
+        solar: {
+            red: loc('race_cyclops_solar_red'),
+            hell: loc('race_cyclops_solar_hell'),
+            gas: loc('race_cyclops_solar_gas'),
+            gas_moon: loc('race_cyclops_solar_gas_moon'),
+            dwarf: loc('race_cyclops_solar_dwarf'),
+        },
+        fanaticism: 'intelligent'
+    },
+    troll: {
+        name: loc('race_troll'),
+        desc: loc('race_troll_desc'),
+        type: 'giant',
+        home: loc('race_troll_home'),
+        entity: loc('race_troll_entity'),
+        traits: {
+            regenerative: 1,
+            gluttony: 1
+        },
+        solar: {
+            red: loc('race_troll_solar_red'),
+            hell: loc('race_troll_solar_hell'),
+            gas: loc('race_troll_solar_gas'),
+            gas_moon: loc('race_troll_solar_gas_moon'),
+            dwarf: loc('race_troll_solar_dwarf'),
+        },
+        fanaticism: 'regenerative'
+    },
+    tortoisan: {
+        name: loc('race_tortoisan'),
+        desc: loc('race_tortoisan_desc'),
+        type: 'reptilian',
+        home: loc('race_tortoisan_home'),
+        entity: loc('race_tortoisan_entity'),
+        traits: {
+            slow: 1,
+            armored: 1
+        },
+        solar: {
+            red: loc('race_tortoisan_solar_red'),
+            hell: loc('race_tortoisan_solar_hell'),
+            gas: loc('race_tortoisan_solar_gas'),
+            gas_moon: loc('race_tortoisan_solar_gas_moon'),
+            dwarf: loc('race_tortoisan_solar_dwarf'),
+        },
+        fanaticism: 'armored'
+    },
+    gecko: {
+        name: loc('race_gecko'),
+        desc: loc('race_gecko_desc'),
+        type: 'reptilian',
+        home: loc('race_gecko_home'),
+        entity: loc('race_gecko_entity'),
+        traits: {
+            optimistic: 1,
+            chameleon: 1
+        },
+        solar: {
+            red: loc('race_gecko_solar_red'),
+            hell: loc('race_gecko_solar_hell'),
+            gas: loc('race_gecko_solar_gas'),
+            gas_moon: loc('race_gecko_solar_gas_moon'),
+            dwarf: loc('race_gecko_solar_dwarf'),
+        },
+        fanaticism: 'optimistic'
+    },
+    slitheryn: {
+        name: loc('race_slitheryn'),
+        desc: loc('race_slitheryn_desc'),
+        type: 'reptilian',
+        home: loc('race_slitheryn_home'),
+        entity: loc('race_slitheryn_entity'),
+        traits: {
+            slow_digestion: 1,
+            hard_of_hearing: 1
+        },
+        solar: {
+            red: loc('race_slitheryn_solar_red'),
+            hell: loc('race_slitheryn_solar_hell'),
+            gas: loc('race_slitheryn_solar_gas'),
+            gas_moon: loc('race_slitheryn_solar_gas_moon'),
+            dwarf: loc('race_slitheryn_solar_dwarf'),
+        },
+        fanaticism: 'slow_digestion'
+    },
+    arraak: {
+        name: loc(!global.settings.boring && date.getMonth() === 10 && date.getDate() >= 22 && date.getDate() <= 28 ? 'race_turkey' : 'race_arraak'),
+        desc: loc(!global.settings.boring && date.getMonth() === 10 && date.getDate() >= 22 && date.getDate() <= 28 ? 'race_turkey_desc' : 'race_arraak_desc'),
+        type: 'avian',
+        home: loc(!global.settings.boring && date.getMonth() === 10 && date.getDate() >= 22 && date.getDate() <= 28 ? 'race_turkey_home' : 'race_arraak_home'),
+        entity: loc('race_arraak_entity'),
+        traits: {
+            resourceful: 1,
+            selenophobia: 1
+        },
+        solar: {
+            red: loc(!global.settings.boring && date.getMonth() === 10 && date.getDate() >= 22 && date.getDate() <= 28 ? 'race_turkey_solar_red' : 'race_arraak_solar_red'),
+            hell: loc(!global.settings.boring && date.getMonth() === 10 && date.getDate() >= 22 && date.getDate() <= 28 ? 'race_turkey_solar_hell' : 'race_arraak_solar_hell'),
+            gas: loc(!global.settings.boring && date.getMonth() === 10 && date.getDate() >= 22 && date.getDate() <= 28 ? 'race_turkey_solar_gas' : 'race_arraak_solar_gas'),
+            gas_moon: loc(!global.settings.boring && date.getMonth() === 10 && date.getDate() >= 22 && date.getDate() <= 28 ? 'race_turkey_solar_gas_moon' : 'race_arraak_solar_gas_moon'),
+            dwarf: loc(!global.settings.boring && date.getMonth() === 10 && date.getDate() >= 22 && date.getDate() <= 28 ? 'race_turkey_solar_dwarf' : 'race_arraak_solar_dwarf'),
+        },
+        fanaticism: 'resourceful'
+    },
+    pterodacti: {
+        name: loc('race_pterodacti'),
+        desc: loc('race_pterodacti_desc'),
+        type: 'avian',
+        home: loc('race_pterodacti_home'),
+        entity: loc('race_pterodacti_entity'),
+        traits: {
+            leathery: 1,
+            pessimistic: 1
+        },
+        solar: {
+            red: loc('race_pterodacti_solar_red'),
+            hell: loc('race_pterodacti_solar_hell'),
+            gas: loc('race_pterodacti_solar_gas'),
+            gas_moon: loc('race_pterodacti_solar_gas_moon'),
+            dwarf: loc('race_pterodacti_solar_dwarf'),
+        },
+        fanaticism: 'leathery'
+    },
+    dracnid: {
+        name: loc('race_dracnid'),
+        desc: loc('race_dracnid_desc'),
+        type: 'avian',
+        home: loc('race_dracnid_home'),
+        entity: loc('race_dracnid_entity'),
+        traits: {
+            hoarder: 1,
+            solitary: 1
+        },
+        solar: {
+            red: loc('race_dracnid_solar_red'),
+            hell: loc('race_dracnid_solar_hell'),
+            gas: loc('race_dracnid_solar_gas'),
+            gas_moon: loc('race_dracnid_solar_gas_moon'),
+            dwarf: loc('race_dracnid_solar_dwarf'),
+        },
+        fanaticism: 'hoarder'
+    },
+    entish: {
+        name: loc('race_entish'),
+        desc: loc('race_entish_desc'),
+        type: 'plant',
+        home: loc('race_entish_home'),
+        entity: loc('race_entish_entity'),
+        traits: {
+            kindling_kindred: 1,
+            pyrophobia: 1
+        },
+        solar: {
+            red: loc('race_entish_solar_red'),
+            hell: loc('race_entish_solar_hell'),
+            gas: loc('race_entish_solar_gas'),
+            gas_moon: loc('race_entish_solar_gas_moon'),
+            dwarf: loc('race_entish_solar_dwarf'),
+        },
+        fanaticism: 'kindling_kindred'
+    },
+    cacti: {
+        name: loc('race_cacti'),
+        desc: loc('race_cacti_desc'),
+        type: 'plant',
+        home: loc('race_cacti_home'),
+        entity: loc('race_cacti_entity'),
+        traits: {
+            hyper: 1,
+            skittish: 1
+        },
+        solar: {
+            red: loc('race_cacti_solar_red'),
+            hell: loc('race_cacti_solar_hell'),
+            gas: loc('race_cacti_solar_gas'),
+            gas_moon: loc('race_cacti_solar_gas_moon'),
+            dwarf: loc('race_cacti_solar_dwarf'),
+        },
+        fanaticism: 'hyper'
+    },
+    pinguicula: {
+        name: loc('race_pinguicula'),
+        desc: loc('race_pinguicula_desc'),
+        type: 'plant',
+        home: loc('race_pinguicula_home'),
+        entity: loc('race_pinguicula_entity'),
+        traits: {
+            fragrant: 1,
+            sticky: 1
+        },
+        solar: {
+            red: loc('race_pinguicula_solar_red'),
+            hell: loc('race_pinguicula_solar_hell'),
+            gas: loc('race_pinguicula_solar_gas'),
+            gas_moon: loc('race_pinguicula_solar_gas_moon'),
+            dwarf: loc('race_pinguicula_solar_dwarf'),
+        },
+        fanaticism: 'sticky'
+    },
+    sporgar: {
+        name: loc('race_sporgar'),
+        desc: loc('race_sporgar_desc'),
+        type: 'fungi',
+        home: loc('race_sporgar_home'),
+        entity: loc('race_sporgar_entity'),
+        traits: {
+            infectious: 1,
+            parasite: 1
+        },
+        solar: {
+            red: loc('race_sporgar_solar_red'),
+            hell: loc('race_sporgar_solar_hell'),
+            gas: loc('race_sporgar_solar_gas'),
+            gas_moon: loc('race_sporgar_solar_gas_moon'),
+            dwarf: loc('race_sporgar_solar_dwarf'),
+        },
+        fanaticism: 'infectious'
+    },
+    shroomi: {
+        name: loc('race_shroomi'),
+        desc: loc('race_shroomi_desc'),
+        type: 'fungi',
+        home: loc('race_shroomi_home'),
+        entity: loc('race_shroomi_entity'),
+        traits: {
+            toxic: 1,
+            nyctophilia: 1
+        },
+        solar: {
+            red: loc('race_shroomi_solar_red'),
+            hell: loc('race_shroomi_solar_hell'),
+            gas: loc('race_shroomi_solar_gas'),
+            gas_moon: loc('race_shroomi_solar_gas_moon'),
+            dwarf: loc('race_shroomi_solar_dwarf'),
+        },
+        fanaticism: 'toxic'
+    },
+    moldling: {
+        name: loc('race_moldling'),
+        desc: loc('race_moldling_desc'),
+        type: 'fungi',
+        home: loc('race_moldling_home'),
+        entity: loc('race_moldling_entity'),
+        traits: {
+            infiltrator: 1,
+            hibernator: 1
+        },
+        solar: {
+            red: loc('race_moldling_solar_red'),
+            hell: loc('race_moldling_solar_hell'),
+            gas: loc('race_moldling_solar_gas'),
+            gas_moon: loc('race_moldling_solar_gas_moon'),
+            dwarf: loc('race_moldling_solar_dwarf'),
+        },
+        fanaticism: 'infiltrator'
+    },
+    mantis: {
+        name: loc('race_mantis'),
+        desc: loc('race_mantis_desc'),
+        type: 'insectoid',
+        home: loc('race_mantis_home'),
+        entity: loc('race_mantis_entity'),
+        traits: {
+            cannibalize: 1,
+            malnutrition: 1
+        },
+        solar: {
+            red: loc('race_mantis_solar_red'),
+            hell: loc('race_mantis_solar_hell'),
+            gas: loc('race_mantis_solar_gas'),
+            gas_moon: loc('race_mantis_solar_gas_moon'),
+            dwarf: loc('race_mantis_solar_dwarf'),
+        },
+        fanaticism: 'cannibalize'
+    },
+    scorpid: {
+        name: loc('race_scorpid'),
+        desc: loc('race_scorpid_desc'),
+        type: 'insectoid',
+        home: loc('race_scorpid_home'),
+        entity: loc('race_scorpid_entity'),
+        traits: {
+            claws: 1,
+            atrophy: 1
+        },
+        solar: {
+            red: loc('race_scorpid_solar_red'),
+            hell: loc('race_scorpid_solar_hell'),
+            gas: loc('race_scorpid_solar_gas'),
+            gas_moon: loc('race_scorpid_solar_gas_moon'),
+            dwarf: loc('race_scorpid_solar_dwarf'),
+        },
+        fanaticism: 'claws'
+    },
+    antid: {
+        name: loc('race_antid'),
+        desc: loc('race_antid_desc'),
+        type: 'insectoid',
+        home: loc('race_antid_home'),
+        entity: loc('race_antid_entity'),
+        traits: {
+            hivemind: 1,
+            tunneler: 1
+        },
+        solar: {
+            red: loc('race_antid_solar_red'),
+            hell: loc('race_antid_solar_hell'),
+            gas: loc('race_antid_solar_gas'),
+            gas_moon: loc('race_antid_solar_gas_moon'),
+            dwarf: loc('race_antid_solar_dwarf'),
+        },
+        fanaticism: 'hivemind'
+    },
+    sharkin: {
+        name: loc('race_sharkin'),
+        desc: loc('race_sharkin_desc'),
+        type: 'aquatic',
+        home: loc('race_sharkin_home'),
+        entity: loc('race_sharkin_entity'),
+        traits: {
+            frenzy: 1,
+            apex_predator: 1
+        },
+        solar: {
+            red: loc('race_sharkin_solar_red'),
+            hell: loc('race_sharkin_solar_hell'),
+            gas: loc('race_sharkin_solar_gas'),
+            gas_moon: loc('race_sharkin_solar_gas_moon'),
+            dwarf: loc('race_sharkin_solar_dwarf'),
+        },
+        fanaticism: 'frenzy'
+    },
+    octigoran: {
+        name: loc('race_octigoran'),
+        desc: loc('race_octigoran_desc'),
+        type: 'aquatic',
+        home: loc('race_octigoran_home'),
+        entity: loc('race_octigoran_entity'),
+        traits: {
+            invertebrate: 1,
+            suction_grip: 1
+        },
+        solar: {
+            red: loc('race_octigoran_solar_red'),
+            hell: loc('race_octigoran_solar_hell'),
+            gas: loc('race_octigoran_solar_gas'),
+            gas_moon: loc('race_octigoran_solar_gas_moon'),
+            dwarf: loc('race_octigoran_solar_dwarf'),
+        },
+        fanaticism: 'suction_grip'
+    },
+    dryad: {
+        name: loc('race_dryad'),
+        desc: loc('race_dryad_desc'),
+        type: 'fey',
+        home: loc('race_dryad_home'),
+        entity: loc('race_dryad_entity'),
+        traits: {
+            befuddle: 1,
+            environmentalist: 1,
+            kindling_kindred: 1
+        },
+        solar: {
+            red: loc('race_dryad_solar_red'),
+            hell: loc('race_dryad_solar_hell'),
+            gas: loc('race_dryad_solar_gas'),
+            gas_moon: loc('race_dryad_solar_gas_moon'),
+            dwarf: loc('race_dryad_solar_dwarf'),
+        },
+        fanaticism: 'befuddle'
+    },
+    satyr: {
+        name: loc('race_satyr'),
+        desc: loc('race_satyr_desc'),
+        type: 'fey',
+        home: loc('race_satyr_home'),
+        entity: loc('race_satyr_entity'),
+        traits: {
+            unorganized: 1,
+            musical: 1
+        },
+        solar: {
+            red: loc('race_satyr_solar_red'),
+            hell: loc('race_satyr_solar_hell'),
+            gas: loc('race_satyr_solar_gas'),
+            gas_moon: loc('race_satyr_solar_gas_moon'),
+            dwarf: loc('race_satyr_solar_dwarf'),
+        },
+        fanaticism: 'musical'
+    },
+    phoenix: {
+        name: loc('race_phoenix'),
+        desc: loc('race_phoenix_desc'),
+        type: 'heat',
+        home: loc('race_phoenix_home'),
+        entity: loc('race_phoenix_entity'),
+        traits: {
+            revive: 1,
+            slow_regen: 1
+        },
+        solar: {
+            red: loc('race_phoenix_solar_red'),
+            hell: loc('race_phoenix_solar_hell'),
+            gas: loc('race_phoenix_solar_gas'),
+            gas_moon: loc('race_phoenix_solar_gas_moon'),
+            dwarf: loc('race_phoenix_solar_dwarf'),
+        },
+        fanaticism: 'revive'
+    },
+    salamander: {
+        name: loc('race_salamander'),
+        desc: loc('race_salamander_desc'),
+        type: 'heat',
+        home: loc('race_salamander_home'),
+        entity: loc('race_salamander_entity'),
+        traits: {
+            forge: 1,
+            autoignition: 1
+        },
+        solar: {
+            red: loc('race_salamander_solar_red'),
+            hell: loc('race_salamander_solar_hell'),
+            gas: loc('race_salamander_solar_gas'),
+            gas_moon: loc('race_salamander_solar_gas_moon'),
+            dwarf: loc('race_salamander_solar_dwarf'),
+        },
+        fanaticism: 'forge'
+    },
+    yeti: {
+        name: loc('race_yeti'),
+        desc: loc('race_yeti_desc'),
+        type: 'polar',
+        home: loc('race_yeti_home'),
+        entity: loc('race_yeti_entity'),
+        traits: {
+            blurry: 1,
+            snowy: 1
+        },
+        solar: {
+            red: loc('race_yeti_solar_red'),
+            hell: loc('race_yeti_solar_hell'),
+            gas: loc('race_yeti_solar_gas'),
+            gas_moon: loc('race_yeti_solar_gas_moon'),
+            dwarf: loc('race_yeti_solar_dwarf'),
+        },
+        fanaticism: 'blurry'
+    },
+    wendigo: {
+        name: loc('race_wendigo'),
+        desc: loc('race_wendigo_desc'),
+        type: 'polar',
+        home: loc('race_wendigo_home'),
+        entity: loc('race_wendigo_entity'),
+        traits: {
+            ravenous: 1,
+            ghostly: 1,
+            soul_eater: 1
+        },
+        solar: {
+            red: loc('race_wendigo_solar_red'),
+            hell: loc('race_wendigo_solar_hell'),
+            gas: loc('race_wendigo_solar_gas'),
+            gas_moon: loc('race_wendigo_solar_gas_moon'),
+            dwarf: loc('race_wendigo_solar_dwarf'),
+        },
+        fanaticism: 'ghostly'
+    },
+    tuskin: {
+        name: loc('race_tuskin'),
+        desc: loc('race_tuskin_desc'),
+        type: 'sand',
+        home: loc('race_tuskin_home'),
+        entity: loc('race_tuskin_entity'),
+        traits: {
+            lawless: 1,
+            mistrustful: 1
+        },
+        solar: {
+            red: loc('race_tuskin_solar_red'),
+            hell: loc('race_tuskin_solar_hell'),
+            gas: loc('race_tuskin_solar_gas'),
+            gas_moon: loc('race_tuskin_solar_gas_moon'),
+            dwarf: loc('race_tuskin_solar_dwarf'),
+        },
+        fanaticism: 'lawless'
+    },
+    kamel: {
+        name: loc('race_kamel'),
+        desc: loc('race_kamel_desc'),
+        type: 'sand',
+        home: loc('race_kamel_home'),
+        entity: loc('race_kamel_entity'),
+        traits: {
+            humpback: 1,
+            thalassophobia: 1
+        },
+        solar: {
+            red: loc('race_kamel_solar_red'),
+            hell: loc('race_kamel_solar_hell'),
+            gas: loc('race_kamel_solar_gas'),
+            gas_moon: loc('race_kamel_solar_gas_moon'),
+            dwarf: loc('race_kamel_solar_dwarf')
+        },
+        fanaticism: 'humpback'
+    },
+    balorg: {
+        name: loc('race_balorg'),
+        desc: loc('race_balorg_desc'),
+        type: 'demonic',
+        home: loc('race_balorg_home'),
+        entity: loc('race_balorg_entity'),
+        traits: {
+            fiery: 1,
+            terrifying: 1,
+            slaver: 1
+        },
+        solar: {
+            red: loc('race_balorg_solar_red'),
+            hell: loc('race_balorg_solar_hell'),
+            gas: loc('race_balorg_solar_gas'),
+            gas_moon: loc('race_balorg_solar_gas_moon'),
+            dwarf: loc('race_balorg_solar_dwarf'),
+        },
+        fanaticism: 'fiery'
+    },
+    imp: {
+        name: loc('race_imp'),
+        desc: loc('race_imp_desc'),
+        type: 'demonic',
+        home: loc('race_imp_home'),
+        entity: loc('race_imp_entity'),
+        traits: {
+            compact: 1,
+            conniving: 1,
+            pathetic: 1,
+        },
+        solar: {
+            red: loc('race_imp_solar_red'),
+            hell: loc('race_imp_solar_hell'),
+            gas: loc('race_imp_solar_gas'),
+            gas_moon: loc('race_imp_solar_gas_moon'),
+            dwarf: loc('race_imp_solar_dwarf'),
+        },
+        fanaticism: 'conniving'
+    },
+    seraph: {
+        name: loc(!global.settings.boring && date.getMonth() === 1 && date.getDate() === 14 ? 'race_cherub' : 'race_seraph'),
+        desc: loc(!global.settings.boring && date.getMonth() === 1 && date.getDate() === 14 ? 'race_cherub_desc' : 'race_seraph_desc'),
+        type: 'angelic',
+        home: loc(!global.settings.boring && date.getMonth() === 1 && date.getDate() === 14 ? 'race_cherub_home' : 'race_seraph_home'),
+        entity: loc(!global.settings.boring && date.getMonth() === 1 && date.getDate() === 14 ? 'race_cherub_entity' : 'race_seraph_entity'),
+        traits: {
+            unified: 1,
+            spiritual: 1,
+            truthful: 1
+        },
+        solar: {
+            red: loc(!global.settings.boring && date.getMonth() === 1 && date.getDate() === 14 ? 'race_cherub_solar_red' : 'race_seraph_solar_red'),
+            hell: loc(!global.settings.boring && date.getMonth() === 1 && date.getDate() === 14 ? 'race_cherub_solar_hell' : 'race_seraph_solar_hell'),
+            gas: loc(!global.settings.boring && date.getMonth() === 1 && date.getDate() === 14 ? 'race_cherub_solar_gas' : 'race_seraph_solar_gas'),
+            gas_moon: loc(!global.settings.boring && date.getMonth() === 1 && date.getDate() === 14 ? 'race_cherub_solar_gas_moon' : 'race_seraph_solar_gas_moon'),
+            dwarf: loc(!global.settings.boring && date.getMonth() === 1 && date.getDate() === 14 ? 'race_cherub_solar_dwarf' : 'race_seraph_solar_dwarf'),
+        },
+        fanaticism: 'spiritual'
+    },
+    unicorn: {
+        name: loc('race_unicorn'),
+        desc: loc('race_unicorn_desc'),
+        type: 'angelic',
+        home: loc('race_unicorn_home'),
+        entity: loc('race_unicorn_entity'),
+        traits: {
+            rainbow: 1,
+            magnificent: 1,
+            noble: 1,
+        },
+        solar: {
+            red: loc('race_unicorn_solar_red'),
+            hell: loc('race_unicorn_solar_hell'),
+            gas: loc('race_unicorn_solar_gas'),
+            gas_moon: loc('race_unicorn_solar_gas_moon'),
+            dwarf: loc('race_unicorn_solar_dwarf'),
+        },
+        fanaticism: 'magnificent'
+    },
+    junker: {
+        name: hallowed.active ? loc('race_ghoul') : loc('race_junker'),
+        desc: hallowed.active ? loc('race_ghoul_desc') : loc('race_junker_desc'),
+        type: (function(){ return global.race.hasOwnProperty('jtype') ? global.race.jtype : 'humanoid'; })(),
+        home: hallowed.active ? loc('race_ghoul_home') : loc('race_junker_home'),
+        entity: hallowed.active ? loc('race_ghoul_entity') : loc('race_junker_entity'),
+        traits: {
+            diverse: 1,
+            arrogant: 1,
+            angry: 1,
+            lazy: 1,
+            herbivore: 1,
+            paranoid: 1,
+            greedy: 1,
+            puny: 1,
+            dumb: 1,
+            nearsighted: 1,
+            gluttony: 1,
+            slow: 1,
+            hard_of_hearing: 1,
+            pessimistic: 1,
+            solitary: 1,
+            pyrophobia: 1,
+            skittish: 1,
+            nyctophilia: 1,
+            frail: 1,
+            atrophy: 1,
+            invertebrate: 1,
+            pathetic: 1,
+            hibernator: 1
+        },
+        solar: {
+            red: hallowed.active ? loc('race_ghoul_solar_red') : loc('race_junker_solar_red'),
+            hell: hallowed.active ? loc('race_ghoul_solar_hell') : loc('race_junker_solar_hell'),
+            gas: hallowed.active ? loc('race_ghoul_solar_gas') : loc('race_junker_solar_gas'),
+            gas_moon: hallowed.active ? loc('race_ghoul_solar_gas_moon') : loc('race_junker_solar_gas_moon'),
+            dwarf: hallowed.active ? loc('race_ghoul_solar_dwarf') : loc('race_junker_solar_dwarf'),
+        },
+        fanaticism: 'none'
+    },
 };
+
+// Achievements/feats from src/achieve.js -> const achievements = {
+const achieve_list = {
+    misc: [
+        'apocalypse','ascended','dreaded','anarchist','second_evolution','blackhole','warmonger',
+        'red_tactics','pacifist','neutralized','paradise','scrooge','madagascar_tree','godwin',
+        'laser_shark','infested','mass_starvation','colonist','world_domination','illuminati',
+        'syndicate','cult_of_personality','doomed','pandemonium','blood_war','landfill','seeder',
+        'miners_dream','shaken','blacken_the_sun','resonance','enlightenment','gladiator','corrupted'
+    ],
+    species: [
+        'mass_extinction','extinct_human','extinct_elven','extinct_orc','extinct_cath','extinct_wolven','extinct_centaur','extinct_kobold',
+        'extinct_goblin','extinct_gnome','extinct_ogre','extinct_cyclops','extinct_troll','extinct_tortoisan','extinct_gecko','extinct_slitheryn',
+        'extinct_arraak','extinct_pterodacti','extinct_dracnid','extinct_entish','extinct_cacti','extinct_pinguicula','extinct_sporgar',
+        'extinct_shroomi','extinct_moldling','extinct_mantis','extinct_scorpid','extinct_antid','extinct_sharkin','extinct_octigoran','extinct_dryad',
+        'extinct_satyr','extinct_phoenix','extinct_salamander','extinct_yeti','extinct_wendigo','extinct_tuskin','extinct_kamel','extinct_balorg',
+        'extinct_imp','extinct_seraph','extinct_unicorn','extinct_junker','extinct_custom'
+    ],
+    genus: [
+        'creator','genus_humanoid','genus_animal','genus_small','genus_giant','genus_reptilian','genus_avian','genus_insectoid',
+        'genus_plant','genus_fungi','genus_aquatic','genus_fey','genus_heat','genus_polar','genus_sand','genus_demonic','genus_angelic'
+    ],
+    planet: [
+        'explorer','biome_grassland','biome_oceanic','biome_forest','biome_desert','biome_volcanic','biome_tundra','biome_hellscape','biome_eden',
+        'atmo_toxic','atmo_mellow','atmo_rage','atmo_stormy','atmo_ozone','atmo_magnetic','atmo_trashed','atmo_elliptical','atmo_flare','atmo_dense',
+        'atmo_unstable'
+    ],
+    universe: [
+        'vigilante','squished','double_density','cross','macro','marble','heavyweight','whitehole','heavy','canceled',
+        'eviltwin','microbang','pw_apocalypse','fullmetal','pass'
+    ],
+    challenge: ['joyless','steelen','dissipated','technophobe','iron_will','failed_history'],
+};
+
+const flairData = {
+    colonist: [races.human.name]
+};
+const achievements = {};
+Object.keys(achieve_list).forEach(function(type){
+    achieve_list[type].forEach(achieve => achievements[achieve] = {
+        name: loc(`achieve_${achieve}_name`),
+        desc: loc(`achieve_${achieve}_desc`),
+        flair: flairData[achieve] ? loc(`achieve_${achieve}_flair`,flairData[achieve]) : loc(`achieve_${achieve}_flair`),
+        type: type
+    });
+});
 
 const feats = {
     utopia: {
@@ -812,6 +1071,11 @@ const feats = {
         desc: loc("feat_demon_slayer_desc"),
         flair: loc("feat_demon_slayer_flair")
     },
+    equilibrium: {
+        name: loc("feat_equilibrium_name"),
+        desc: loc("feat_equilibrium_desc"),
+        flair: loc("feat_equilibrium_flair")
+    },
     novice: {
         name: loc("feat_novice_name"),
         desc: loc("feat_achievement_hunter_desc",[10]),
@@ -842,6 +1106,11 @@ const feats = {
         desc: loc("feat_nephilim_desc"),
         flair: loc("feat_nephilim_flair")
     },
+    twisted: {
+        name: loc("feat_twisted_name"),
+        desc: loc("feat_twisted_desc"),
+        flair: loc("feat_twisted_flair")
+    },
     friday: {
         name: loc("feat_friday_name"),
         desc: loc("feat_friday_desc"),
@@ -871,6 +1140,11 @@ const feats = {
         name: loc("feat_boo_name"),
         desc: loc("feat_boo_desc"),
         flair: loc("feat_boo_flair")
+    },
+    trickortreat: {
+        name: loc("feat_trickortreat_name"),
+        desc: loc("feat_trickortreat_desc"),
+        flair: loc("feat_trickortreat_flair")
     },
     thanksgiving: {
         name: loc("feat_gobble_gobble_name"),
@@ -906,22 +1180,23 @@ const perks = [
 	[ 'heavyweight', 'achievements' ],
 	[ 'technophobe', 'achievements' ],
 	[ 'ascended', 'achievements' ],
+	[ 'gladiator', 'achievements' ],
+	[ 'resonance', 'achievements' ],
 	[ 'novice', 'feats' ],
 	[ 'journeyman', 'feats' ],
 ];
 
 // CRISPR upgrades from src/arpa.js -> const genePool = {
-const upgrades = {
+const genePool = {
     genetic_memory: {
         id: 'genes-genetic_memory',
         title: loc('arpa_genepool_genetic_memory_title'),
         desc: loc('arpa_genepool_genetic_memory_desc'),
         reqs: {},
         grant: ['creep',1],
-        cost: 25,
-        effect(){ return crispr_effect($(this)[0].cost); },
+        cost: { Plasmid(){ return 25; } },
         action(){
-            if (payPlasmids('genetic_memory')){
+            if (payCrispr('genetic_memory')){
                 return true;
             }
             return false;
@@ -933,10 +1208,9 @@ const upgrades = {
         desc: loc('arpa_genepool_animus_desc'),
         reqs: { creep: 1 },
         grant: ['creep',2],
-        cost: 75,
-        effect(){ return crispr_effect($(this)[0].cost); },
+        cost: { Plasmid(){ return 75; } },
         action(){
-            if (payPlasmids('animus')){
+            if (payCrispr('animus')){
                 return true;
             }
             return false;
@@ -948,10 +1222,9 @@ const upgrades = {
         desc: loc('arpa_genepool_divine_remembrance_desc'),
         reqs: { creep: 2 },
         grant: ['creep',3],
-        cost: 225,
-        effect(){ return crispr_effect($(this)[0].cost); },
+        cost: { Plasmid(){ return 225; } },
         action(){
-            if (payPlasmids('divine_remembrance')){
+            if (payCrispr('divine_remembrance')){
                 return true;
             }
             return false;
@@ -963,10 +1236,9 @@ const upgrades = {
         desc: loc('arpa_genepool_divine_proportion_desc'),
         reqs: { creep: 3 },
         grant: ['creep',4],
-        cost: 618,
-        effect(){ return crispr_effect($(this)[0].cost); },
+        cost: { Plasmid(){ return 618; } },
         action(){
-            if (payPlasmids('divine_proportion')){
+            if (payCrispr('divine_proportion')){
                 return true;
             }
             return false;
@@ -978,10 +1250,9 @@ const upgrades = {
         desc: loc('arpa_genepool_genetic_repository_desc'),
         reqs: { creep: 4 },
         grant: ['creep',5],
-        cost: 999,
-        effect(){ return crispr_effect($(this)[0].cost); },
+        cost: { Plasmid(){ return 999; } },
         action(){
-            if (payPlasmids('genetic_repository')){
+            if (payCrispr('genetic_repository')){
                 return true;
             }
             return false;
@@ -993,10 +1264,9 @@ const upgrades = {
         desc: loc('arpa_genepool_spatial_reasoning_desc'),
         reqs: {},
         grant: ['store',1],
-        cost: 50,
-        effect(){ return crispr_effect($(this)[0].cost); },
+        cost: { Plasmid(){ return 50; } },
         action(){
-            if (payPlasmids('spatial_reasoning')){
+            if (payCrispr('spatial_reasoning')){
                 return true;
             }
             return false;
@@ -1008,10 +1278,9 @@ const upgrades = {
         desc: loc('arpa_genepool_spatial_superiority_desc'),
         reqs: { store: 1 },
         grant: ['store',2],
-        cost: 125,
-        effect(){ return crispr_effect($(this)[0].cost); },
+        cost: { Plasmid(){ return 125; } },
         action(){
-            if (payPlasmids('spatial_superiority')){
+            if (payCrispr('spatial_superiority')){
                 return true;
             }
             return false;
@@ -1023,10 +1292,9 @@ const upgrades = {
         desc: loc('arpa_genepool_spatial_supremacy_desc'),
         reqs: { store: 2 },
         grant: ['store',3],
-        cost: 325,
-        effect(){ return crispr_effect($(this)[0].cost); },
+        cost: { Plasmid(){ return 325; } },
         action(){
-            if (payPlasmids('spatial_supremacy')){
+            if (payCrispr('spatial_supremacy')){
                 return true;
             }
             return false;
@@ -1038,10 +1306,9 @@ const upgrades = {
         desc: loc('arpa_genepool_dimensional_warping_desc'),
         reqs: { store: 3 },
         grant: ['store',4],
-        cost: 500,
-        effect(){ return crispr_effect($(this)[0].cost); },
+        cost: { Plasmid(){ return 500; } },
         action(){
-            if (payPlasmids('dimensional_warping')){
+            if (payCrispr('dimensional_warping')){
                 return true;
             }
             return false;
@@ -1053,10 +1320,9 @@ const upgrades = {
         desc: loc('arpa_genepool_enhanced_muscle_fiber_desc'),
         reqs: {},
         grant: ['enhance',1],
-        cost: 25,
-        effect(){ return crispr_effect($(this)[0].cost); },
+        cost: { Plasmid(){ return 25; } },
         action(){
-            if (payPlasmids('enhanced_muscle_fiber')){
+            if (payCrispr('enhanced_muscle_fiber')){
                 return true;
             }
             return false;
@@ -1068,10 +1334,9 @@ const upgrades = {
         desc: loc('arpa_genepool_morphogenesis_desc'),
         reqs: {},
         grant: ['evolve',1],
-        cost: 10,
-        effect(){ return crispr_effect($(this)[0].cost); },
+        cost: { Plasmid(){ return 10; } },
         action(){
-            if (payPlasmids('morphogenesis')){
+            if (payCrispr('morphogenesis')){
                 return true;
             }
             return false;
@@ -1083,10 +1348,9 @@ const upgrades = {
         desc: loc('arpa_genepool_recombination_desc'),
         reqs: { evolve: 1 },
         grant: ['evolve',2],
-        cost: 35,
-        effect(){ return crispr_effect($(this)[0].cost); },
+        cost: { Plasmid(){ return 35; } },
         action(){
-            if (payPlasmids('recombination')){
+            if (payCrispr('recombination')){
                 return true;
             }
             return false;
@@ -1098,10 +1362,9 @@ const upgrades = {
         desc: loc('arpa_genepool_homologous_recombination_desc'),
         reqs: { evolve: 2 },
         grant: ['evolve',3],
-        cost: 70,
-        effect(){ return crispr_effect($(this)[0].cost); },
+        cost: { Plasmid(){ return 70; } },
         action(){
-            if (payPlasmids('homologous_recombination')){
+            if (payCrispr('homologous_recombination')){
                 return true;
             }
             return false;
@@ -1113,10 +1376,9 @@ const upgrades = {
         desc: loc('arpa_genepool_genetic_reshuffling_desc'),
         reqs: { evolve: 3 },
         grant: ['evolve',4],
-        cost: 175,
-        effect(){ return crispr_effect($(this)[0].cost); },
+        cost: { Plasmid(){ return 175; } },
         action(){
-            if (payPlasmids('genetic_reshuffling')){
+            if (payCrispr('genetic_reshuffling')){
                 return true;
             }
             return false;
@@ -1128,10 +1390,9 @@ const upgrades = {
         desc: loc('arpa_genepool_recombinant_dna_desc'),
         reqs: { evolve: 4 },
         grant: ['evolve',5],
-        cost: 440,
-        effect(){ return crispr_effect($(this)[0].cost); },
+        cost: { Plasmid(){ return 440; } },
         action(){
-            if (payPlasmids('recombinant_dna')){
+            if (payCrispr('recombinant_dna')){
                 return true;
             }
             return false;
@@ -1143,10 +1404,9 @@ const upgrades = {
         desc: loc('arpa_genepool_chimeric_dna_desc'),
         reqs: { evolve: 5 },
         grant: ['evolve',6],
-        cost: 1100,
-        effect(){ return crispr_effect($(this)[0].cost); },
+        cost: { Plasmid(){ return 1100; } },
         action(){
-            if (payPlasmids('chimeric_dna')){
+            if (payCrispr('chimeric_dna')){
                 return true;
             }
             return false;
@@ -1158,10 +1418,9 @@ const upgrades = {
         desc: loc('arpa_genepool_molecular_cloning_desc'),
         reqs: { evolve: 6 },
         grant: ['evolve',7],
-        cost: 2750,
-        effect(){ return crispr_effect($(this)[0].cost); },
+        cost: { Plasmid(){ return 2750; } },
         action(){
-            if (payPlasmids('molecular_cloning')){
+            if (payCrispr('molecular_cloning')){
                 return true;
             }
             return false;
@@ -1173,10 +1432,9 @@ const upgrades = {
         desc: loc('arpa_genepool_transgenes_desc'),
         reqs: { evolve: 7 },
         grant: ['evolve',8],
-        cost: 6875,
-        effect(){ return crispr_effect($(this)[0].cost); },
+        cost: { Plasmid(){ return 6875; } },
         action(){
-            if (payPlasmids('transgenes')){
+            if (payCrispr('transgenes')){
                 return true;
             }
             return false;
@@ -1188,10 +1446,9 @@ const upgrades = {
         desc: loc('arpa_genepool_synthesis_desc',[2,10]),
         reqs: { evolve: 1 },
         grant: ['synthesis',1],
-        cost: 25,
-        effect(){ return crispr_effect($(this)[0].cost); },
+        cost: { Plasmid(){ return 25; } },
         action(){
-            if (payPlasmids('synthesis')){
+            if (payCrispr('synthesis')){
                 return true;
             }
             return false;
@@ -1203,10 +1460,9 @@ const upgrades = {
         desc: loc('arpa_genepool_synthesis_desc',[3,25]),
         reqs: { synthesis: 1 },
         grant: ['synthesis',2],
-        cost: 40,
-        effect(){ return crispr_effect($(this)[0].cost); },
+        cost: { Plasmid(){ return 40; } },
         action(){
-            if (payPlasmids('karyokinesis')){
+            if (payCrispr('karyokinesis')){
                 return true;
             }
             return false;
@@ -1218,10 +1474,9 @@ const upgrades = {
         desc: loc('arpa_genepool_synthesis_desc',[4,50]),
         reqs: { synthesis: 2 },
         grant: ['synthesis',3],
-        cost: 55,
-        effect(){ return crispr_effect($(this)[0].cost); },
+        cost: { Plasmid(){ return 55; } },
         action(){
-            if (payPlasmids('cytokinesis')){
+            if (payCrispr('cytokinesis')){
                 return true;
             }
             return false;
@@ -1233,10 +1488,9 @@ const upgrades = {
         desc: loc('arpa_genepool_mitosis_desc',[3]),
         reqs: { synthesis: 3, evolve: 2 },
         grant: ['plasma',1],
-        cost: 90,
-        effect(){ return crispr_effect($(this)[0].cost); },
+        cost: { Plasmid(){ return 90; } },
         action(){
-            if (payPlasmids('mitosis')){
+            if (payCrispr('mitosis')){
                 return true;
             }
             return false;
@@ -1248,10 +1502,9 @@ const upgrades = {
         desc: loc('arpa_genepool_mitosis_desc',[5]),
         reqs: { plasma: 1 },
         grant: ['plasma',2],
-        cost: 165,
-        effect(){ return crispr_effect($(this)[0].cost); },
+        cost: { Plasmid(){ return 165; } },
         action(){
-            if (payPlasmids('mitosis')){
+            if (payCrispr('mitosis')){
                 return true;
             }
             return false;
@@ -1263,10 +1516,9 @@ const upgrades = {
         desc: loc('arpa_genepool_mutation_desc'),
         reqs: { synthesis: 3, creep: 5 },
         grant: ['mutation',1],
-        cost: 1250,
-        effect(){ return crispr_effect($(this)[0].cost); },
+        cost: { Plasmid(){ return 1250; } },
         action(){
-            if (payPlasmids('mutation')){
+            if (payCrispr('mutation')){
                 global.genes['mutation'] = 1;
                 genetics();
                 return true;
@@ -1280,10 +1532,9 @@ const upgrades = {
         desc: loc('arpa_genepool_transformation_desc'),
         reqs: { mutation: 1 },
         grant: ['mutation',2],
-        cost: 1500,
-        effect(){ return crispr_effect($(this)[0].cost); },
+        cost: { Plasmid(){ return 1500; } },
         action(){
-            if (payPlasmids('transformation')){
+            if (payCrispr('transformation')){
                 global.genes['mutation'] = 2;
                 genetics();
                 return true;
@@ -1297,10 +1548,9 @@ const upgrades = {
         desc: loc('arpa_genepool_metamorphosis_desc'),
         reqs: { mutation: 2 },
         grant: ['mutation',3],
-        cost: 1750,
-        effect(){ return crispr_effect($(this)[0].cost); },
+        cost: { Plasmid(){ return 1750; } },
         action(){
-            if (payPlasmids('metamorphosis')){
+            if (payCrispr('metamorphosis')){
                 global.genes['mutation'] = 3;
                 genetics();
                 return true;
@@ -1314,10 +1564,9 @@ const upgrades = {
         desc: loc('arpa_genepool_replication_desc'),
         reqs: { evolve: 1 },
         grant: ['birth',1],
-        cost: 65,
-        effect(){ return crispr_effect($(this)[0].cost); },
+        cost: { Plasmid(){ return 65; } },
         action(){
-            if (payPlasmids('replication')){
+            if (payCrispr('replication')){
                 return true;
             }
             return false;
@@ -1329,10 +1578,9 @@ const upgrades = {
         desc: loc('arpa_genepool_artificer_desc'),
         reqs: { evolve: 1 },
         grant: ['crafty',1],
-        cost: 45,
-        effect(){ return crispr_effect($(this)[0].cost); },
+        cost: { Plasmid(){ return 45; } },
         action(){
-            if (payPlasmids('artificer')){
+            if (payCrispr('artificer')){
                 return true;
             }
             return false;
@@ -1344,10 +1592,9 @@ const upgrades = {
         desc: loc('arpa_genepool_crafting_desc',['50']),
         reqs: { crafty: 1 },
         grant: ['crafty',2],
-        cost: 90,
-        effect(){ return crispr_effect($(this)[0].cost); },
+        cost: { Plasmid(){ return 90; } },
         action(){
-            if (payPlasmids('detail_oriented')){
+            if (payCrispr('detail_oriented')){
                 return true;
             }
             return false;
@@ -1359,10 +1606,9 @@ const upgrades = {
         desc: loc('arpa_genepool_crafting_desc',['100']),
         reqs: { crafty: 2 },
         grant: ['crafty',3],
-        cost: 135,
-        effect(){ return crispr_effect($(this)[0].cost); },
+        cost: { Plasmid(){ return 135; } },
         action(){
-            if (payPlasmids('rigorous')){
+            if (payCrispr('rigorous')){
                 return true;
             }
             return false;
@@ -1374,10 +1620,9 @@ const upgrades = {
         desc: loc('arpa_genepool_geographer_desc'),
         reqs: { store: 1 },
         grant: ['queue',1],
-        cost: 75,
-        effect(){ return crispr_effect($(this)[0].cost); },
+        cost: { Plasmid(){ return 75; } },
         action(){
-            if (payPlasmids('geographer')){
+            if (payCrispr('geographer')){
                 return true;
             }
             return false;
@@ -1389,10 +1634,9 @@ const upgrades = {
         desc: loc('arpa_genepool_architect_desc'),
         reqs: { queue: 1 },
         grant: ['queue',2],
-        cost: 160,
-        effect(){ return crispr_effect($(this)[0].cost); },
+        cost: { Plasmid(){ return 160; } },
         action(){
-            if (payPlasmids('architect')){
+            if (payCrispr('architect')){
                 return true;
             }
             return false;
@@ -1404,10 +1648,9 @@ const upgrades = {
         desc: loc('arpa_genepool_hardened_genes_desc'),
         reqs: {},
         grant: ['challenge',1],
-        cost: 5,
-        effect(){ return crispr_effect($(this)[0].cost); },
+        cost: { Plasmid(){ return 5; } },
         action(){
-            if (payPlasmids('hardened_genes')){
+            if (payCrispr('hardened_genes')){
                 return true;
             }
             return false;
@@ -1419,13 +1662,15 @@ const upgrades = {
         desc: loc('arpa_genepool_unlocked_desc'),
         reqs: {challenge:1},
         grant: ['challenge',2],
-        cost: 50,
-        effect(){ return crispr_effect($(this)[0].cost); },
+        cost: { Plasmid(){ return 50; } },
         action(){
-            if (payPlasmids('unlocked')){
+            if (payCrispr('unlocked')){
                 return true;
             }
             return false;
+        },
+        post(){
+            calc_mastery(true);
         }
     },
     universal: {
@@ -1437,13 +1682,15 @@ const upgrades = {
         condition(){
             return global.race.universe !== 'standard' ? true : false;
         },
-        cost: 400,
-        effect(){ return crispr_effect($(this)[0].cost); },
+        cost: { Plasmid(){ return 400; } },
         action(){
-            if (payPlasmids('universal')){
+            if (payCrispr('universal')){
                 return true;
             }
             return false;
+        },
+        post(){
+            calc_mastery(true);
         }
     },
     standard: {
@@ -1455,13 +1702,15 @@ const upgrades = {
         condition(){
             return global.race.universe !== 'standard' ? true : false;
         },
-        cost: 2500,
-        effect(){ return crispr_effect($(this)[0].cost); },
+        cost: { Plasmid(){ return 2500; } },
         action(){
-            if (payPlasmids('standard')){
+            if (payCrispr('standard')){
                 return true;
             }
             return false;
+        },
+        post(){
+            calc_mastery(true);
         }
     },
     mastered: {
@@ -1470,10 +1719,9 @@ const upgrades = {
         desc: loc('arpa_genepool_mastered_desc'),
         reqs: {challenge:4},
         grant: ['challenge',5],
-        cost: 4000,
-        effect(){ return crispr_effect($(this)[0].cost); },
+        cost: { Plasmid(){ return 4000; } },
         action(){
-            if (payPlasmids('mastered')){
+            if (payCrispr('mastered')){
                 return true;
             }
             return false;
@@ -1485,10 +1733,9 @@ const upgrades = {
         desc: loc('arpa_genepool_negotiator_desc'),
         reqs: {challenge:2},
         grant: ['trader',1],
-        cost: 750,
-        effect(){ return crispr_effect($(this)[0].cost); },
+        cost: { Plasmid(){ return 750; } },
         action(){
-            if (payPlasmids('negotiator')){
+            if (payCrispr('negotiator')){
                 global.genes['trader'] = 1;
                 updateTrades();
                 return true;
@@ -1500,12 +1747,14 @@ const upgrades = {
         id: 'genes-ancients',
         title: loc('arpa_genepool_ancients_title'),
         desc: loc('arpa_genepool_ancients_desc'),
-        reqs: { evolve: 2, old_gods: 1 },
+        reqs: { evolve: 2 },
+        condition(){
+            return global.genes['old_gods'] ? true : false;
+        },
         grant: ['ancients',1],
-        cost: 120,
-        effect(){ return crispr_effect($(this)[0].cost); },
+        cost: { Plasmid(){ return 120; } },
         action(){
-            if (payPlasmids('ancients')){
+            if (payCrispr('ancients')){
                 global.genes['ancients'] = 1;
                 drawTech();
                 return true;
@@ -1519,10 +1768,9 @@ const upgrades = {
         desc: loc('arpa_genepool_faith_desc'),
         reqs: { ancients: 1 },
         grant: ['ancients',2],
-        cost: 300,
-        effect(){ return crispr_effect($(this)[0].cost); },
+        cost: { Plasmid(){ return 300; } },
         action(){
-            if (payPlasmids('faith')){
+            if (payCrispr('faith')){
                 global.civic.priest.display = true;
                 return true;
             }
@@ -1535,10 +1783,9 @@ const upgrades = {
         desc: loc('arpa_genepool_devotion_desc'),
         reqs: { ancients: 2 },
         grant: ['ancients',3],
-        cost: 600,
-        effect(){ return crispr_effect($(this)[0].cost); },
+        cost: { Plasmid(){ return 600; } },
         action(){
-            if (payPlasmids('devotion')){
+            if (payCrispr('devotion')){
                 return true;
             }
             return false;
@@ -1550,10 +1797,9 @@ const upgrades = {
         desc: loc('arpa_genepool_acolyte_desc'),
         reqs: { ancients: 3 },
         grant: ['ancients',4],
-        cost: 1000,
-        effect(){ return crispr_effect($(this)[0].cost); },
+        cost: { Plasmid(){ return 1000; } },
         action(){
-            if (payPlasmids('acolyte')){
+            if (payCrispr('acolyte')){
                 return true;
             }
             return false;
@@ -1565,10 +1811,9 @@ const upgrades = {
         desc: loc('arpa_genepool_conviction_desc'),
         reqs: { ancients: 4 },
         grant: ['ancients',5],
-        cost: 1500,
-        effect(){ return crispr_effect($(this)[0].cost); },
+        cost: { Plasmid(){ return 1500; } },
         action(){
-            if (payPlasmids('conviction')){
+            if (payCrispr('conviction')){
                 return true;
             }
             return false;
@@ -1580,10 +1825,9 @@ const upgrades = {
         desc: loc('arpa_genepool_transcendence_desc'),
         reqs: { ancients: 1, mutation: 3 },
         grant: ['transcendence',1],
-        cost: 3000,
-        effect(){ return crispr_effect($(this)[0].cost); },
+        cost: { Plasmid(){ return 3000; } },
         action(){
-            if (payPlasmids('transcendence')){
+            if (payCrispr('transcendence')){
                 global.genes['transcendence'] = 1;
                 drawTech();
                 return true;
@@ -1597,10 +1841,9 @@ const upgrades = {
         desc: loc('arpa_genepool_preeminence_desc'),
         reqs: {transcendence: 1, challenge:3},
         grant: ['transcendence',2],
-        cost: 4200,
-        effect(){ return crispr_effect($(this)[0].cost); },
+        cost: { Plasmid(){ return 4200; } },
         action(){
-            if (payPlasmids('preeminence')){
+            if (payCrispr('preeminence')){
                 return true;
             }
             return false;
@@ -1615,10 +1858,9 @@ const upgrades = {
         condition(){
             return global.race.universe === 'antimatter' ? true : false;
         },
-        cost: 100,
-        effect(){ return crispr_effect($(this)[0].cost); },
+        cost: { Plasmid(){ return 100; } },
         action(){
-            if (payPlasmids('bleeding_effect')){
+            if (payCrispr('bleeding_effect')){
                 return true;
             }
             return false;
@@ -1630,10 +1872,9 @@ const upgrades = {
         desc: loc('arpa_genepool_synchronicity_desc',[25]),
         reqs: { bleed: 1 },
         grant: ['bleed',2],
-        cost: 500,
-        effect(){ return crispr_effect($(this)[0].cost); },
+        cost: { Plasmid(){ return 500; } },
         action(){
-            if (payPlasmids('synchronicity')){
+            if (payCrispr('synchronicity')){
                 return true;
             }
             return false;
@@ -1645,16 +1886,1345 @@ const upgrades = {
         desc: loc('arpa_genepool_astral_awareness_desc'),
         reqs: { bleed: 2 },
         grant: ['bleed',3],
-        cost: 1000,
-        effect(){ return crispr_effect($(this)[0].cost); },
+        cost: { Plasmid(){ return 1000; } },
         action(){
-            if (payPlasmids('astral_awareness')){
+            if (payCrispr('astral_awareness')){
+                return true;
+            }
+            return false;
+        }
+    },
+    blood_remembrance: {
+        id: 'genes-blood_remembrance',
+        title: loc('arpa_genepool_blood_remembrance_title'),
+        desc: loc('arpa_genepool_blood_remembrance_desc'),
+        reqs: {},
+        grant: ['blood',1],
+        condition(){
+            return global.resource.Blood_Stone.amount >= 1 ? true : false;
+        },
+        cost: {
+            Plasmid(){ return 1000; },
+            Phage(){ return 10; }
+        },
+        action(){
+            if (payCrispr('blood_remembrance')){
+                return true;
+            }
+            return false;
+        }
+    },
+    blood_sacrifice: {
+        id: 'genes-blood_sacrifice',
+        title: loc('arpa_genepool_blood_sacrifice_title'),
+        desc: loc('arpa_genepool_blood_sacrifice_desc'),
+        reqs: { blood: 1 },
+        grant: ['blood',2],
+        cost: {
+            Plasmid(){ return 3000; },
+            Phage(){ return 100; },
+            Artifact(){ return 1; }
+        },
+        action(){
+            if (payCrispr('blood_sacrifice')){
+                return true;
+            }
+            return false;
+        }
+    },
+    essence_absorber: {
+        id: 'genes-essence_absorber',
+        title: loc('arpa_genepool_essence_absorber_title'),
+        desc: loc('arpa_genepool_essence_absorber_desc'),
+        reqs: { blood: 2 },
+        grant: ['blood',3],
+        cost: {
+            Plasmid(){ return 7500; },
+            Phage(){ return 250; },
+            Artifact(){ return 1; }
+        },
+        action(){
+            if (payCrispr('essence_absorber')){
+                return true;
+            }
+            return false;
+        },
+        post(){
+            blood();
+        }
+    },
+}
+
+const bloodPool = {
+    purify: {
+        id: 'blood-purify',
+        title: loc('arpa_blood_purify_title'),
+        desc: loc('arpa_blood_purify_desc'),
+        reqs: {},
+        grant: ['spire',1],
+        cost: { Blood_Stone(){ return 10; } },
+        action(){
+            if (payBloodPrice($(this)[0].cost)){
+                return true;
+            }
+            return false;
+        }
+    },
+    chum: {
+        id: 'blood-chum',
+        title: loc('arpa_blood_chum_title'),
+        desc: loc('arpa_blood_chum_desc'),
+        reqs: { spire: 1 },
+        grant: ['spire',2],
+        cost: { Blood_Stone(){ return 25; } },
+        action(){
+            if (payBloodPrice($(this)[0].cost)){
+                return true;
+            }
+            return false;
+        }
+    },
+    lust: {
+        id: 'blood-lust',
+        title: loc('arpa_blood_lust_title'),
+        desc: loc('arpa_blood_lust_desc'),
+        reqs: {},
+        grant: ['lust','*'],
+        cost: {
+            Blood_Stone(){ return global.blood['lust'] ? (global.blood.lust * 15 + 15) : 15; },
+            Artifact(){ return (global.blood['lust'] || 0) % 5 === 0 ? 1 : 0; }
+        },
+        effect(){ return `<span class="has-text-caution">${loc('arpa_blood_repeat')}</span>`; },
+        action(){
+            if (payBloodPrice($(this)[0].cost)){
+                return true;
+            }
+            return false;
+        }
+    },
+    illuminate: {
+        id: 'blood-illuminate',
+        title: loc('arpa_blood_illuminate_title'),
+        desc: loc('arpa_blood_illuminate_desc'),
+        reqs: {},
+        grant: ['illuminate','*'],
+        cost: {
+            Blood_Stone(){ return global.blood['illuminate'] ? (global.blood.illuminate * 12 + 12) : 12; },
+            Artifact(){ return (global.blood['illuminate'] || 0) % 5 === 0 ? 1 : 0; }
+        },
+        effect(){ return `<span class="has-text-caution">${loc('arpa_blood_repeat')}</span>`; },
+        action(){
+            if (payBloodPrice($(this)[0].cost)){
+                return true;
+            }
+            return false;
+        }
+    },
+    greed: {
+        id: 'blood-greed',
+        title: loc('arpa_blood_greed_title'),
+        desc: loc('arpa_blood_greed_desc'),
+        reqs: {},
+        grant: ['greed','*'],
+        cost: {
+            Blood_Stone(){ return global.blood['greed'] ? (global.blood.greed * 16 + 16) : 16; },
+            Artifact(){ return (global.blood['greed'] || 0) % 5 === 0 ? 1 : 0; }
+        },
+        effect(){ return `<span class="has-text-caution">${loc('arpa_blood_repeat')}</span>`; },
+        action(){
+            if (payBloodPrice($(this)[0].cost)){
+                return true;
+            }
+            return false;
+        }
+    },
+    hoarder: {
+        id: 'blood-hoarder',
+        title: loc('arpa_blood_hoarder_title'),
+        desc: loc('arpa_blood_hoarder_desc'),
+        reqs: {},
+        grant: ['hoarder','*'],
+        condition(){
+            return global.genes['blood'] && global.genes.blood >= 3 ? true : false;
+        },
+        cost: {
+            Blood_Stone(){ return global.blood['hoarder'] ? (global.blood.hoarder * 14 + 14) : 14; },
+            Artifact(){ return (global.blood['hoarder'] || 0) % 5 === 0 ? 1 : 0; }
+        },
+        effect(){ return `<span class="has-text-caution">${loc('arpa_blood_repeat')}</span>`; },
+        action(){
+            if (payBloodPrice($(this)[0].cost)){
+                return true;
+            }
+            return false;
+        }
+    },
+    artisan: {
+        id: 'blood-artisan',
+        title: loc('arpa_blood_artisan_title'),
+        desc: loc('arpa_blood_artisan_desc'),
+        reqs: {},
+        grant: ['artisan','*'],
+        cost: {
+            Blood_Stone(){ return global.blood['artisan'] ? (global.blood.artisan * 8 + 8) : 8; },
+            Artifact(){ return (global.blood['artisan'] || 0) % 5 === 0 ? 1 : 0; }
+        },
+        effect(){ return `<span class="has-text-caution">${loc('arpa_blood_repeat')}</span>`; },
+        action(){
+            if (payBloodPrice($(this)[0].cost)){
+                return true;
+            }
+            return false;
+        }
+    },
+    attract: {
+        id: 'blood-attract',
+        title: loc('arpa_blood_attract_title'),
+        desc: loc('arpa_blood_attract_desc'),
+        reqs: {},
+        grant: ['attract','*'],
+        condition(){
+            return global.genes['blood'] && global.genes.blood >= 3 ? true : false;
+        },
+        cost: {
+            Blood_Stone(){ return global.blood['attract'] ? (global.blood.attract * 4 + 4) : 4; },
+            Artifact(){ return (global.blood['attract'] || 0) % 5 === 0 ? 1 : 0; }
+        },
+        effect(){ return `<span class="has-text-caution">${loc('arpa_blood_repeat')}</span>`; },
+        action(){
+            if (payBloodPrice($(this)[0].cost)){
+                return true;
+            }
+            return false;
+        }
+    },
+    wrath: {
+        id: 'blood-wrath',
+        title: loc('arpa_blood_wrath_title'),
+        desc: loc('arpa_blood_wrath_desc'),
+        reqs: {},
+        grant: ['wrath','*'],
+        cost: {
+            Blood_Stone(){ return global.blood['wrath'] ? (global.blood.wrath * 2 + 2) : 2; },
+            Artifact(){ return 1; }
+        },
+        effect(){ return `<span class="has-text-caution">${loc('arpa_blood_repeat')}</span>`; },
+        action(){
+            if (payBloodPrice($(this)[0].cost)){
+                return true;
+            }
+            return false;
+        }
+    },
+    prepared: {
+        id: 'blood-prepared',
+        title: loc('arpa_blood_prepared_title'),
+        desc: loc('arpa_blood_prepared_desc'),
+        reqs: {},
+        grant: ['prepared',1],
+        condition(){
+            return global.genes['blood'] && global.genes.blood >= 3 ? true : false;
+        },
+        cost: { Blood_Stone(){ return 50; } },
+        action(){
+            if (payBloodPrice($(this)[0].cost)){
+                return true;
+            }
+            return false;
+        },
+        post(){
+            drawMechLab();
+        }
+    },
+    compact: {
+        id: 'blood-compact',
+        title: loc('arpa_blood_compact_title'),
+        desc: loc('arpa_blood_compact_desc'),
+        reqs: { prepared: 1 },
+        grant: ['prepared',2],
+        condition(){
+            return global.genes['blood'] && global.genes.blood >= 3 ? true : false;
+        },
+        cost: { Blood_Stone(){ return 75; } },
+        action(){
+            if (payBloodPrice($(this)[0].cost)){
+                return true;
+            }
+            return false;
+        }
+    },
+    unbound: {
+        id: 'blood-unbound',
+        title: loc('arpa_blood_unbound_title'),
+        desc: loc('arpa_blood_unbound_desc'),
+        reqs: {},
+        grant: ['unbound',1],
+        cost: { Blood_Stone(){ return 50; }, },
+        action(){
+            if (payBloodPrice($(this)[0].cost)){
+                return true;
+            }
+            return false;
+        }
+    },
+    unbound_resistance: {
+        id: 'blood-unbound_resistance',
+        title: loc('arpa_blood_unbound_resistance_title'),
+        desc: loc('arpa_blood_unbound_resistance_desc'),
+        reqs: { unbound: 1 },
+        grant: ['unbound',2],
+        cost: { Blood_Stone(){ return 100; } },
+        action(){
+            if (payBloodPrice($(this)[0].cost)){
+                return true;
+            }
+            return false;
+        }
+    },
+    shadow_war: {
+        id: 'blood-shadow_war',
+        title: loc('arpa_blood_shadow_war_title'),
+        desc: loc('arpa_blood_shadow_war_desc'),
+        reqs: { unbound: 2 },
+        grant: ['unbound',3],
+        condition(){
+            return global.genes['blood'] && global.genes.blood >= 3 ? true : false;
+        },
+        cost: {
+            Blood_Stone(){ return 250; },
+            Artifact(){ return 2; }
+        },
+        action(){
+            if (payBloodPrice($(this)[0].cost)){
+                return true;
+            }
+            return false;
+        }
+    },
+    unbound_immunity: {
+        id: 'blood-unbound_immunity',
+        title: loc('arpa_blood_unbound_immunity_title'),
+        desc: loc('arpa_blood_unbound_immunity_desc'),
+        reqs: { unbound: 3 },
+        grant: ['unbound',4],
+        condition(){
+            return global.genes['blood'] && global.genes.blood >= 3 ? true : false;
+        },
+        cost: { Blood_Stone(){ return 500; } },
+        action(){
+            if (payBloodPrice($(this)[0].cost)){
+                return true;
+            }
+            return false;
+        }
+    },
+    blood_aware: {
+        id: 'blood-blood_aware',
+        title: loc('arpa_blood_blood_aware_title'),
+        desc: loc('arpa_blood_blood_aware_desc'),
+        reqs: {},
+        grant: ['aware',1],
+        condition(){
+            return global.genes['blood'] && global.genes.blood >= 3 ? true : false;
+        },
+        cost: { Blood_Stone(){ return 10; } },
+        action(){
+            if (payBloodPrice($(this)[0].cost)){
                 return true;
             }
             return false;
         }
     },
 }
+
+// Traits from src/races.js -> const genus_traits = {
+const genus_traits = {
+    humanoid: {
+        adaptable: 1,
+        wasteful: 1
+    },
+    animal: {
+        beast: 1,
+        cautious: 1
+    },
+    small: {
+        small: 1,
+        weak: 1
+    },
+    giant: {
+        large: 1,
+        strong: 1
+    },
+    reptilian: {
+        cold_blooded: 1,
+        scales: 1
+    },
+    avian: {
+        hollow_bones: 1,
+        rigid: 1
+    },
+    insectoid: {
+        fast_growth: 1,
+        high_metabolism: 1
+    },
+    plant: {
+        sappy: 1,
+        asymmetrical: 1
+    },
+    fungi: {
+        detritivore: 1,
+        spongy: 1
+    },
+    aquatic: {
+        submerged: 1,
+        low_light: 1
+    },
+    fey: {
+        elusive: 1,
+        iron_allergy: 1
+    },
+    heat: {
+        smoldering: 1,
+        cold_intolerance: 1
+    },
+    polar: {
+        chilled: 1,
+        heat_intolerance: 1
+    },
+    sand: {
+        scavenger: 1,
+        nomadic: 1
+    },
+    demonic: {
+        immoral: 1,
+        evil: 1,
+        soul_eater: 1
+    },
+    angelic: {
+        blissful: 1,
+        pompous: 1,
+        holy: 1,
+    }
+};
+
+const traits = {
+    adaptable: { // Genetic Mutations occur faster from gene tampering
+        name: loc('trait_adaptable_name'),
+        desc: loc('trait_adaptable'),
+        type: 'genus',
+        val: 3,
+        vars: [10]
+    },
+    wasteful: { // Craftings cost more materials
+        name: loc('trait_wasteful_name'),
+        desc: loc('trait_wasteful'),
+        type: 'genus',
+        val: -3,
+        vars: [10]
+    },
+    xenophobic: { // Trade posts suffer a -1 penalty per post
+        name: loc('trait_xenophobic_name'),
+        desc: loc('trait_xenophobic'),
+        type: 'genus',
+        val: -5,
+    },
+    beast: { // Improved hunting and soldier training
+        name: loc('trait_beast_name'),
+        desc: loc('trait_beast'),
+        type: 'genus',
+        val: 3,
+        vars: [10,20,20]
+    },
+    cautious: { // Rain reduces combat rating
+        name: loc('trait_cautious_name'),
+        desc: loc('trait_cautious'),
+        type: 'genus',
+        val: -2,
+        vars: [10]
+    },
+    small: { // Reduces cost creep multipliers by 0.01
+        name: loc('trait_small_name'),
+        desc: loc('trait_small'),
+        type: 'genus',
+        val: 6,
+        vars: [0.01,0.005]
+    },
+    weak: { // Lumberjacks, miners, and quarry workers are 10% less effective
+        name: loc('trait_weak_name'),
+        desc: loc('trait_weak'),
+        type: 'genus',
+        val: -3,
+        vars: [10]
+    },
+    large: { // Increases cost creep multipliers by 0.005
+        name: loc('trait_large_name'),
+        desc: loc('trait_large'),
+        type: 'genus',
+        val: -5,
+        vars: [0.005]
+    },
+    strong: { // Increased manual resource gain
+        name: loc('trait_strong_name'),
+        desc: loc('trait_strong'),
+        type: 'genus',
+        val: 1,
+        vars: [5]
+    },
+    cold_blooded: { // Weather affects productivity
+        name: loc('trait_cold_blooded_name'),
+        desc: loc('trait_cold_blooded'),
+        type: 'genus',
+        val: -2,
+        vars: [20,10]
+    },
+    scales: { // Minor decrease of soldiers killed in combat
+        name: loc('trait_scales_name'),
+        desc: loc('trait_scales'),
+        type: 'genus',
+        val: 5,
+        vars: [2,1,1]
+    },
+    hollow_bones: { // Less Crafted Materials Needed
+        name: loc('trait_hollow_bones_name'),
+        desc: loc('trait_hollow_bones'),
+        type: 'genus',
+        val: 3,
+        vars: [5]
+    },
+    rigid: { // Crafting production lowered slightly
+        name: loc('trait_rigid_name'),
+        desc: loc('trait_rigid'),
+        type: 'genus',
+        val: -1,
+        vars: [1]
+    },
+    fast_growth: { // Greatly increases odds of population growth each cycle
+        name: loc('trait_fast_growth_name'),
+        desc: loc('trait_fast_growth'),
+        type: 'genus',
+        val: 3,
+    },
+    high_metabolism: { // Food requirements increased by 10%
+        name: loc('trait_high_metabolism_name'),
+        desc: loc('trait_high_metabolism'),
+        type: 'genus',
+        val: -1,
+        vars: [5]
+    },
+    photosynth: { // Reduces food requirements dependant on sunshine.
+        name: loc('trait_photosynth_name'),
+        desc: loc('trait_photosynth'),
+        type: 'genus',
+        val: 3,
+        vars: [40,20,10]
+    },
+    sappy: { // Stone is replaced with Amber.
+        name: loc('trait_sappy_name'),
+        desc: loc('trait_sappy',[loc('resource_Amber_name')]),
+        type: 'genus',
+        val: 4,
+    },
+    asymmetrical: { // Trade selling prices are slightly worse then normal
+        name: loc('trait_asymmetrical_name'),
+        desc: loc('trait_asymmetrical'),
+        type: 'genus',
+        val: -3,
+        vars: [20]
+    },
+    detritivore: { // You eat dead matter
+        name: loc('trait_detritivore_name'),
+        desc: loc('trait_detritivore'),
+        type: 'genus',
+        val: 2,
+    },
+    spores: { // Birthrate increased when it's windy
+        name: loc('trait_spores_name'),
+        desc: loc('trait_spores'),
+        type: 'genus',
+        val: 2,
+    },
+    spongy: { // Birthrate decreased when it's raining
+        name: loc('trait_spongy_name'),
+        desc: loc('trait_spongy'),
+        type: 'genus',
+        val: -2,
+    },
+    submerged: { // Immune to weather effects
+        name: loc('trait_submerged_name'),
+        desc: loc('trait_submerged'),
+        type: 'genus',
+        val: 3,
+    },
+    low_light: { // Farming effectiveness decreased
+        name: loc('trait_low_light_name'),
+        desc: loc('trait_low_light'),
+        type: 'genus',
+        val: -2,
+        vars: [10]
+    },
+    elusive: { // Spies are never caught
+        name: loc('trait_elusive_name'),
+        desc: loc('trait_elusive'),
+        type: 'genus',
+        val: 7,
+    },
+    iron_allergy: { // Iron mining reduced
+        name: loc('trait_iron_allergy_name'),
+        desc: loc('trait_iron_allergy'),
+        type: 'genus',
+        val: -4,
+        vars: [25]
+    },
+    smoldering: { // Hot weather is a bonus
+        name: loc('trait_smoldering_name'),
+        desc: loc('trait_smoldering'),
+        type: 'genus',
+        val: 7,
+        vars: [5,0.35,0.2]
+    },
+    cold_intolerance: { // Cold weather is a detriment
+        name: loc('trait_cold_intolerance_name'),
+        desc: loc('trait_cold_intolerance'),
+        type: 'genus',
+        val: -4,
+        vars: [0.25]
+    },
+    chilled: { // Cold weather is a bonus
+        name: loc('trait_chilled_name'),
+        desc: loc('trait_chilled'),
+        type: 'genus',
+        val: 7,
+        vars: [5,0.35,0.2,20,10,15]
+    },
+    heat_intolerance: { // Hot weather is a detriment
+        name: loc('trait_heat_intolerance_name'),
+        desc: loc('trait_heat_intolerance'),
+        type: 'genus',
+        val: -4,
+        vars: [0.25]
+    },
+    scavenger: { // scavenger job is always available
+        name: loc('trait_scavenger_name'),
+        desc: loc('trait_scavenger'),
+        type: 'genus',
+        val: 3,
+        vars: [25]
+    },
+    nomadic: { // -1 Trade route from trade post
+        name: loc('trait_nomadic_name'),
+        desc: loc('trait_nomadic'),
+        type: 'genus',
+        val: -5,
+    },
+    immoral: { // Warmonger is a bonus instead of a penalty
+        name: loc('trait_immoral_name'),
+        desc: loc('trait_immoral'),
+        type: 'genus',
+        val: 4,
+    },
+    evil: { // You are pure evil
+        name: loc('trait_evil_name'),
+        desc: loc('trait_evil'),
+        type: 'genus',
+        val: 0,
+    },
+    blissful: { // Low morale penalty is halved and citizens never riot.
+        name: loc('trait_blissful_name'),
+        desc: loc('trait_blissful'),
+        type: 'genus',
+        val: 4,
+    },
+    pompous: { // Professors are less effective
+        name: loc('trait_pompous_name'),
+        desc: loc('trait_pompous'),
+        type: 'genus',
+        val: -6,
+        vars: [75]
+    },
+    holy: { // Combat Bonus in Hell
+        name: loc('trait_holy_name'),
+        desc: loc('trait_holy'),
+        type: 'genus',
+        val: 1,
+        vars: [50,25]
+    },
+    creative: { // A.R.P.A. Projects are cheaper
+        name: loc('trait_creative_name'),
+        desc: loc('trait_creative'),
+        type: 'major',
+        val: 8,
+        vars: [0.005,20]
+    },
+    diverse: { // Training soldiers takes longer
+        name: loc('trait_diverse_name'),
+        desc: loc('trait_diverse'),
+        type: 'major',
+        val: -4,
+        vars: [25]
+    },
+    studious: { // Professors generate an extra 0.25 Knowledge per second, Libraries provide 10% more knowledge cap
+        name: loc('trait_studious_name'),
+        desc: loc('trait_studious'),
+        type: 'major',
+        val: 2,
+        vars: [0.25,10]
+    },
+    arrogant: { // Market prices are higher
+        name: loc('trait_arrogant_name'),
+        desc: loc('trait_arrogant'),
+        type: 'major',
+        val: -2,
+        vars: [10]
+    },
+    brute: { // Recruitment costs are 1/2 price
+        name: loc('trait_brute_name'),
+        desc: loc('trait_brute'),
+        type: 'major',
+        val: 7,
+        vars: [50,2.5]
+    },
+    angry: { // When hungry you get hangry, low food penalty is more severe
+        name: loc('trait_angry_name'),
+        desc: loc('trait_angry'),
+        type: 'major',
+        val: -1,
+        vars: [25]
+    },
+    lazy: { // All production is lowered when the temperature is hot
+        name: loc('trait_lazy_name'),
+        desc: loc('trait_lazy'),
+        type: 'major',
+        val: -4,
+        vars: [10]
+    },
+    carnivore: { // No agriculture tech tree path, however unemployed citizens now act as hunters.
+        name: loc('trait_carnivore_name'),
+        desc: loc('trait_carnivore'),
+        type: 'major',
+        val: 2,
+    },
+    pack_mentality: { // Cabins cost more, but cottages cost less.
+        name: loc('trait_pack_mentality_name'),
+        desc: loc('trait_pack_mentality'),
+        type: 'major',
+        val: 4,
+        vars: [0.03,0.02]
+    },
+    tracker: { // 20% increased gains from hunting
+        name: loc('trait_tracker_name'),
+        desc: loc('trait_tracker'),
+        type: 'major',
+        val: 2,
+        vars: [20]
+    },
+    beast_of_burden: { // Gains more loot during raids
+        name: loc('trait_beast_of_burden_name'),
+        desc: loc('trait_beast_of_burden'),
+        type: 'major',
+        val: 3
+    },
+    herbivore: { // No food is gained from hunting
+        name: loc('trait_herbivore_name'),
+        desc: loc('trait_herbivore'),
+        type: 'major',
+        val: -7,
+    },
+    pack_rat: { // Storage space is increased
+        name: loc('trait_pack_rat_name'),
+        desc: loc('trait_pack_rat'),
+        type: 'major',
+        val: 3,
+        vars: [10,5]
+    },
+    paranoid: { // Bank capacity reduced by 10%
+        name: loc('trait_paranoid_name'),
+        desc: loc('trait_paranoid'),
+        type: 'major',
+        val: -3,
+        vars: [10]
+    },
+    greedy: { // Lowers income from taxes
+        name: loc('trait_greedy_name'),
+        desc: loc('trait_greedy'),
+        type: 'major',
+        val: -5,
+        vars: [12.5]
+    },
+    merchant: { // Better commodity selling prices
+        name: loc('trait_merchant_name'),
+        desc: loc('trait_merchant'),
+        type: 'major',
+        val: 3,
+        vars: [25,10]
+    },
+    smart: { // Knowledge costs reduced by 10%
+        name: loc('trait_smart_name'),
+        desc: loc('trait_smart'),
+        type: 'major',
+        val: 6,
+        vars: [10]
+    },
+    puny: { // Lowers minium bound for army score roll
+        name: loc('trait_puny_name'),
+        desc: loc('trait_puny'),
+        type: 'major',
+        val: -4,
+        vars: [10]
+    },
+    dumb: { // Knowledge costs increased by 5%
+        name: loc('trait_dumb_name'),
+        desc: loc('trait_dumb'),
+        type: 'major',
+        val: -5,
+        vars: [5]
+    },
+    tough: { // Mining output increased by 25%
+        name: loc('trait_tough_name'),
+        desc: loc('trait_tough'),
+        type: 'major',
+        val: 4,
+        vars: [25]
+    },
+    nearsighted: { // Libraries are less effective
+        name: loc('trait_nearsighted_name'),
+        desc: loc('trait_nearsighted'),
+        type: 'major',
+        val: -4,
+        vars: [12]
+    },
+    intelligent: { // Professors and Scientists add a global production bonus
+        name: loc('trait_intelligent_name'),
+        desc: loc('trait_intelligent'),
+        type: 'major',
+        val: 7,
+        vars: [0.125,0.25]
+    },
+    regenerative: { // Wounded soldiers heal 4x as fast
+        name: loc('trait_regenerative_name'),
+        desc: loc('trait_regenerative'),
+        type: 'major',
+        val: 8,
+        vars: [4]
+    },
+    gluttony: { // Eats 25% more food per rank
+        name: loc('trait_gluttony_name'),
+        desc: loc('trait_gluttony'),
+        type: 'major',
+        val: -2,
+        vars: [10]
+    },
+    slow: { // The game moves at a 10% slower pace
+        name: loc('trait_slow_name'),
+        desc: loc('trait_slow'),
+        type: 'major',
+        val: -5,
+    },
+    armored: { // Less soldiers die in combat
+        name: loc('trait_armored_name'),
+        desc: loc('trait_armored'),
+        type: 'major',
+        val: 4,
+        vars: [25,2]
+    },
+    optimistic: { // Minor reduction to stress
+        name: loc('trait_optimistic_name'),
+        desc: loc('trait_optimistic'),
+        type: 'major',
+        val: 5,
+        vars: [10]
+    },
+    chameleon: { // Barracks have less soldiers
+        name: loc('trait_chameleon_name'),
+        desc: loc('trait_chameleon'),
+        type: 'major',
+        val: 6,
+        vars: [20]
+    },
+    slow_digestion: { // Your race is more resilient to starvation
+        name: loc('trait_slow_digestion_name'),
+        desc: loc('trait_slow_digestion'),
+        type: 'major',
+        val: 1,
+        vars: [0.75]
+    },
+    hard_of_hearing: { // University science cap gain reduced by 5%
+        name: loc('trait_hard_of_hearing_name'),
+        desc: loc('trait_hard_of_hearing'),
+        type: 'major',
+        val: -3,
+        vars: [5]
+    },
+    resourceful: { // Crafting costs are reduced slightly
+        name: loc('trait_resourceful_name'),
+        desc: loc('trait_resourceful'),
+        type: 'major',
+        val: 4,
+        vars: [12]
+    },
+    selenophobia: { // Moon phase directly affects productivity, on average this is slightly negative
+        name: loc('trait_selenophobia_name'),
+        desc: loc('trait_selenophobia'),
+        type: 'major',
+        val: -6,
+    },
+    leathery: { // Morale penalty from some weather conditions are reduced.
+        name: loc('trait_leathery_name'),
+        desc: loc('trait_leathery'),
+        type: 'major',
+        val: 2,
+    },
+    pessimistic: { // Minor increase to stress
+        name: loc('trait_pessimistic_name'),
+        desc: loc('trait_pessimistic'),
+        type: 'major',
+        val: -1,
+        vars: [2]
+    },
+    hoarder: { // Banks can store 20% more money
+        name: loc('trait_hoarder_name'),
+        desc: loc('trait_hoarder'),
+        type: 'major',
+        val: 4,
+        vars: [20]
+    },
+    solitary: { // Cabins are cheaper however cottages cost more
+        name: loc('trait_solitary_name'),
+        desc: loc('trait_solitary'),
+        type: 'major',
+        val: -1,
+        vars: [0.02]
+    },
+    kindling_kindred: { // Lumber is no longer a resource, however other costs are increased for anything that would have used lumber to compensate.
+        name: loc('trait_kindling_kindred_name'),
+        desc: loc('trait_kindling_kindred'),
+        type: 'major',
+        val: 8,
+        vars: [5]
+    },
+    pyrophobia: { // Smelter productivity is reduced
+        name: loc('trait_pyrophobia_name'),
+        desc: loc('trait_pyrophobia'),
+        type: 'major',
+        val: -4,
+        vars: [10]
+    },
+    hyper: { // The game moves at a 5% faster pace
+        name: loc('trait_hyper_name'),
+        desc: loc('trait_hyper'),
+        type: 'major',
+        val: 4,
+    },
+    skittish: { // Thunderstorms lower all production
+        name: loc('trait_skittish_name'),
+        desc: loc('trait_skittish'),
+        type: 'major',
+        val: -4,
+        vars: [12]
+    },
+    fragrant: { // Reduced Hunting effectiveness
+        name: loc('trait_fragrant_name'),
+        desc: loc('trait_fragrant'),
+        type: 'major',
+        val: -3,
+        vars: [20]
+    },
+    sticky: { // Food req lowered, Incrsa
+        name: loc('trait_sticky_name'),
+        desc: loc('trait_sticky'),
+        type: 'major',
+        val: 3,
+        vars: [20,15]
+    },
+    infectious: { // Attacking has a chance to infect other creatures and grow your population
+        name: loc('trait_infectious_name'),
+        desc: loc('trait_infectious'),
+        type: 'major',
+        val: 4,
+    },
+    parasite: { // You can only reproduce by infecting victims, spores sometimes find a victim when it's windy
+        name: loc('trait_parasite_name'),
+        desc: loc('trait_parasite'),
+        type: 'major',
+        val: -4,
+    },
+    toxic: { // Factory type jobs are more productive
+        name: loc('trait_toxic_name'),
+        desc: loc('trait_toxic'),
+        type: 'major',
+        val: 5,
+        vars: [20,8,30]
+    },
+    nyctophilia: { // Productivity is lost when it is sunny
+        name: loc('trait_nyctophilia_name'),
+        desc: loc('trait_nyctophilia'),
+        type: 'major',
+        val: -3,
+        vars: [5,2]
+    },
+    infiltrator: { // Cheap spies and sometimes steal tech from rivals
+        name: loc('trait_infiltrator_name'),
+        desc: loc('trait_infiltrator'),
+        type: 'major',
+        val: 4,
+    },
+    hibernator: { // Lower activity during winter
+        name: loc('trait_hibernator_name'),
+        desc: loc('trait_hibernator'),
+        type: 'major',
+        val: -3,
+        vars: [25,8]
+    },
+    cannibalize: { // Eat your own for buffs
+        name: loc('trait_cannibalize_name'),
+        desc: loc('trait_cannibalize'),
+        type: 'major',
+        val: 5,
+    },
+    frail: { // More soldiers die in combat
+        name: loc('trait_frail_name'),
+        desc: loc('trait_frail'),
+        type: 'major',
+        val: -5,
+    },
+    malnutrition: { // The rationing penalty is weaker
+        name: loc('trait_malnutrition_name'),
+        desc: loc('trait_malnutrition'),
+        type: 'major',
+        val: 1,
+        vars: [25]
+    },
+    claws: { // Raises maximum bound for army score roll
+        name: loc('trait_claws_name'),
+        desc: loc('trait_claws'),
+        type: 'major',
+        val: 5,
+        vars: [25]
+    },
+    atrophy: { // More prone to starvation
+        name: loc('trait_atrophy_name'),
+        desc: loc('trait_atrophy'),
+        type: 'major',
+        val: -1,
+        vars: [0.15]
+    },
+    hivemind: { // Jobs with low citizen counts assigned to them have reduced output, but those with high numbers have increased output.
+        name: loc('trait_hivemind_name'),
+        desc: loc('trait_hivemind'),
+        type: 'major',
+        val: 9,
+    },
+    tunneler: { // Mines and Coal Mines are cheaper.
+        name: loc('trait_tunneler_name'),
+        desc: loc('trait_tunneler'),
+        type: 'major',
+        val: 2,
+        vars: [0.01]
+    },
+    frenzy: { // Combat causes a temporary increase in morale
+        name: loc('trait_frenzy_name'),
+        desc: loc('trait_frenzy'),
+        type: 'major',
+        val: 5,
+    },
+    apex_predator: { // Hunting and Combat ratings are significantly higher, but you can't use armor
+        name: loc('trait_apex_predator_name'),
+        desc: loc('trait_apex_predator'),
+        type: 'major',
+        val: 6,
+        vars: [30,50]
+    },
+    invertebrate: { // You have no bones
+        name: loc('trait_invertebrate_name'),
+        desc: loc('trait_invertebrate'),
+        type: 'major',
+        val: -2,
+        vars: [10]
+    },
+    suction_grip: { // Global productivity boost
+        name: loc('trait_suction_grip_name'),
+        desc: loc('trait_suction_grip'),
+        type: 'major',
+        val: 4,
+        vars: [8]
+    },
+    befuddle: { // Spy actions complete in 1/2 time
+        name: loc('trait_befuddle_name'),
+        desc: loc('trait_befuddle'),
+        type: 'major',
+        val: 4,
+    },
+    environmentalist: { // Use renewable energy instead of dirtly coal & oil power.
+        name: loc('trait_environmentalist_name'),
+        desc: loc('trait_environmentalist'),
+        type: 'major',
+        val: -5,
+    },
+    unorganized: { // Increased time between revolutions
+        name: loc('trait_unorganized_name'),
+        desc: loc('trait_unorganized'),
+        type: 'major',
+        val: -2,
+        vars: [50]
+    },
+    musical: { // Entertainers are more effective
+        name: loc('trait_musical_name'),
+        desc: loc('trait_musical'),
+        type: 'major',
+        val: 5,
+    },
+    revive: { // Soldiers sometimes self res
+        name: loc('trait_revive_name'),
+        desc: loc('trait_revive'),
+        type: 'major',
+        val: 4,
+    },
+    slow_regen: { // Your soldiers wounds heal slower.
+        name: loc('trait_slow_regen_name'),
+        desc: loc('trait_slow_regen'),
+        type: 'major',
+        val: -4,
+        vars: [25]
+    },
+    forge: { // Smelters do not require fuel, boosts geothermal power
+        name: loc('trait_forge_name'),
+        desc: loc('trait_forge'),
+        type: 'major',
+        val: 4,
+        vars: [2]
+    },
+    autoignition: { // Library knowledge bonus reduced
+        name: loc('trait_autoignition_name'),
+        desc: loc('trait_autoignition'),
+        type: 'major',
+        val: -4,
+        vars: [3]
+    },
+    blurry: { // Increased success chance of spies
+        name: loc('trait_blurry_name'),
+        desc: loc('trait_blurry'),
+        type: 'major',
+        val: 5,
+        vars: [25]
+    },
+    snowy: { // You lose morale if it's not snowing
+        name: loc('trait_snowy_name'),
+        desc: loc('trait_snowy'),
+        type: 'major',
+        val: -3,
+        vars: [2,5]
+    },
+    ravenous: { // Drastically increases food consumption
+        name: loc('trait_ravenous_name'),
+        desc: loc('trait_ravenous'),
+        type: 'major',
+        val: -5,
+    },
+    ghostly: { // More souls from hunting and soul wells, increased soul gem drop chance
+        name: loc('trait_ghostly_name'),
+        desc: loc('trait_ghostly'),
+        type: 'major',
+        val: 5,
+        vars: [50,1.5,15]
+    },
+    lawless: { // Government lockout timer is reduced by 90%
+        name: loc('trait_lawless_name'),
+        desc: loc('trait_lawless'),
+        type: 'major',
+        val: 3,
+        vars: [90]
+    },
+    mistrustful: { // Lose standing with rival cities quicker
+        name: loc('trait_mistrustful_name'),
+        desc: loc('trait_mistrustful'),
+        type: 'major',
+        val: -1,
+    },
+    humpback: { // Starvation resistance and miner/lumberjack boost
+        name: loc('trait_humpback_name'),
+        desc: loc('trait_humpback'),
+        type: 'major',
+        val: 4,
+        vars: [0.5, 20]
+    },
+    thalassophobia: { // Wharves are unavailable
+        name: loc('trait_thalassophobia_name'),
+        desc: loc('trait_thalassophobia'),
+        type: 'major',
+        val: -4,
+    },
+    fiery: { // Major war bonus
+        name: loc('trait_fiery_name'),
+        desc: loc('trait_fiery'),
+        type: 'major',
+        val: 10,
+        vars: [65,25]
+    },
+    terrifying: { // No one will trade with you
+        name: loc('trait_terrifying_name'),
+        desc: loc('trait_terrifying'),
+        type: 'major',
+        val: 6,
+    },
+    slaver: { // You capture victims and force them to work for you
+        name: loc('trait_slaver_name'),
+        desc: loc('trait_slaver'),
+        type: 'major',
+        val: 12,
+    },
+    compact: { // You hardly take up any space at all
+        name: loc('trait_compact_name'),
+        desc: loc('trait_compact'),
+        type: 'major',
+        val: 10,
+        vars: [0.015,0.0075]
+    },
+    conniving: { // Better trade deals
+        name: loc('trait_conniving_name'),
+        desc: loc('trait_conniving'),
+        type: 'major',
+        val: 4,
+        vars: [5,15]
+    },
+    pathetic: { // You suck at combat
+        name: loc('trait_pathetic_name'),
+        desc: loc('trait_pathetic'),
+        type: 'major',
+        val: -5,
+        vars: [25]
+    },
+    spiritual: { // Temples are 13% more effective
+        name: loc('trait_spiritual_name'),
+        desc: loc('trait_spiritual'),
+        type: 'major',
+        val: 4,
+        vars: [13]
+    },
+    truthful: { // Bankers are less effective
+        name: loc('trait_truthful_name'),
+        desc: loc('trait_truthful'),
+        type: 'major',
+        val: -7,
+        vars: [50]
+    },
+    unified: { // Start with unification
+        name: loc('trait_unified_name'),
+        desc: loc('trait_unified'),
+        type: 'major',
+        val: 4,
+    },
+    rainbow: { // Gain a bonus if sunny after raining
+        name: loc('trait_rainbow_name'),
+        desc: loc('trait_rainbow'),
+        type: 'major',
+        val: 3,
+        vars: [50]
+    },
+    magnificent: { // construct shrines to receive boons
+        name: loc('trait_magnificent_name'),
+        desc: loc('trait_magnificent'),
+        type: 'major',
+        val: 6,
+    },
+    noble: { // Unable to raise taxes above base value or set very low taxes
+        name: loc('trait_noble_name'),
+        desc: loc('trait_noble'),
+        type: 'major',
+        val: -3,
+    },
+    soul_eater: { // You eat souls for breakfast, lunch, and dinner
+        name: loc('trait_soul_eater_name'),
+        desc: loc('trait_soul_eater'),
+        type: 'special',
+        val: 0,
+    },
+    untapped: { // Untapped Potential
+        name: loc('trait_untapped_name'),
+        desc: loc('trait_untapped'),
+        type: 'special',
+        val: 0,
+    },
+    emfield: { // Your body produces a natural electromagnetic field that disrupts electriciy
+        name: loc('trait_emfield_name'),
+        desc: loc('trait_emfield'),
+        type: 'special',
+        val: -20,
+    },
+    tactical: { // War Bonus
+        name: loc('trait_tactical_name'),
+        desc: loc('trait_tactical'),
+        type: 'minor',
+    },
+    analytical: { // Science Bonus
+        name: loc('trait_analytical_name'),
+        desc: loc('trait_analytical'),
+        type: 'minor',
+    },
+    promiscuous: { // Population Growth Bonus
+        name: loc('trait_promiscuous_name'),
+        desc: loc('trait_promiscuous'),
+        type: 'minor',
+    },
+    resilient: { // Coal Mining Bonus
+        name: loc('trait_resilient_name'),
+        desc: loc('trait_resilient'),
+        type: 'minor',
+    },
+    cunning: { // Hunting Bonus
+        name: loc('trait_cunning_name'),
+        desc: loc('trait_cunning'),
+        type: 'minor',
+    },
+    hardy: { // Factory Woker Bonus
+        name: loc('trait_hardy_name'),
+        desc: loc('trait_hardy'),
+        type: 'minor',
+    },
+    ambidextrous: { // Crafting Bonus
+        name: loc('trait_ambidextrous_name'),
+        desc: loc('trait_ambidextrous'),
+        type: 'minor',
+    },
+    industrious: { // Miner Bonus
+        name: loc('trait_industrious_name'),
+        desc: loc('trait_industrious'),
+        type: 'minor',
+    },
+    content: { // Morale Bonus
+        name: loc('trait_content_name'),
+        desc: loc('trait_content'),
+        type: 'minor',
+    },
+    fibroblast: { // Healing Bonus
+        name: loc('trait_fibroblast_name'),
+        desc: loc('trait_fibroblast'),
+        type: 'minor',
+    },
+    metallurgist: { // Alloy bonus
+        name: loc('trait_metallurgist_name'),
+        desc: loc('trait_metallurgist'),
+        type: 'minor',
+    },
+    gambler: { // Alloy bonus
+        name: loc('trait_gambler_name'),
+        desc: loc('trait_gambler'),
+        type: 'minor',
+    },
+    persuasive: { // Trade bonus
+        name: loc('trait_persuasive_name'),
+        desc: loc('trait_persuasive'),
+        type: 'minor',
+    },
+    fortify: { // gene fortification
+        name: loc('trait_fortify_name'),
+        desc: loc('trait_fortify'),
+        type: 'special',
+    },
+    mastery: { // mastery booster
+        name: loc('trait_mastery_name'),
+        desc: loc('trait_mastery'),
+        type: 'special',
+    }
+};
 
 const upgradeList = [];
 let i;
@@ -1718,6 +3288,9 @@ const filters = {
 	eviltwin: { only: 'evil' },
 	microbang: { only: 'micro' },
 	whitehole: { only: 'standard' },
+    pw_apocalypse: { only: 'magic' },
+    fullmetal: { only: 'magic' },
+    pass: { not: 'evil' },
     double_density: { only: 'heavy' }
 }
 
@@ -1805,6 +3378,8 @@ const keywords = {
 	seeder: ['reset'],
 	macro: ['universe'],
 	marble: ['universe'],
+	double_density: ['universe'],
+	pass: ['reset'],
 	explorer: ['biome', 'reset', 'perk'],
 	joyless: ['progression', 'challenge'],
 	steelen: ['challenge', 'reset', 'perk'],
@@ -1824,6 +3399,7 @@ const keywords = {
 	canceled: ['reset', 'universe'],
 	eviltwin: ['reset', 'universe'],
 	microbang: ['reset', 'universe'],
+	pw_apocalypse: ['reset', 'universe'],
 	dissipated: ['reset', 'challenge', 'perk'],
 	shaken: ['scenario'],
 	iron_will: ['perk', 'scenario'],
@@ -1901,6 +3477,10 @@ const keywords = {
 	extinct_unicorn: ['species', 'universe'],
 	extinct_junker: ['species', 'perk', 'scenario'],
 	extinct_custom: ['species'],
+    resonance: ['other', 'progression'],
+    enlightenment: ['other', 'progression'],
+    gladiator: ['other'],
+    corrupted: ['other', 'progression'],
 }
 
 function createIcon(div, universe, type, item) {
@@ -1938,6 +3518,10 @@ function createIcon(div, universe, type, item) {
 				icon = $('<svg class="checkmark" version="1.1" x="0px" y="0px" width="16px" height="16px" viewBox="'+icons[universe].viewbox+'" xml:space="preserve">'+icons[universe].path+'</svg>');
 				div.append(icon).children().last().tooltip({ placement: 'right', 'title': 'Upgrade Purchased' });
 				break;
+            case 'upgrade-repeat':
+                icon = $('<span class="upgrade-level small">('+item+')</span>');
+				div.append(icon).children().last().tooltip({ placement: 'right', 'title': 'Upgrade Purchased (Level '+item+')' });
+                break;
 			default:
 				icon = $('<svg class="star'+item+'" version="1.1" x="0px" y="0px" width="16px" height="16px" viewBox="'+icons[universe].viewbox+'" xml:space="preserve">'+icons[universe].path+'</svg>');
 				div.append(icon).children().last().tooltip({ placement: 'right', 'title': (item - 1)+' Challenges Completed' });
@@ -1973,11 +3557,26 @@ $.each(perks, function(index, details){
 	else perkBonus = perksDesc[perkName];
 	$('#p-'+perkName).siblings().first().tooltip({ placement: 'right', 'title': perk.desc+'<hr class="hr-tip"><span class="small">'+perk.flair+'</span><hr class="hr-tip"><div class="small text-left">'+perkBonus+'</div>', html: true });
 });
-$.each(upgrades, function(index, upgrade){
-	upgradeList.push(index);
+$.each(bloodPool, function(index, upgrade){
+	let html = '<div class="row"><div id="b-'+index+'" class="col-upgrade"></div><div>'+upgrade.title+' <span class="small">('+upgrade.grant[0]+' '+upgrade.grant[1]+')</span></div></div>';
+	$('#bloodList>div').append(html);
+	$('#b-'+index).siblings().first().tooltip({ placement: 'right', 'title': upgrade.title+'<hr class="hr-tip">'+upgrade.cost.Blood_Stone()+' Blood Stones'+((upgrade.cost.Artifact && upgrade.cost.Artifact() > 0) ? ', ' + upgrade.cost.Artifact() + ' Artifacts' : '')+(upgrade.grant[1] === '*' ? ' <span class="small">(At Level 1)</span>' : '')+'<hr class="hr-tip"><span class="small">'+upgrade.desc+'</span>', html: true });
+});
+$.each(races, function(index, race){
+    if (index == 'protoplasm') {
+        index = 'custom';
+        race.name = 'Custom Race';
+        race.desc = `Your custom race.`;
+    }
+	let html = '<div class="row" data-index="'+index+'"><div id="pi-'+index+'" class="col-upgrade"></div><div>'+race.name+'</div></div>';
+	$('#pillarList>div').append(html);
+	$('#pi-'+index).siblings().first().tooltip({ placement: 'right', 'title': race.name+'<hr class="hr-tip"><span class="small">'+race.desc+'</span>', html: true });
+});
+$.each(genePool, function(index, upgrade){
+	//upgradeList.push(index);
 	let html = '<div class="row"><div id="g-'+index+'" class="col-upgrade"></div><div>'+upgrade.title+' <span class="small">('+upgrade.grant[0]+' '+upgrade.grant[1]+')</span></div></div>';
 	$('#crisprList>div').append(html);
-	$('#g-'+index).siblings().first().tooltip({ placement: 'right', 'title': upgrade.title+'<hr class="hr-tip">'+upgrade.cost+' '+(index == 'bleeding_effect' ? 'Anti-Plasmids' : 'Plasmids')+'<hr class="hr-tip"><span class="small">'+upgrade.desc+'</span>', html: true });
+	$('#g-'+index).siblings().first().tooltip({ placement: 'right', 'title': upgrade.title+'<hr class="hr-tip">'+upgrade.cost.Plasmid()+' '+(index == 'bleeding_effect' ? 'Anti-Plasmids' : 'Plasmids')+'<hr class="hr-tip"><span class="small">'+upgrade.desc+'</span>', html: true });
 });
 
 $('#load').on('click', function(){
@@ -1986,12 +3585,36 @@ $('#load').on('click', function(){
 	let importText = $('#saveTextarea').val();
 	if (importText != '') {
 		let data;
-		let featComplete = perkComplete = upgradeComplete = 0;
+		let featComplete = perkComplete = pillarComplete = bloodComplete = upgradeComplete = 0;
 		try {
-			data = JSON.parse(LZString.decompressFromBase64(importText));
+            data = JSON.parse(LZString.decompressFromUTF16(importText));
+            if (data === null) data = JSON.parse(LZString.decompressFromBase64(importText));
+
 			saveData.achievements = data.stats.achieve ? data.stats.achieve : {};
 			saveData.feats = data.stats.feat ? data.stats.feat : {};
+			saveData.pillars = data.pillars ? data.pillars : {};
+			saveData.blood = data.blood ? data.blood : {};
+            $.each(saveData.blood, function(name, level){
+                if (name == '*') {
+                    global.blood[name] = level;
+                }
+            });
 			saveData.genes = data.genes ? data.genes : {};
+			saveData.custom = data.custom.race0 ? data.custom.race0 : {
+                name: 'Zombie',
+                desc: `Zombies aren't so much a species as they are the shambling remains of a race who succumbed to a nightmarish virus. Yet somehow they continue to drone on.`,
+                entity: 'rotting bipedal creatures',
+                home: 'Grave',
+                red: 'Brains',
+                hell: 'Rigor Mortis',
+                gas: 'Decompose',
+                gas_moon: 'Bones',
+                dwarf: 'Double Tap',
+                genes: 10,
+                genus: 'humanoid',
+                traitlist: []
+            };
+            genome = data.custom.race0;
 		} catch(e) {
 			alert('Invalid save data.')
 			return false;
@@ -2002,6 +3625,7 @@ $('#load').on('click', function(){
 		let microComplete = 0;
 		let antiComplete = 0;
 		let evilComplete = 0;
+		let magicComplete = 0;
 		$.each(achievements, function(index, achieve){
 			let div = $('#a-'+index);
 			if (div.length) {
@@ -2012,21 +3636,31 @@ $('#load').on('click', function(){
 						heavyComplete++;
 					}
 					else createIcon(div, 'heavy');
+
 					if (achievement['m']) {
 						createIcon(div, 'micro', 'achievement', achievement);
 						microComplete++;
 					}
 					else createIcon(div, 'micro');
+
 					if (achievement['e']) {
 						createIcon(div, 'evil', 'achievement', achievement);
 						evilComplete++;
 					}
 					else createIcon(div, 'evil');
+
 					if (achievement['a']) {
 						createIcon(div, 'antimatter', 'achievement', achievement);
 						antiComplete++;
 					}
 					else createIcon(div, 'antimatter');
+
+					if (achievement['mg']) {
+						createIcon(div, 'magic', 'achievement', achievement);
+						standardComplete++;
+					}
+					else createIcon(div, 'magic');
+
 					if (achievement['l']) {
 						createIcon(div, 'standard', 'achievement', achievement);
 						standardComplete++;
@@ -2038,25 +3672,28 @@ $('#load').on('click', function(){
 					createIcon(div, 'micro');
 					createIcon(div, 'evil');
 					createIcon(div, 'antimatter');
+					createIcon(div, 'magic');
 					createIcon(div, 'standard');
 				}
 			}
 		});
-		let allComplete = standardComplete + heavyComplete + microComplete + evilComplete + antiComplete;
+		let allComplete = standardComplete + heavyComplete + microComplete + evilComplete + antiComplete + magicComplete;
 
 		let standardTotal = $('.svg.standard').length;
 		let heavyTotal = $('.svg.heavy').length;
 		let microTotal = $('.svg.micro').length;
 		let evilTotal = $('.svg.evil').length;
 		let antiTotal = $('.svg.antimatter').length;
-		let allTotal = standardTotal + heavyTotal + microTotal + evilTotal + antiTotal;
+		let magicTotal = $('.svg.magic').length;
+		let allTotal = standardTotal + heavyTotal + microTotal + evilTotal + antiTotal + magicTotal;
 
 		let html = '<span class="'+(allComplete == allTotal ? 'yellow' : '')+'">'+allComplete+'</span> of <span class="yellow">'+allTotal+'</span> Total Achievement Levels<br />'+(allComplete/allTotal*100).toFixed(2)+'% Complete<br /><p class="universe-totals">';
 		html += 'Standard Universe: '+standardComplete+' of '+standardTotal+' (<span class="'+(standardComplete == standardTotal ? 'yellow' : '')+'">'+(standardComplete/standardTotal*100).toFixed(2)+'% Complete</span>)<br />';
 		html += 'Heavy Universe: '+heavyComplete+' of '+heavyTotal+' (<span class="'+(heavyComplete == heavyTotal ? 'yellow' : '')+'">'+(heavyComplete/heavyTotal*100).toFixed(2)+'% Complete</span>)<br />';
 		html += 'Micro Universe: '+microComplete+' of '+microTotal+' (<span class="'+(microComplete == microTotal ? 'yellow' : '')+'">'+(microComplete/microTotal*100).toFixed(2)+'% Complete</span>)<br />';
 		html += 'Evil Universe: '+evilComplete+' of '+evilTotal+' (<span class="'+(evilComplete == evilTotal ? 'yellow' : '')+'">'+(evilComplete/evilTotal*100).toFixed(2)+'% Complete</span>)<br />';
-		html += 'Antimatter Universe: '+antiComplete+' of '+antiTotal+' (<span class="'+(antiComplete == antiTotal ? 'yellow' : '')+'">'+(antiComplete/antiTotal*100).toFixed(2)+'% Complete</span>)</p>';
+		html += 'Antimatter Universe: '+antiComplete+' of '+antiTotal+' (<span class="'+(antiComplete == antiTotal ? 'yellow' : '')+'">'+(antiComplete/antiTotal*100).toFixed(2)+'% Complete</span>)<br />';
+		html += 'Magic Universe: '+magicComplete+' of '+magicTotal+' (<span class="'+(magicComplete == magicTotal ? 'yellow' : '')+'">'+(magicComplete/magicTotal*100).toFixed(2)+'% Complete</span>)</p>';
 		$('#achievementList>p').html(html);
 
 		$.each(saveData.feats, function(index, feat){
@@ -2083,7 +3720,34 @@ $('#load').on('click', function(){
 		let pColor = (perkComplete == Object.keys(perks).length) ? 'yellow' : '';
 		$('#perkList>p').html('<span class="'+pColor+'">'+perkComplete+'</span> of <span class="yellow">'+Object.keys(perks).length+'</span> ('+(perkComplete/Object.keys(perks).length*100).toFixed(2)+'% Complete)');
 
-		$.each(upgrades, function(type, upgrade){
+		$.each(bloodPool, function(type, upgrade){
+			$.each(saveData.blood, function(index, level){
+                if (upgrade.grant[0] == index) {
+                        let div = $('#b-'+type);
+                        if (div.length) bloodComplete++;
+                    if (upgrade.grant[1] === '*') {
+                        (div.length) ? createIcon(div, 'checkmark', 'upgrade-repeat', level) : createIcon(div, 'checkmark');
+                    }
+                    else if (upgrade.grant[1] <= level) {
+                        (div.length) ? createIcon(div, 'checkmark', 'upgrade', 0) : createIcon(div, 'checkmark');
+                    }
+				}
+			});
+		});
+		let bColor = (upgradeComplete == Object.keys(genePool).length) ? 'yellow' : '';
+		$('#bloodList>p').html('<span class="'+bColor+'">'+bloodComplete+'</span> of <span class="yellow">'+Object.keys(bloodPool).length+'</span> ('+(bloodComplete/Object.keys(bloodPool).length*100).toFixed(2)+'% Purchased)');
+
+		$.each(saveData.pillars, function(index, pillar){
+			let div = $('#pi-'+index);
+			if (div.length) {
+				pillarComplete++;
+				(pillar > 0) ? createIcon(div, 'standard', 'feat', pillar) : createIcon(div, 'standard');
+			}
+		});
+		let piColor = (pillarComplete == Object.keys(races).length) ? 'yellow' : '';
+		$('#pillarList>p').html('<span class="'+fColor+'">'+pillarComplete+'</span> of <span class="yellow">'+Object.keys(races).length+'</span> ('+(pillarComplete/Object.keys(races).length*100).toFixed(2)+'% Complete)');
+
+		$.each(genePool, function(type, upgrade){
 			$.each(saveData.genes, function(index, level){
 				if (upgrade.grant[0] == index && upgrade.grant[1] <= level) {
 					let div = $('#g-'+type);
@@ -2092,17 +3756,191 @@ $('#load').on('click', function(){
 				}
 			});
 		});
-		let uColor = (upgradeComplete == Object.keys(upgrades).length) ? 'yellow' : '';
-		$('#crisprList>p').html('<span class="'+uColor+'">'+upgradeComplete+'</span> of <span class="yellow">'+Object.keys(upgrades).length+'</span> ('+(upgradeComplete/Object.keys(upgrades).length*100).toFixed(2)+'% Purchased)');
+		let uColor = (upgradeComplete == Object.keys(genePool).length) ? 'yellow' : '';
+		$('#crisprList>p').html('<span class="'+uColor+'">'+upgradeComplete+'</span> of <span class="yellow">'+Object.keys(genePool).length+'</span> ('+(upgradeComplete/Object.keys(genePool).length*100).toFixed(2)+'% Purchased)');
 
 		$('#filterRow').removeClass('d-none');
+
+
+        let lab = $(`<div id="celestialLab" class="celestialLab"></div>`);
+        $(`#city`).empty().append(lab);
+
+        lab.append(`<div><span class="has-text-warning">${loc('genelab_genes')} <span id="genesRemaining"></span></span></div>`);
+
+        let name = $(`<div class="fields">
+          <div class="name">${loc('genelab_name')} <input name="name" maxlength="20" class="form-control" value="${genome.name}"></input></div>
+          <div class="entity">${loc('genelab_entity')} <input v-model="entity" maxlength="40" class="form-control" value="${genome.entity}"></input></div>
+          <div class="name">${loc('genelab_home')} <input v-model="home" maxlength="20" class="form-control" value="${genome.home}"></input></div>
+          <div>${loc('genelab_desc')} <input v-model="desc" maxlength="255" class="form-control" value="${genome.desc}"></input></div></div>`);
+        lab.append(name);
+
+        let planets = $(`<div class="fields">
+          <div class="name">${loc('genelab_red')} <input name="red" maxlength="20" class="form-control" value="${genome.red}"></input></div>
+          <div class="name">${loc('genelab_hell')} <input name="hell" maxlength="20" class="form-control" value="${genome.hell}"></input></div>
+          <div class="name">${loc('genelab_gas')} <input name="gas" maxlength="20" class="form-control" value="${genome.gas}"></input></div>
+          <div class="name">${loc('genelab_gas_moon')} <input name="gas_moon" maxlength="20" class="form-control" value="${genome.gas_moon}"></input></div>
+          <div class="name">${loc('genelab_dwarf')} <input name="dwarf" maxlength="20" class="form-control" value="${genome.dwarf}"></input></div></div>`);
+        lab.append(planets);
+
+        let genes = $(`<div class="sequence"></div>`);
+        lab.append(genes);
+        let genus = $(`<div class="genus_selection"><div class="has-text-caution">${loc('genelab_genus')}</div><section></section></div>`);
+        genes.append(genus);
+        Object.keys(genus_traits).forEach(function (type){
+            if (saveData.achievements[`genus_${type}`] && saveData.achievements[`genus_${type}`].l > 0){
+                let desc = '';
+                Object.keys(genus_traits[type]).forEach(function (t){
+                    if (traits[t]){
+                        desc = desc + `${traits[t].desc} `;
+                    }
+                });
+                let radio = $(`<div class="form-check">
+                  <input type="radio" class="form-check-input" id="${type}" name="type" value="${type}" class="custom-control-input" ${(genome.genus == type) ? "checked" : ''} />
+                  <label class="form-check-label" for="${type}">${loc(`genelab_genus_${type}`)}</label></div>`);
+                $('.genus_selection>section').append(radio);
+                radio.on('click', 'input', function(){
+                    genome.genus = $(this).val();
+                    genome.genes = calcGenomeScore(genome);
+                });
+                radio.find('label').first().tooltip({ placement: 'right', title: desc, offset: '0, 3' });
+            }
+        });
+
+        let trait_list = `<div class="trait_selection"><div class="has-text-warning">${loc('genelab_traits')}</div><section></section></div>`;
+        genes.append(trait_list);
+        let negative = $();
+        Object.keys(races).forEach(function (race){
+            let type = races[race].type;
+            if (
+                (saveData.achievements[`extinct_${race}`] && saveData.achievements[`extinct_${race}`].l > 0)
+                    ||
+                (saveData.achievements[`genus_${type}`] && saveData.achievements[`genus_${type}`].l > 0)
+                ){
+                if (races[race].hasOwnProperty('traits')){
+                    Object.keys(races[race].traits).forEach(function (trait){
+                        unlockedTraits[trait] = true;
+                    });
+                }
+            }
+        });
+
+        Object.keys(unlockedTraits).sort().forEach(function (trait){
+            if (traits.hasOwnProperty(trait) && traits[trait].type === 'major'){
+                if (traits[trait].val >= 0){
+                    let checked = false;
+                    Object.keys(genome.traits).forEach(function (t){
+                        if (genome.traits[t] == trait) {
+                            checked = true;
+                            return;
+                        }
+                    });
+                    let checkbox = $(`
+                    <div class="form-check">
+                        <input type="checkbox" class="form-check-input" name="${trait}" id="${trait}" ${checked ? "checked" : ''} />
+                        <label class="form-check-label" for="${trait}">
+                            <span class="has-text-success">${loc(`trait_${trait}_name`)}</span>
+                            (<span class="has-text-advanced">${traits[trait].val}</span>)
+                        </label>
+                    </div>`);
+                    $('.trait_selection>section').append(checkbox);
+                    checkbox.on('click', 'input', function(){
+                        if (!$(this).prop('checked')){
+                            Object.keys(genome.traits).forEach(function (t){
+                                if (genome.traits[t] == trait) genome.traits.splice(t, 1);
+                            });
+                        }
+                        else {
+                            genome.traits.push(trait);
+                        }
+                        genome.genes = calcGenomeScore(genome);
+                    });
+                    checkbox.find('label').first().tooltip({ placement: 'right', title: traits[trait].desc, offset: '0, 3' });
+                }
+                else {
+                    let checked = false;
+                    Object.keys(genome.traits).forEach(function (t){
+                        if (genome.traits[t] == trait) {
+                            checked = true;
+                            return;
+                        }
+                    });
+                    let checkbox = $(`
+                    <div class="form-check">
+                        <input type="checkbox" class="form-check-input" name="${trait}" id="${trait}" ${checked ? "checked" : ''} />
+                        <label class="form-check-label" for="${trait}">
+                            <span class="has-text-danger">${loc(`trait_${trait}_name`)}</span>
+                            (<span class="has-text-caution">${traits[trait].val}</span>)
+                        </label>
+                    </div>`);
+                    negative = negative.add(checkbox);
+                    checkbox.on('click', 'input', function(){
+                        if (!$(this).prop('checked')){
+                            Object.keys(genome.traits).forEach(function (t){
+                                if (genome.traits[t] == trait) genome.traits.splice(t, 1);
+                            });
+                        }
+                        else {
+                            genome.traits.push(trait);
+                        }
+                        genome.genes = calcGenomeScore(genome);
+                    });
+                    checkbox.find('label').first().tooltip({ placement: 'right', title: traits[trait].desc, offset: '0, 3' });
+                }
+            }
+        });
+        $('.trait_selection>section').append(negative);
+        genome.genes = calcGenomeScore(genome);
 	}
+    //console.log(''+JSON.stringify(genome));
 });
+
+function calcGenomeScore(genome){
+    let genes = 0;
+    if (saveData.achievements[`ascended`]){
+        let types = ['l','a','h','e','m','ma'];
+        for (let i=0; i<types.length; i++){
+            if (saveData.achievements.ascended.hasOwnProperty(types[i])){
+                genes += saveData.achievements.ascended[types[i]];
+            }
+        }
+    }
+
+    Object.keys(genus_traits[genome.genus]).forEach(function (t){
+        genes -= traits[t].val;
+    });
+
+    let max_complexity = 2;
+    if (saveData.achievements['technophobe'] && saveData.achievements.technophobe.l >= 1){
+        max_complexity += saveData.achievements.technophobe.l;
+    }
+
+    let complexity = 0;
+    for (let i=0; i<genome.traits.length; i++){
+        let gene_cost = traits[genome.traits[i]].val;
+        if (traits[genome.traits[i]].val >= 0){
+            if (complexity > max_complexity){
+                gene_cost -= max_complexity - complexity;
+            }
+            complexity++;
+        }
+        genes -= gene_cost;
+    }
+
+    Object.keys(unlockedTraits).sort().forEach(function (trait){
+        if (traits.hasOwnProperty(trait) && traits[trait].type === 'major' && traits[trait].val >= 0){
+            let increase = complexity > max_complexity ? complexity - max_complexity : 0;
+            $(`label[for=${trait}]`).children().last().html(traits[trait].val + increase);
+        }
+    });
+    $('#genesRemaining').text(genes);
+    return genes;
+}
 
 // Isotope setup
 var $achieves = $('#achievementList>div').isotope({
-  itemSelector: '.row',
-  layoutMode: 'vertical'
+    itemSelector: '.row',
+    layoutMode: 'fitRows',
+    transitionDuration: 0,
 });
 
 // Store filter for each group
@@ -2114,6 +3952,7 @@ $('#filterRow').on('click', '.btn', function(event){
 	$button.button('toggle');
 	var filterGroup = $buttonGroup.attr('data-filter-group');
 	var buttonAttr = $button.attr('data-filter');
+
 	switch(filterGroup) {
 		case 'universes':
 			checks['universe'] = buttonAttr;
@@ -2159,6 +3998,10 @@ function clearScreen(clear = false) {
 	$('#featList>p').empty();
 	$('#perkList>div>div .col-upgrade').empty();
 	$('#perkList>p').empty();
+	$('#bloodList>div>div .col-upgrade').empty();
+	$('#bloodList>p').empty();
+	$('#pillarList>div>div .col-upgrade').empty();
+	$('#pillarList>p').empty();
 	$('#crisprList>div>div .col-upgrade').empty();
 	$('#crisprList>p').empty();
 	if (clear == true) $('#saveTextarea').val('');
@@ -2169,6 +4012,7 @@ function clearScreen(clear = false) {
 	$('#achievementList div').each(function(){
 		$(this).show();
 	});
+    $('#city').empty().html('<p class="text-center">Load save data to view the calculator.</p>');
 
 	$.each(achievements, function(index, achievement){
 		let row = $('#achievementList div [data-index="'+index+'"]');
@@ -2179,9 +4023,31 @@ function clearScreen(clear = false) {
 	});
 }
 
-
 $('#clear').on('click', function(){
 	clearScreen(true);
 });
 
+$('#achieveLink').on('click', function(){
+    $('#achievePanel').show();
+    $('#otherPanel').hide();
+    $('#labPanel').hide();
+    $('#allGeneral').parent().click();
+});
+
+$('#otherLink').on('click', function(){
+    $('#achievePanel').hide();
+    $('#otherPanel').show();
+    $('#labPanel').hide();
+});
+
+$('#labLink').on('click', function(){
+    $('#achievePanel').hide();
+    $('#otherPanel').hide();
+    $('#labPanel').show();
+});
+
+
+$('#otherPanel').hide();
+$('#labPanel').hide();
+//$('#achievePanel').hide();
 });

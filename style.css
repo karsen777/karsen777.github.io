@@ -37,6 +37,8 @@ a:hover, a:active {
 #achievementList>div>div:hover,
 #featList>div>div:hover,
 #perkList>div>div:hover,
+#bloodList>div>div:hover,
+#pillarList>div>div:hover,
 #crisprList>div>div:hover {
 	background-color: #2b3232;
 }
@@ -47,13 +49,13 @@ a:hover, a:active {
 }
 
 #achievementList>div>.row {
-	width: 100%;
+	width: 25%;
 }
 
 .col-icon {
 	margin-left: 25px;
 	padding-right: 10px;
-	width: 90px;
+	width: 106px;
 	text-align: right;
 }
 
@@ -124,20 +126,34 @@ a:hover, a:active {
 }
 
 #perkList>h2 {
+    margin-top: 30px;
 	color: #1abc9c;
 }
 
-#crisprList>h2 {
+#pillarList>h2 {
+    margin-top: 30px;
 	color: #fff;
 }
 
-#crisprList>div>div {
+#bloodList>h2 {
+	color: #fff;
+}
+
+#crisprList>h2 {
+	color: #ffdd57;
+}
+
+#bloodList>div>div, #crisprList>div>div {
 	text-transform: capitalize;
 }
 
 .universe-totals {
 	margin-top: 10px;
 	font-size: 12px;
+}
+
+.upgrade-level {
+    margin-right: 2px;
 }
 
 #filterRow > div {
@@ -154,4 +170,143 @@ a:hover, a:active {
 
 #buttons .btn:not(:first-child) {
 	margin-top: 10px;
+}
+
+.page-item>a {
+    transition: all 200ms ease;
+    height: 1.6875rem;
+    background-color: #282f2f;
+    color: #fff;
+    padding-left: .75em;
+    padding-right: .75em;
+    padding-top: calc(.375em - 1px);
+    padding-bottom: calc(.375em - 1px);
+}
+
+.page-item>a.is-hovered,
+.page-item>a:hover {
+    background-color: #3a4344;
+    color: #f2f2f2;
+}
+
+.page-item>a.is-focused,
+.page-item>a:focus {
+    border-color: #dbdbdb;
+    box-shadow: none;
+}
+
+.celestialLab .fields {
+    margin-top: .5rem;
+}
+.celestialLab .fields .name {
+    display: inline-block;
+    width: 10rem;
+    margin-right: 1rem;
+}
+.celestialLab .fields .entity {
+    display: inline-block;
+    width: 20rem;
+    margin-right: 1rem;
+}
+
+.celestialLab .sequence {
+    display: flex;
+    margin-top: .5rem;
+}
+
+.celestialLab .sequence .genus_selection {
+    width: 10rem;
+}
+.celestialLab .sequence .genus_selection section {
+    margin-top: .5rem;
+}
+
+.celestialLab .sequence .trait_selection {
+    margin-left: 2rem;
+}
+
+.celestialLab .sequence .trait_selection section {
+    margin-top: .5rem;
+    display: flex;
+    flex-wrap: wrap;
+
+}
+.celestialLab .sequence .trait_selection section > div {
+    width: 11.5rem;
+}
+
+.celestialLab .sequence > div .field:not(:last-child){
+    margin-bottom: 0;
+}
+
+.celestialLab .create {
+    margin-top: 1rem;
+    text-align: center;
+}
+
+.form-control {
+    background-color: #fff;
+    border-color: #dbdbdb;
+    border-radius: 4px;
+    color: #363636;
+    box-shadow: inset 0 1px 2px rgba(10,10,10,.1);
+    max-width: 100%;
+    width: 100%;
+    display: inline-flex;
+    font-size: 1rem;
+    height: 2.25em;
+    justify-content: flex-start;
+    line-height: 1.5;
+    padding-bottom: calc(.375em - 1px);
+    padding-left: calc(.625em - 1px);
+    padding-right: calc(.625em - 1px);
+    padding-top: calc(.375em - 1px);
+    position: relative;
+    vertical-align: top;
+}
+
+.form-control:active, .form-control:focus {
+    border-color: #7957d5;
+    box-shadow: 0 0 0 0.125em rgba(121,87,213,.25);
+}
+
+.has-text-fade {
+    color: #5e5e5e !important;
+}
+
+.has-text-special,
+.has-text-flair {
+    color: #91006c !important;
+}
+
+.has-text-advanced {
+    color: #00ac95 !important;
+}
+
+.has-text-caution {
+    color: #ffa500 !important;
+}
+
+.has-text-alert {
+    color: #af5d00 !important;
+}
+
+.has-text-label {
+    color: #ffff9e !important;
+}
+
+.has-text-warning {
+    color: #ffdd57!important;
+}
+
+.checkbox:hover, .radio:hover {
+    color: #1abc9c;
+}
+
+.has-text-success {
+    color: #23d160!important;
+}
+
+.has-text-danger {
+    color: #ff3860!important;
 }
