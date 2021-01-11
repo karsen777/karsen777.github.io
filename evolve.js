@@ -3545,7 +3545,6 @@ $.each(feats, function(index, feat){
 	$('#f-'+index).siblings().first().tooltip({ placement: 'right', 'title': feat.desc+'<hr class="hr-tip"><span class="small">'+feat.flair+'</span>', html: true });
 });
 $.each(perks, function(index, details){
-    console.log(index);
 	let perkName = details[0];
 	let perk = (details[1] == 'achievements') ? achievements[perkName] : feats[perkName];
 	if (perk.name == 'Resonance') perk.name = 'Harmonic Energy';
