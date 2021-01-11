@@ -3231,7 +3231,7 @@ let i;
 let blackholeDesc = mass_extinctionDesc = creatorDesc = explorerDesc = whitehole2Desc = '';
 let heavyweightDesc = dissipated3Desc = dissipated4Desc = anarchistDesc = steelenDesc = '';
 let novice1Desc = novice2Desc = journeyman1Desc = journeyman2Desc = minersDesc = joylessDesc = '';
-let technoDesc5 = '';
+let technoDesc5 = gladiatorDesc = '';
 for (i = 1; i <= 5; i++) {
 	blackholeDesc += i * 5;
 	if (i < 5) blackholeDesc += '% / ';
@@ -3263,6 +3263,8 @@ for (i = 1; i <= 5; i++) {
 	if (i < 5) minersDesc += ' / ';
 	technoDesc5 += i;
 	if (i < 5) technoDesc5 += ' / +';
+	gladiatorDesc += i * 20;
+	if (i < 5) gladiatorDesc += '% / ';
 }
 //let dissipated2Desc = `1kW (${star2}) / +2kw (${star4})`;
 let dissipated2Desc = `1kW (2-star) / +2 (4-star)`;
@@ -3330,6 +3332,12 @@ const perksDesc = {
 	],
     ascended: [
         '+1 gene during custom species creation per star level per universe (max of +5 genes per universe). This perk is not currently listed on the stats page in-game.'
+    ],
+    gladiator: [
+        loc("achieve_perks_gladiator",[gladiatorDesc]),
+    ],
+    resonance: [
+        loc("perks_harmonic",[1, 2]) + ' ' + loc("wiki_perks_harmonic_note2",[]),
     ],
 	novice: loc("achieve_perks_novice",[novice1Desc, novice2Desc]),
 	journeyman: [
@@ -3537,8 +3545,10 @@ $.each(feats, function(index, feat){
 	$('#f-'+index).siblings().first().tooltip({ placement: 'right', 'title': feat.desc+'<hr class="hr-tip"><span class="small">'+feat.flair+'</span>', html: true });
 });
 $.each(perks, function(index, details){
+    console.log(index);
 	let perkName = details[0];
 	let perk = (details[1] == 'achievements') ? achievements[perkName] : feats[perkName];
+	if (perk.name == 'Resonance') perk.name = 'Harmonic Energy';
 	let html = '<div class="row"><div id="p-'+perkName+'" class="col-upgrade"></div><div>'+perk.name+'</div></div>';
 	$('#perkList>div').append(html);
 	let perkBonus = '';
