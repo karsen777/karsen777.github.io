@@ -3268,14 +3268,7 @@ for (i = 1; i <= 5; i++) {
 let dissipated2Desc = `1kW (2-star) / +2 (4-star)`;
 
 const filters = {
-	vigilante: { only: 'evil' },
-	blood_war: { not: 'evil' },
-	extinct_seraph: { only: 'evil' },
-	extinct_unicorn: { only: 'evil' },
-	extinct_balorg: { not: 'evil' },
-	extinct_imp: { not: 'evil' },
-	genus_angelic: { only: 'evil' },
-	genus_demonic: { not: 'evil' },
+    vigilante: { only: 'evil' },
 	biome_eden: { only: 'evil' },
 	biome_hellscape: { not: 'evil' },
 	squished: { only: 'micro' },
@@ -3290,7 +3283,7 @@ const filters = {
 	whitehole: { only: 'standard' },
     pw_apocalypse: { only: 'magic' },
     fullmetal: { only: 'magic' },
-    pass: { not: 'evil' },
+    pass: { only: 'magic' },
     double_density: { only: 'heavy' }
 }
 
