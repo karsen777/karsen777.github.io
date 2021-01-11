@@ -3650,7 +3650,7 @@ $('#load').on('click', function(){
 
 					if (achievement['mg']) {
 						createIcon(div, 'magic', 'achievement', achievement);
-						standardComplete++;
+						magicComplete++;
 					}
 					else createIcon(div, 'magic');
 
