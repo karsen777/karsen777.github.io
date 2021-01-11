@@ -3600,7 +3600,7 @@ $('#load').on('click', function(){
                 }
             });
 			saveData.genes = data.genes ? data.genes : {};
-			saveData.custom = data.custom.race0 ? data.custom.race0 : {
+			saveData.custom = data.custom && data.custom.race0 ? data.custom.race0 : {
                 name: 'Zombie',
                 desc: `Zombies aren't so much a species as they are the shambling remains of a race who succumbed to a nightmarish virus. Yet somehow they continue to drone on.`,
                 entity: 'rotting bipedal creatures',
@@ -3612,9 +3612,9 @@ $('#load').on('click', function(){
                 dwarf: 'Double Tap',
                 genes: 10,
                 genus: 'humanoid',
-                traitlist: []
+                traits: []
             };
-            genome = data.custom.race0;
+            genome = data.custom && data.custom.race0 ? data.custom.race0 : saveData.custom;
 		} catch(e) {
 			alert('Invalid save data.')
 			return false;
@@ -3858,6 +3858,7 @@ $('#load').on('click', function(){
                 }
                 else {
                     let checked = false;
+
                     Object.keys(genome.traits).forEach(function (t){
                         if (genome.traits[t] == trait) {
                             checked = true;
