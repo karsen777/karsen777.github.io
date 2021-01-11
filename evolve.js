@@ -3898,7 +3898,7 @@ $('#load').on('click', function(){
 function calcGenomeScore(genome){
     let genes = 0;
     if (saveData.achievements[`ascended`]){
-        let types = ['l','a','h','e','m','ma'];
+        let types = ['l','a','h','e','m','mg'];
         for (let i=0; i<types.length; i++){
             if (saveData.achievements.ascended.hasOwnProperty(types[i])){
                 genes += saveData.achievements.ascended[types[i]];
