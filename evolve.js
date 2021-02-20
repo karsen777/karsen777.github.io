@@ -1,13 +1,13 @@
 $(function(){
 
-const version = '1.0.21';
+const version = '1.0.27';
 $('#version').text(version);
 
 const date = new Date();
 let hallowed = { active: false};
 let easter = { active: false};
 
-const global = { race: { species: ''}, settings: { boring: true}, blood: {} };
+const global = { race: { species: '' }, settings: { boring: true} };
 let achievementCount = featCount = 0;
 let genome = {};
 let unlockedTraits = {};
@@ -16,7 +16,6 @@ let saveData = {
 	feats: {},
 	genes: {},
     blood: {},
-    genes: {},
     custom: {}
 };
 
@@ -87,10 +86,30 @@ function loc(key, variables) {
     return string;
 }
 
+function universeLevel(universe){
+    universe = universe || global.race.universe;
+    let affix = universeData[universe].code;
+    let lvl = 0;
+    let ulvl = 0;
+    Object.keys(achievements).forEach(function (achievement){
+        if (saveData.achievements[achievement]){
+            lvl += saveData.achievements[achievement].l > 5 ? 5 : saveData.achievements[achievement].l;
+            if (saveData.achievements[achievement][affix]){
+                ulvl += saveData.achievements[achievement][affix] > 5 ? 5 : saveData.achievements[achievement][affix];
+            }
+        }
+    });
+    return { aLvl: lvl, uLvl: ulvl };
+}
+
 const universeData = {
 	standard: {
 		name: 'Standard',
 		code: 'l'
+	},
+	heavy: {
+		name: 'Heavy',
+		code: 'h'
 	},
 	antimatter: {
 		name: 'Antimatter',
@@ -99,10 +118,6 @@ const universeData = {
 	evil: {
 		name: 'Evil',
 		code: 'e'
-	},
-	heavy: {
-		name: 'Heavy',
-		code: 'h'
 	},
 	micro: {
 		name: 'Micro',
@@ -966,7 +981,8 @@ const achieve_list = {
         'red_tactics','pacifist','neutralized','paradise','scrooge','madagascar_tree','godwin',
         'laser_shark','infested','mass_starvation','colonist','world_domination','illuminati',
         'syndicate','cult_of_personality','doomed','pandemonium','blood_war','landfill','seeder',
-        'miners_dream','shaken','blacken_the_sun','resonance','enlightenment','gladiator','corrupted'
+        'miners_dream','shaken','blacken_the_sun','trade','resonance','enlightenment','gladiator',
+        'corrupted'
     ],
     species: [
         'mass_extinction','extinct_human','extinct_elven','extinct_orc','extinct_cath','extinct_wolven','extinct_centaur','extinct_kobold',
@@ -995,11 +1011,15 @@ const achieve_list = {
 const flairData = {
     colonist: [races.human.name]
 };
+const descData = {
+    trade: [750,50]
+};
+
 const achievements = {};
 Object.keys(achieve_list).forEach(function(type){
     achieve_list[type].forEach(achieve => achievements[achieve] = {
         name: loc(`achieve_${achieve}_name`),
-        desc: loc(`achieve_${achieve}_desc`),
+        desc: descData[achieve] ? loc(`achieve_${achieve}_desc`,descData[achieve]) : loc(`achieve_${achieve}_desc`),
         flair: flairData[achieve] ? loc(`achieve_${achieve}_flair`,flairData[achieve]) : loc(`achieve_${achieve}_flair`),
         type: type
     });
@@ -1164,6 +1184,7 @@ const feats = {
 }
 
 const perks = [
+    [ 'trade', 'achievements' ],
 	[ 'mass_extinction', 'achievements' ],
 	[ 'extinct_junker', 'achievements' ],
 	[ 'anarchist', 'achievements' ],
@@ -1991,8 +2012,8 @@ const bloodPool = {
         reqs: {},
         grant: ['lust','*'],
         cost: {
-            Blood_Stone(){ return global.blood['lust'] ? (global.blood.lust * 15 + 15) : 15; },
-            Artifact(){ return (global.blood['lust'] || 0) % 5 === 0 ? 1 : 0; }
+            Blood_Stone(){ return saveData.blood['lust'] ? (saveData.blood.lust * 15 + 15) : 15; },
+            Artifact(){ return (saveData.blood['lust'] || 0) % 5 === 0 ? 1 : 0; }
         },
         effect(){ return `<span class="has-text-caution">${loc('arpa_blood_repeat')}</span>`; },
         action(){
@@ -2009,8 +2030,8 @@ const bloodPool = {
         reqs: {},
         grant: ['illuminate','*'],
         cost: {
-            Blood_Stone(){ return global.blood['illuminate'] ? (global.blood.illuminate * 12 + 12) : 12; },
-            Artifact(){ return (global.blood['illuminate'] || 0) % 5 === 0 ? 1 : 0; }
+            Blood_Stone(){ return saveData.blood['illuminate'] ? (saveData.blood.illuminate * 12 + 12) : 12; },
+            Artifact(){ return (saveData.blood['illuminate'] || 0) % 5 === 0 ? 1 : 0; }
         },
         effect(){ return `<span class="has-text-caution">${loc('arpa_blood_repeat')}</span>`; },
         action(){
@@ -2027,8 +2048,8 @@ const bloodPool = {
         reqs: {},
         grant: ['greed','*'],
         cost: {
-            Blood_Stone(){ return global.blood['greed'] ? (global.blood.greed * 16 + 16) : 16; },
-            Artifact(){ return (global.blood['greed'] || 0) % 5 === 0 ? 1 : 0; }
+            Blood_Stone(){ return saveData.blood['greed'] ? (saveData.blood.greed * 16 + 16) : 16; },
+            Artifact(){ return (saveData.blood['greed'] || 0) % 5 === 0 ? 1 : 0; }
         },
         effect(){ return `<span class="has-text-caution">${loc('arpa_blood_repeat')}</span>`; },
         action(){
@@ -2045,11 +2066,11 @@ const bloodPool = {
         reqs: {},
         grant: ['hoarder','*'],
         condition(){
-            return global.genes['blood'] && global.genes.blood >= 3 ? true : false;
+            return saveData.genes['blood'] && saveData.genes.blood >= 3 ? true : false;
         },
         cost: {
-            Blood_Stone(){ return global.blood['hoarder'] ? (global.blood.hoarder * 14 + 14) : 14; },
-            Artifact(){ return (global.blood['hoarder'] || 0) % 5 === 0 ? 1 : 0; }
+            Blood_Stone(){ return saveData.blood['hoarder'] ? (saveData.blood.hoarder * 14 + 14) : 14; },
+            Artifact(){ return (saveData.blood['hoarder'] || 0) % 5 === 0 ? 1 : 0; }
         },
         effect(){ return `<span class="has-text-caution">${loc('arpa_blood_repeat')}</span>`; },
         action(){
@@ -2066,8 +2087,8 @@ const bloodPool = {
         reqs: {},
         grant: ['artisan','*'],
         cost: {
-            Blood_Stone(){ return global.blood['artisan'] ? (global.blood.artisan * 8 + 8) : 8; },
-            Artifact(){ return (global.blood['artisan'] || 0) % 5 === 0 ? 1 : 0; }
+            Blood_Stone(){ return saveData.blood['artisan'] ? (saveData.blood.artisan * 8 + 8) : 8; },
+            Artifact(){ return (saveData.blood['artisan'] || 0) % 5 === 0 ? 1 : 0; }
         },
         effect(){ return `<span class="has-text-caution">${loc('arpa_blood_repeat')}</span>`; },
         action(){
@@ -2084,11 +2105,11 @@ const bloodPool = {
         reqs: {},
         grant: ['attract','*'],
         condition(){
-            return global.genes['blood'] && global.genes.blood >= 3 ? true : false;
+            return saveData.genes['blood'] && saveData.genes.blood >= 3 ? true : false;
         },
         cost: {
-            Blood_Stone(){ return global.blood['attract'] ? (global.blood.attract * 4 + 4) : 4; },
-            Artifact(){ return (global.blood['attract'] || 0) % 5 === 0 ? 1 : 0; }
+            Blood_Stone(){ return saveData.blood['attract'] ? (saveData.blood.attract * 4 + 4) : 4; },
+            Artifact(){ return (saveData.blood['attract'] || 0) % 5 === 0 ? 1 : 0; }
         },
         effect(){ return `<span class="has-text-caution">${loc('arpa_blood_repeat')}</span>`; },
         action(){
@@ -2105,7 +2126,7 @@ const bloodPool = {
         reqs: {},
         grant: ['wrath','*'],
         cost: {
-            Blood_Stone(){ return global.blood['wrath'] ? (global.blood.wrath * 2 + 2) : 2; },
+            Blood_Stone(){ return saveData.blood['wrath'] ? (saveData.blood.wrath * 2 + 2) : 2; },
             Artifact(){ return 1; }
         },
         effect(){ return `<span class="has-text-caution">${loc('arpa_blood_repeat')}</span>`; },
@@ -2123,7 +2144,7 @@ const bloodPool = {
         reqs: {},
         grant: ['prepared',1],
         condition(){
-            return global.genes['blood'] && global.genes.blood >= 3 ? true : false;
+            return saveData.genes['blood'] && saveData.genes.blood >= 3 ? true : false;
         },
         cost: { Blood_Stone(){ return 50; } },
         action(){
@@ -2143,7 +2164,7 @@ const bloodPool = {
         reqs: { prepared: 1 },
         grant: ['prepared',2],
         condition(){
-            return global.genes['blood'] && global.genes.blood >= 3 ? true : false;
+            return saveData.genes['blood'] && saveData.genes.blood >= 3 ? true : false;
         },
         cost: { Blood_Stone(){ return 75; } },
         action(){
@@ -2188,7 +2209,7 @@ const bloodPool = {
         reqs: { unbound: 2 },
         grant: ['unbound',3],
         condition(){
-            return global.genes['blood'] && global.genes.blood >= 3 ? true : false;
+            return saveData.genes['blood'] && saveData.genes.blood >= 3 ? true : false;
         },
         cost: {
             Blood_Stone(){ return 250; },
@@ -2208,7 +2229,7 @@ const bloodPool = {
         reqs: { unbound: 3 },
         grant: ['unbound',4],
         condition(){
-            return global.genes['blood'] && global.genes.blood >= 3 ? true : false;
+            return saveData.genes['blood'] && saveData.genes.blood >= 3 ? true : false;
         },
         cost: { Blood_Stone(){ return 500; } },
         action(){
@@ -2225,7 +2246,7 @@ const bloodPool = {
         reqs: {},
         grant: ['aware',1],
         condition(){
-            return global.genes['blood'] && global.genes.blood >= 3 ? true : false;
+            return saveData.genes['blood'] && saveData.genes.blood >= 3 ? true : false;
         },
         cost: { Blood_Stone(){ return 10; } },
         action(){
@@ -3231,7 +3252,7 @@ let i;
 let blackholeDesc = mass_extinctionDesc = creatorDesc = explorerDesc = whitehole2Desc = '';
 let heavyweightDesc = dissipated3Desc = dissipated4Desc = anarchistDesc = steelenDesc = '';
 let novice1Desc = novice2Desc = journeyman1Desc = journeyman2Desc = minersDesc = joylessDesc = '';
-let technoDesc5 = gladiatorDesc = '';
+let technoDesc5 = gladiatorDesc = tradeDesc1 = tradeDesc2 = '';
 for (i = 1; i <= 5; i++) {
 	blackholeDesc += i * 5;
 	if (i < 5) blackholeDesc += '% / ';
@@ -3265,8 +3286,11 @@ for (i = 1; i <= 5; i++) {
 	if (i < 5) technoDesc5 += ' / +';
 	gladiatorDesc += i * 20;
 	if (i < 5) gladiatorDesc += '% / ';
+	tradeDesc1 += i * 2;
+	if (i < 5) tradeDesc1 += '% / ';
+	tradeDesc2 += i;
+	if (i < 5) tradeDesc2 += '% / ';
 }
-//let dissipated2Desc = `1kW (${star2}) / +2kw (${star4})`;
 let dissipated2Desc = `1kW (2-star) / +2 (4-star)`;
 
 const filters = {
@@ -3291,6 +3315,7 @@ const filters = {
 
 const perksDesc = {
 	blackhole: loc("achieve_perks_blackhole",[blackholeDesc]),
+    trade: loc("achieve_perks_trade",[tradeDesc1,tradeDesc2]),
 	mass_extinction: [
 		loc("achieve_perks_mass_extinction"),
 		loc("achieve_perks_mass_extinction2",[mass_extinctionDesc]),
@@ -3381,6 +3406,7 @@ const keywords = {
 	marble: ['universe'],
 	double_density: ['universe'],
 	pass: ['reset'],
+    trade: ['other'],
 	explorer: ['biome', 'reset', 'perk'],
 	joyless: ['progression', 'challenge'],
 	steelen: ['challenge', 'reset', 'perk'],
@@ -3598,7 +3624,7 @@ $('#load').on('click', function(){
 			saveData.blood = data.blood ? data.blood : {};
             $.each(saveData.blood, function(name, level){
                 if (name == '*') {
-                    global.blood[name] = level;
+                    saveData.blood[name] = level;
                 }
             });
 			saveData.genes = data.genes ? data.genes : {};
